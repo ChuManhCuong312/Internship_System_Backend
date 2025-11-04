@@ -144,15 +144,4 @@ public class InternController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // Delete - Delete all intern profiles
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteAllInternProfiles() {
-        try {
-            internService.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }
