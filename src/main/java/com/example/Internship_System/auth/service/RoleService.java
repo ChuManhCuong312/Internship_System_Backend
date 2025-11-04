@@ -40,4 +40,27 @@ public class RoleService {
         role.setPermissions(permissions);
         return roleRepository.save(role);
     }
+
+    // 🔹 Remove multiple permissions from a role
+    public Role removePermissionsFromRole(String roleName, Set<String> permissionCodes) {
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        Set<Permission> toRemove = new HashSet<>();
+
+        for (String permCode : permissionCodes) {
+            Permission permission = permissionRepository.findByCode(permCode)
+                    .orElseThrow(() -> new RuntimeException("Permission not found: " + permCode));
+            toRemove.add(permission);
+        }
+
+        role.getPermissions().removeAll(toRemove);
+        return roleRepository.save(role);
+    }
+
+    public Set<Permission> getPermissionsByRole(String roleName) {
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        return role.getPermissions();
+    }
 }
