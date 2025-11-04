@@ -1,8 +1,6 @@
 package com.example.Internship_System.intern.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
