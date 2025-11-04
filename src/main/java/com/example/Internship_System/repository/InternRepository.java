@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface InternRepository extends JpaRepository<InternProfile, Integer> {
-    Optional<InternProfile> findByUserId(int userId);
+    Optional<InternProfile> findByUserId(int user_id);
 
-    boolean existsByUserId(int userId);
+    boolean existsByUserId(int user_id);
 }
