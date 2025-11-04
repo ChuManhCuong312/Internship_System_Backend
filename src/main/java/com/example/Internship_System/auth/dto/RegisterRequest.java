@@ -4,6 +4,7 @@ public class RegisterRequest {
     private String fullName;
     private String email;
     private String password;
+    private String phone;
 
     // For intern registration (optional fields)
     private String school;
@@ -18,6 +19,9 @@ public class RegisterRequest {
 
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
     public String getSchool() {return school;}
     public void setSchool(String school) {this.school = school;}
