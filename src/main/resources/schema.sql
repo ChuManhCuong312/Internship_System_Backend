@@ -20,7 +20,7 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
-    status ENUM('ACTIVE','INACTIVE','REJECTED') DEFAULT 'ACTIVE',
+    status ENUM('ACTIVE','INACTIVE','REJECTED','PENDING_APPROVAL') DEFAULT 'ACTIVE',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     role_id INT,
     FOREIGN KEY (role_id) REFERENCES roles(role_id)
