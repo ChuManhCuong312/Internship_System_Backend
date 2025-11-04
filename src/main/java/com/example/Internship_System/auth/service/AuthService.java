@@ -70,7 +70,7 @@ public class AuthService {
 
         User user = userOpt.get();
 
-        // ❌ Check if user is active
+        // Check if user is active
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new RuntimeException("Account not active. Please wait for admin approval.");
         }
@@ -78,8 +78,8 @@ public class AuthService {
             return null;
         }
 
-        // ✅ Generate JWT token
-        return jwtUtils.generateToken(user.getEmail());
+        // ✅ Generate JWT token with email + role
+        return jwtUtils.generateToken(user.getEmail(), user.getRole().getName());
     }
 
     // Encode passowrd using BCrypt
