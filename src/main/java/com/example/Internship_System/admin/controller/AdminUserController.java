@@ -41,6 +41,7 @@ public class AdminUserController {
         user.setFullName(request.getFullName());
         user.setEmail(request.getEmail());
         user.setPasswordHash(authService.encodePassWord(request.getPassword()));
+        user.setPhone(request.getPhone());
 
         // Set status: INTERN INACTIVE approval, other active immediately
         if(roleName.equalsIgnoreCase("INTERN")){
