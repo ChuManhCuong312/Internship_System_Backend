@@ -59,4 +59,46 @@ public class AdminUserController {
         userRepository.save(user);
         return ResponseEntity.ok("User created successfully with role "+ roleName);
     }
+
+    // 🔹 Approve intern (Admin only)
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/approve/{userId}")
+    public ResponseEntity<?> approveIntern(@PathVariable Integer userId) {
+        return userRepository.findById(Long.valueOf(userId)) // ✅ match repository's Long ID type
+                .map(user -> {
+                    if (user.getStatus() != UserStatus.INACTIVE) {
+                        return ResponseEntity.badRequest().body("User must be INACTIVE before approval.");
+                    }
+
+                    user.setStatus(UserStatus.ACTIVE);
+
+                    // Assign role "INTERN"
+                    var internRole = roleService.getRoleByName("INTERN");
+                    if (internRole.isPresent()) {
+                        user.setRole(internRole.get());
+                    } else {
+                        return ResponseEntity.badRequest().body("INTERN role not found.");
+                    }
+
+                    userRepository.save(user);
+                    return ResponseEntity.ok("Intern approved and activated successfully.");
+                })
+                .orElse(ResponseEntity.badRequest().body("User not found."));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/reject/{userId}")
+    public ResponseEntity<?> rejectIntern(@PathVariable Integer userId) {
+        return userRepository.findById(Long.valueOf(userId))
+                .map(user -> {
+                    if (user.getStatus() != UserStatus.INACTIVE) {
+                        return ResponseEntity.badRequest().body("User must be INACTIVE before rejection.");
+                    }
+
+                    user.setStatus(UserStatus.REJECTED);
+                    userRepository.save(user);
+                    return ResponseEntity.ok("Intern registration rejected successfully.");
+                })
+                .orElse(ResponseEntity.badRequest().body("User not found."));
+    }
 }
