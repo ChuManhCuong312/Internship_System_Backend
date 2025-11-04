@@ -8,10 +8,11 @@ import java.time.LocalDate;
 public class InternProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int intern_id;
+    @Column(name = "intern_id", nullable = false)
+    private int internId;
 
     @Column(name = "user_id", nullable = false, unique = true)
-    private int user_id;
+    private int userId;
     @Column(name = "school", nullable = false)
     private String school;
     @Column(name = "major", nullable = false)
@@ -21,24 +22,24 @@ public class InternProfile {
     @Column(name = "address", nullable = false)
     private String address;
     @Column(name = "cv_path", nullable = false)
-    private String cv_path;
+    private String cvPath;
     @Column(name = "status")
     private String status;
 
-    public int getIntern_id() {
-        return intern_id;
+    public int getInternId() {
+        return internId;
     }
 
-    public void setIntern_id(int intern_id) {
-        this.intern_id = intern_id;
+    public void setInternId(int internId) {
+        this.internId = internId;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getSchool() {
@@ -73,12 +74,12 @@ public class InternProfile {
         this.address = address;
     }
 
-    public String getCv_path() {
-        return cv_path;
+    public String getCvPath() {
+        return cvPath;
     }
 
-    public void setCv_path(String cv_path) {
-        this.cv_path = cv_path;
+    public void setCvPath(String cvPath) {
+        this.cvPath = cvPath;
     }
 
     public String getStatus() {
