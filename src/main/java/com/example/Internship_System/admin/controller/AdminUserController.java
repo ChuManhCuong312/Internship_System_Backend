@@ -66,8 +66,8 @@ public class AdminUserController {
     public ResponseEntity<?> approveIntern(@PathVariable Integer userId) {
         return userRepository.findById(Long.valueOf(userId)) // ✅ match repository's Long ID type
                 .map(user -> {
-                    if (user.getStatus() != UserStatus.INACTIVE) {
-                        return ResponseEntity.badRequest().body("User must be INACTIVE before approval.");
+                    if (user.getStatus() != UserStatus.PENDING_APPROVAL) {
+                        return ResponseEntity.badRequest().body("User must be PENDING_APPROVAL before approval.");
                     }
 
                     user.setStatus(UserStatus.ACTIVE);
@@ -91,8 +91,8 @@ public class AdminUserController {
     public ResponseEntity<?> rejectIntern(@PathVariable Integer userId) {
         return userRepository.findById(Long.valueOf(userId))
                 .map(user -> {
-                    if (user.getStatus() != UserStatus.INACTIVE) {
-                        return ResponseEntity.badRequest().body("User must be INACTIVE before rejection.");
+                    if (user.getStatus() != UserStatus.PENDING_APPROVAL) {
+                        return ResponseEntity.badRequest().body("User must be PENDING_APPROVAL before rejection.");
                     }
 
                     user.setStatus(UserStatus.REJECTED);
