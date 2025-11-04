@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter{
@@ -25,6 +27,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -37,16 +40,22 @@ public class JwtAuthFilter extends OncePerRequestFilter{
         String email = null;
 
         if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7);
+            token = header.substring(7).trim();
             email = jwtUtils.extractEmail(token);
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userOpt = userRepository.findByEmail(email);
             if (userOpt.isPresent() && jwtUtils.validateToken(token)) {
-                UserDetails userDetails = new User(userOpt.get().getEmail(), userOpt.get().getPasswordHash(), Collections.emptyList());
+                var userEntity = userOpt.get();
+                String roleName = userEntity.getRole().getName(); // e.g., ADMIN
+                var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + roleName));
+
+                UserDetails userDetails = new User(userEntity.getEmail(),
+                        userEntity.getPasswordHash(), authorities);
+
                 UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
@@ -54,6 +63,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 
         filterChain.doFilter(request, response);
     }
+
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
