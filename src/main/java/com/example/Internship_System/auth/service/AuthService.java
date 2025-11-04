@@ -65,4 +65,9 @@ public class AuthService {
         // ✅ Generate JWT token
         return jwtUtils.generateToken(user.getEmail());
     }
+
+    // Encode passowrd using BCrypt
+    public String encodePassWord(String rawPassword){
+        return passwordEncoder.encode(rawPassword);
+    }
 }
