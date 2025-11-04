@@ -5,7 +5,7 @@ INSERT INTO roles (role_id, name, description) VALUES
 (4, 'INTERN', 'Thực tập sinh');
 
 INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role_id) VALUES
-(1, 'admin@intern.vn', '123456', 'Nguyễn Quang Huy', '0987654321', 'ACTIVE', 1),
+(1, 'admin@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Quang Huy', '0987654321', 'ACTIVE', 1),
 (2, 'hr01@intern.vn', '123456', 'Trần Thu Hà', '0912000111', 'ACTIVE', 2),
 (3, 'hr02@intern.vn', '123456', 'Phạm Văn Cường', '0905999888', 'ACTIVE', 2),
 (4, 'mentor01@intern.vn', '123456', 'Đặng Minh Tâm', '0977222111', 'ACTIVE', 3),
