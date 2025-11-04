@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -40,17 +41,17 @@ public class AuthController {
         return ResponseEntity.ok(message + " Verification email sent.");
     }
 
-    // 🔹 Login endpoint
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             String token = authService.login(request);
             if (token == null) {
-                return ResponseEntity.status(401).body("Invalid email or password.");
+                return ResponseEntity.status(401).body(Map.of("error", "Invalid email or password."));
             }
-            return ResponseEntity.ok("Bearer " + token);
+
+            return ResponseEntity.ok(Map.of("token", "Bearer " + token));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(403).body(e.getMessage());
+            return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
         }
     }
 
