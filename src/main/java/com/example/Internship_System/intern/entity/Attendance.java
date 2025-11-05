@@ -1,4 +1,75 @@
 package com.example.Internship_System.intern.entity;
 
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 public class Attendance {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "attendance_id")
+    private int attendanceId;
+
+    @Column(name = "intern_id")
+    private int intern_id;
+
+    @Column(name = "date")
+    private LocalDate date;
+
+    @Column(name = "check_in")
+    private LocalTime checkIn;
+
+    @Column(name = "check_out")
+    private LocalTime checkOut;
+
+    @Column(name = "location")
+    private String location;
+
+    public int getAttendanceId() {
+        return attendanceId;
+    }
+
+    public void setAttendanceId(int attendanceId) {
+        this.attendanceId = attendanceId;
+    }
+
+    public int getIntern_id() {
+        return intern_id;
+    }
+
+    public void setIntern_id(int intern_id) {
+        this.intern_id = intern_id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public LocalTime getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(LocalTime checkIn) {
+        this.checkIn = checkIn;
+    }
+
+    public LocalTime getCheckOut() {
+        return checkOut;
+    }
+
+    public void setCheckOut(LocalTime checkOut) {
+        this.checkOut = checkOut;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }
