@@ -10,7 +10,6 @@ public class Intern{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "intern_id", nullable = false)
     private int internId;
-
     @Column(name = "user_id", nullable = false, unique = true)
     private int userId;
     @Column(name = "school", nullable = false)
@@ -25,6 +24,7 @@ public class Intern{
     private String cvPath;
     @Column(name = "status")
     private String status;
+
 
     public int getInternId() {
         return internId;
