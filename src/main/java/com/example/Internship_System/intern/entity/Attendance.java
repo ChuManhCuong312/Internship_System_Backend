@@ -76,4 +76,5 @@ public class Attendance {
     public void setLocation(String location) {
         this.location = location;
     }
+
 }
