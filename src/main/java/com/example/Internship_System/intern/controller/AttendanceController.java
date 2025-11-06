@@ -48,12 +48,14 @@ public class AttendanceController {
         Optional<Attendance> attendance = attendanceService.findById(id);
         return attendance.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-//READ attendance by intern id
+
+    //READ attendance by intern id
     @GetMapping("/intern/{internId}")
     public ResponseEntity<Attendance> getAttendanceByInternId(@PathVariable("internId") int internId) {
         Optional<Attendance> attendance = attendanceService.findByInternId(internId);
         return attendance.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
     //Update attendance
     @PutMapping("/id")
     public ResponseEntity<Attendance> updateAttendance9(@PathVariable("id") int id, @RequestBody Attendance attendance) {
@@ -73,4 +75,52 @@ public class AttendanceController {
         }
     }
 
+    @PatchMapping("/id")
+    public ResponseEntity<Attendance> partialUpdateAttendance(@PathVariable("id") int id,
+                                                              @RequestBody Attendance attendance) {
+        Optional<Attendance> existingAttendance = attendanceService.findById(id);
+
+        if (existingAttendance.isPresent()) {
+            Attendance attendanceToUpdate = existingAttendance.get();
+
+            if (Attendance.getInternId() != null) {
+                attendanceToUpdate.setInternId(attendance.getInternId());
+            }
+            if (Attendance.getDate() != null) {
+                attendanceToUpdate.setDate(attendance.getDate());
+            }
+            if (Attendance.getCheckIn() != null) {
+                attendanceToUpdate.setCheckIn(attendance.getCheckIn());
+            }
+            if (Attendance.getCheckOut() != null) {
+                attendanceToUpdate.setCheckOut(attendance.getCheckOut());
+            }
+            if (Attendance.getLocation() != null) {
+                attendanceToUpdate.setLocation(attendance.getLocation());
+            }
+
+            return new ResponseEntity<>(attendanceService.save(attendanceToUpdate), HttpStatus.OK);
+
+    } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 }
+//DELETE by id
+    @DeleteMapping("/id")
+    public ResponseEntity<HttpStatus> deleteAttendance(@PathVariable("id") int id){
+     try {
+         Optional<Attendance> attendance = attendanceService.findById(id);
+         if (attendance.isPresent()){
+             attendanceService.deleteById(id);
+             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+         } else {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+         }
+     }catch (Exception e){
+         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+     }
+    }
+}
+
+
+
