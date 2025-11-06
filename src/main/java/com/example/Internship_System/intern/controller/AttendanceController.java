@@ -74,36 +74,36 @@ public class AttendanceController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    @PatchMapping("/id")
-    public ResponseEntity<Attendance> partialUpdateAttendance(@PathVariable("id") int id, @RequestBody Attendance attendance) {
-        Optional<Attendance> existingAttendance = attendanceService.findById(id);
-
-        if (existingAttendance.isPresent()) {
-            Attendance attendanceToUpdate = existingAttendance.get();
-
-            if (Attendance.getInternId() != null) {
-                attendanceToUpdate.setInternId(attendance.getInternId());
-            }
-            if (Attendance.getDate() != null) {
-                attendanceToUpdate.setDate(attendance.getDate());
-            }
-            if (Attendance.getCheckIn() != null) {
-                attendanceToUpdate.setCheckIn(attendance.getCheckIn());
-            }
-            if (Attendance.getCheckOut() != null) {
-                attendanceToUpdate.setCheckOut(attendance.getCheckOut());
-            }
-            if (Attendance.getLocation() != null) {
-                attendanceToUpdate.setLocation(attendance.getLocation());
-            }
-
-            return new ResponseEntity<>(attendanceService.save(attendanceToUpdate), HttpStatus.OK);
-
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+// CHƯA CHẠY ĐƯỢC PHẦN NÀY
+//    @PatchMapping("/id")
+//    public ResponseEntity<Attendance> partialUpdateAttendance(@PathVariable("id") int id, @RequestBody Attendance attendance) {
+//        Optional<Attendance> existingAttendance = attendanceService.findById(id);
+//
+//        if (existingAttendance.isPresent()) {
+//            Attendance attendanceToUpdate = existingAttendance.get();
+//
+//            if (Attendance.getInternId() != null) {
+//                attendanceToUpdate.setInternId(attendance.getInternId());
+//            }
+//            if (Attendance.getDate() != null) {
+//                attendanceToUpdate.setDate(attendance.getDate());
+//            }
+//            if (Attendance.getCheckIn() != null) {
+//                attendanceToUpdate.setCheckIn(attendance.getCheckIn());
+//            }
+//            if (Attendance.getCheckOut() != null) {
+//                attendanceToUpdate.setCheckOut(attendance.getCheckOut());
+//            }
+//            if (Attendance.getLocation() != null) {
+//                attendanceToUpdate.setLocation(attendance.getLocation());
+//            }
+//
+//            return new ResponseEntity<>(attendanceService.save(attendanceToUpdate), HttpStatus.OK);
+//
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     //DELETE by id
     @DeleteMapping("/id")
