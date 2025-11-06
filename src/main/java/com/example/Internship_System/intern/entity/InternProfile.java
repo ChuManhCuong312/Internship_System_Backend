@@ -22,8 +22,12 @@ public class InternProfile {
     private String address;
     @Column(name = "cv_path", nullable = false)
     private String cvPath;
+    @Column(name = "cv_file")
+    private String cvFile;
     @Column(name = "status")
     private String status;
+    @Column(name = "avatar")
+    private String avatar;
 
 
     public int getInternId() {
@@ -88,5 +92,13 @@ public class InternProfile {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
