@@ -36,7 +36,4 @@ public class InternService {
         repository.deleteById(id);
     }
 
-    public void deleteAll() {
-        repository.deleteAll();
-    }
 }
