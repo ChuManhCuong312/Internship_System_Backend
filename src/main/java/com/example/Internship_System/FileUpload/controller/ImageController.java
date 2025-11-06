@@ -22,7 +22,7 @@ import java.util.Optional;
         public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
             try {
                 Image image = imageService.saveImage(file);
-                return ResponseEntity.ok("Image uploaded successfully with ID: " + image.getId());
+                return ResponseEntity.ok("Image uploaded successfully with ID: " + image.getImageId());
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Error uploading image: " + e.getMessage());
@@ -45,4 +45,4 @@ import java.util.Optional;
                     .body(image.getData());
         }
     }
-}
+
