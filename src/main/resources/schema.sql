@@ -207,3 +207,15 @@ CREATE TABLE audit_logs (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
+
+-- Bổ sung bảng Quan hệ phân công Mentor ↔ Intern
+CREATE TABLE mentor_assignments (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    mentor_id INT NOT NULL,
+    intern_id INT NOT NULL,
+    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('ACTIVE','COMPLETED','CANCELLED') DEFAULT 'ACTIVE',
+    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id),
+    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
+);
