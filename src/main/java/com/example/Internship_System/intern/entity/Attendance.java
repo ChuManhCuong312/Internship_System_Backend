@@ -37,7 +37,7 @@ public class Attendance {
         return internId;
     }
 
-    public void setInternId(int intern_id) {
+    public void setInternId(int internId) {
         this.internId = internId;
     }
 
