@@ -1,10 +1,9 @@
 package com.example.Internship_System.intern.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "attendance")
@@ -12,7 +11,7 @@ public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "attendance_id", nullable = false)
+    @Column(name = "attendance_id")
     private int attendanceId;
 
     @Column(name = "intern_id")
@@ -22,10 +21,10 @@ public class Attendance {
     private LocalDate date;
 
     @Column(name = "check_in")
-    private LocalDateTime checkIn;
+    private LocalTime checkIn;
 
     @Column(name = "check_out")
-    private LocalDateTime checkOut;
+    private LocalTime checkOut;
 
     @Column(name = "location")
     private String location;
@@ -37,6 +36,7 @@ public class Attendance {
     public void setAttendanceId(int attendanceId) {
         this.attendanceId = attendanceId;
     }
+
     public int getInternId() {
         return internId;
     }
@@ -45,27 +45,25 @@ public class Attendance {
         this.internId = internId;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    public LocalDate getDate() {return date;}
 
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public LocalDateTime getCheckIn() {
+    public LocalTime getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(LocalDateTime checkIn) {
+    public void setCheckIn(LocalTime checkIn) {
         this.checkIn = checkIn;
     }
 
-    public LocalDateTime getCheckOut() {
+    public LocalTime getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(LocalDateTime checkOut) {
+    public void setCheckOut(LocalTime checkOut) {
         this.checkOut = checkOut;
     }
 
@@ -76,5 +74,4 @@ public class Attendance {
     public void setLocation(String location) {
         this.location = location;
     }
-
 }
