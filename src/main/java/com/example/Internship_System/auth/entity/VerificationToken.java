@@ -11,8 +11,11 @@ public class VerificationToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @Column(nullable = false,length = 6)
+    private String otp;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime expiryDate;
@@ -20,7 +23,7 @@ public class VerificationToken {
     @Column(nullable = false)
     private boolean used = false;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
@@ -30,8 +33,9 @@ public class VerificationToken {
 
     public VerificationToken() {}
 
-    public VerificationToken(String token, LocalDateTime expiryDate, User user) {
-        this.token = token;
+    public VerificationToken(String otp,LocalDateTime expiryDate, User user) {
+        this.otp = otp;
+        this.createdAt = LocalDateTime.now();
         this.expiryDate = expiryDate;
         this.user = user;
         this.used = false;
@@ -49,12 +53,20 @@ public class VerificationToken {
         this.id = id;
     }
 
-    public String getToken() {
-        return token;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getOtp() {
+        return otp;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getExpiryDate() {
