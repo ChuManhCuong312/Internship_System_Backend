@@ -101,4 +101,12 @@ public class InternProfile {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    public String getCvFile() {
+        return cvFile;
+    }
+
+    public void setCvFile(String cvFile) {
+        this.cvFile = cvFile;
+    }
 }
