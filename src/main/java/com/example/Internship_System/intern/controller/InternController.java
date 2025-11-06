@@ -89,7 +89,8 @@ public class InternController {
             profileToUpdate.setCvPath(internProfile.getCvPath());
             profileToUpdate.setStatus(internProfile.getStatus());
 
-            return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
+            return new ResponseEntity<>(internService.save(profileToUpdate),
+                    HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
