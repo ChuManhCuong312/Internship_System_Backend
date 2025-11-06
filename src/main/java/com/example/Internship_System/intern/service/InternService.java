@@ -30,4 +30,5 @@ public class InternService {
         repository.deleteById(id);
     }
 
+
 }

@@ -11,4 +11,5 @@ public interface InternRepository extends JpaRepository<Intern, Integer> {
     Optional<Intern> findByUserId(int userId);
 
     List<Intern> findByStatus(String status);
+
 }

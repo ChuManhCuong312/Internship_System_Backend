@@ -27,6 +27,7 @@ public class InternController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     // Read - Get all intern profiles
