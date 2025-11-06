@@ -1,8 +1,12 @@
 package com.example.Internship_System.intern.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+@Entity
+@Table(name = "attendance")
 public class Attendance {
 
     @Id
@@ -11,7 +15,7 @@ public class Attendance {
     private int attendanceId;
 
     @Column(name = "intern_id")
-    private int intern_id;
+    private int internId;
 
     @Column(name = "date")
     private LocalDate date;
@@ -33,17 +37,15 @@ public class Attendance {
         this.attendanceId = attendanceId;
     }
 
-    public int getIntern_id() {
-        return intern_id;
+    public int getInternId() {
+        return internId;
     }
 
-    public void setIntern_id(int intern_id) {
-        this.intern_id = intern_id;
+    public void setInternId(int internId) {
+        this.internId = internId;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    public LocalDate getDate() {return date;}
 
     public void setDate(LocalDate date) {
         this.date = date;
