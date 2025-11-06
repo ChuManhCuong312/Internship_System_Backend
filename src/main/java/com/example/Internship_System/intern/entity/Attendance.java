@@ -1,8 +1,12 @@
 package com.example.Internship_System.intern.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+@Entity
+@Table(name = "attendance")
 public class Attendance {
 
     @Id

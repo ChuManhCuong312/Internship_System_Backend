@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/attendances")
 @CrossOrigin(origins = "*")
@@ -68,16 +69,14 @@ public class AttendanceController {
             attendanceToUpdate.setCheckOut(attendance.getCheckOut());
             attendanceToUpdate.setLocation(attendance.getLocation());
 
-            return new ResponseEntity<>(attendanceService.save(attendanceToUpdate),
-                    HttpStatus.OK);
+            return new ResponseEntity<>(attendanceService.save(attendanceToUpdate), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PatchMapping("/id")
-    public ResponseEntity<Attendance> partialUpdateAttendance(@PathVariable("id") int id,
-                                                              @RequestBody Attendance attendance) {
+    public ResponseEntity<Attendance> partialUpdateAttendance(@PathVariable("id") int id, @RequestBody Attendance attendance) {
         Optional<Attendance> existingAttendance = attendanceService.findById(id);
 
         if (existingAttendance.isPresent()) {
@@ -101,24 +100,25 @@ public class AttendanceController {
 
             return new ResponseEntity<>(attendanceService.save(attendanceToUpdate), HttpStatus.OK);
 
-    } else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-}
-//DELETE by id
+    }
+
+    //DELETE by id
     @DeleteMapping("/id")
-    public ResponseEntity<HttpStatus> deleteAttendance(@PathVariable("id") int id){
-     try {
-         Optional<Attendance> attendance = attendanceService.findById(id);
-         if (attendance.isPresent()){
-             attendanceService.deleteById(id);
-             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-         } else {
-             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-         }
-     }catch (Exception e){
-         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-     }
+    public ResponseEntity<HttpStatus> deleteAttendance(@PathVariable("id") int id) {
+        try {
+            Optional<Attendance> attendance = attendanceService.findById(id);
+            if (attendance.isPresent()) {
+                attendanceService.deleteById(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 
