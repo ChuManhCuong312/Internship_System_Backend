@@ -30,7 +30,6 @@ server:
 jwt:
   secret: "S${JWT_SECRET}"
   expirationMs: 1800000
-
 cloudinary:
   cloud-name: "your_cloud_name"
   api-key: "your_api_key"

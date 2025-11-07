@@ -219,3 +219,20 @@ CREATE TABLE mentor_assignments (
     FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id),
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
+
+-- Thêm bảng Profiles để lưu profiles thực tập sinh
+CREATE TABLE profiles (
+    profile_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    photo_path VARCHAR(255),
+    full_name VARCHAR(100) NOT NULL,
+    gender ENUM('Nam','Nữ','Khác') DEFAULT 'Khác',
+    dob DATE,
+    school VARCHAR(150),
+    major VARCHAR(150),
+    gpa DECIMAL(3,2) CHECK (gpa BETWEEN 0 AND 4.00),
+    phone VARCHAR(20),
+    address VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
