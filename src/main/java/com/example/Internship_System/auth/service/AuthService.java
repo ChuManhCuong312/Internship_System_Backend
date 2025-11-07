@@ -13,9 +13,11 @@ import com.example.Internship_System.repository.VerificationTokenRepository;
 import com.example.Internship_System.utils.EmailService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // ✅ Import this
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -89,19 +91,70 @@ public class AuthService {
     }
 
     public void sendVerificationEmail(User user) {
-        String token = UUID.randomUUID().toString();
+        verificationTokenRepository.deleteAllByUser(user);
+        String otp = String.format("%06d", new Random().nextInt(999999)); // 6-digit OTP
+
         VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
+        verificationToken.setOtp(otp);
         verificationToken.setUser(user);
+        verificationToken.setCreatedAt(LocalDateTime.now());
         verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(10));
+        verificationToken.setUsed(false);
         verificationTokenRepository.save(verificationToken);
 
-        String verifyUrl = "http://localhost:8080/api/auth/verify?token=" + token;
-        String subject = "Xác thực tài khoản Internship System";
+        String subject = "Mã xác thực tài khoản Internship System";
         String body = "Chào " + user.getFullName() + ",\n\n" +
-                "Vui lòng xác thực tài khoản bằng cách click vào link sau: \n" + verifyUrl +
-                "\n\nLiên kết này sẽ hết hạn sau 10 phút.";
+                "Mã OTP của bạn là: " + otp +
+                "\n\nMã này sẽ hết hạn sau 10 phút.";
 
         emailService.sendEmail(user.getEmail(), subject, body);
     }
+
+    @Transactional
+    public String resendOtp(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            return "Email not found!";
+        }
+
+        User user = optionalUser.get();
+
+        if (user.getStatus() != UserStatus.INACTIVE) {
+            return "User already verified or pending approval.";
+        }
+
+        Optional<VerificationToken> lastTokenOpt = verificationTokenRepository.findByUser(user);
+        if (lastTokenOpt.isPresent()) {
+            VerificationToken lastToken = lastTokenOpt.get();
+            long secondsSinceLast = java.time.Duration.between(lastToken.getCreatedAt(), LocalDateTime.now()).getSeconds();
+            if (secondsSinceLast < 60) {
+                long waitSeconds = 60 - secondsSinceLast;
+                return "WAIT_" + waitSeconds;  // <-- special format to tell frontend
+            }
+        }
+
+        verificationTokenRepository.deleteAllByUser(user);
+
+        String otp = String.format("%06d", new Random().nextInt(999999));
+
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setUser(user);
+        verificationToken.setOtp(otp);
+        verificationToken.setUsed(false);
+        verificationToken.setCreatedAt(LocalDateTime.now());
+        verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(10));
+        verificationTokenRepository.save(verificationToken);
+
+        String subject = "Mã OTP xác thực tài khoản Internship System (Gửi lại)";
+        String body = "Chào " + user.getFullName() + ",\n\n"
+                + "Đây là mã OTP mới của bạn: " + otp
+                + "\n\nMã sẽ hết hạn sau 10 phút.\n\n"
+                + "Nếu bạn không yêu cầu gửi lại OTP, vui lòng bỏ qua email này.";
+
+        emailService.sendEmail(user.getEmail(), subject, body);
+
+        return "OTP mới đã được gửi đến email của bạn!";
+    }
+
+
 }
