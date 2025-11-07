@@ -2,6 +2,8 @@ package com.example.Internship_System.FileUpload.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+@Entity
+@Table(name = "image")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
