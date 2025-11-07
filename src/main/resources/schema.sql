@@ -226,7 +226,7 @@ CREATE TABLE profiles (
     user_id INT NOT NULL,
     photo_path VARCHAR(255),
     full_name VARCHAR(100) NOT NULL,
-    gender ENUM('MALE','FEMALE','OTHER') DEFAULT 'OTHER',
+    gender ENUM('Nam','Nữ','Khác') DEFAULT 'Khác',
     dob DATE,
     school VARCHAR(150),
     major VARCHAR(150),
