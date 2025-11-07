@@ -28,7 +28,7 @@ server:
 
 # --- JWT config (replace jwt.secret with secure string) ---
 jwt:
-  secret: ${JWT_SECRET}
+  secret: "S${JWT_SECRET}"
   expirationMs: 1800000
 
 cloudinary:
