@@ -103,4 +103,9 @@ public class AuthController {
 
         return ResponseEntity.ok(message);
     }
+
+    @GetMapping("/oauth-success")
+    public ResponseEntity<String> oauthSuccess() {
+        return ResponseEntity.ok("OAuth login successful! Please wait for admin approval.");
+    }
 }
