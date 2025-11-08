@@ -73,10 +73,7 @@ public class AuthService {
 
         User user = userOpt.get();
 
-        // Check if user is active
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new RuntimeException("Account not active. Please wait for admin approval.");
-        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             return null;
         }
