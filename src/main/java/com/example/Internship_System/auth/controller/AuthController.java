@@ -35,7 +35,7 @@ public class AuthController {
         this.verificationTokenRepository = verificationTokenRepository;
         this.emailService = emailService;
     }
-    // 🔹 Register endpoint
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         String message = authService.register(request);
@@ -89,9 +89,6 @@ public class AuthController {
         return ResponseEntity.ok("OTP verified successfully! Please wait for admin approval.");
     }
 
-    // ============================
-    // 🔹 Resend OTP Endpoint
-    // ============================
     @PostMapping("/resend-otp")
     public ResponseEntity<String> resendOtp(@RequestParam String email) {
         String message = authService.resendOtp(email);
@@ -107,5 +104,29 @@ public class AuthController {
     @GetMapping("/oauth-success")
     public ResponseEntity<String> oauthSuccess() {
         return ResponseEntity.ok("OAuth login successful! Please wait for admin approval.");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        String msg = authService.sendResetLink(email);
+        return ResponseEntity.ok(msg);
+    }
+
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<Boolean> validateResetToken(@RequestParam String token) {
+        boolean valid = authService.validateResetToken(token);
+        return ResponseEntity.ok(valid);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        String msg = authService.resetPassword(token, newPassword);
+        return ResponseEntity.ok(msg);
+    }
+
+    @PostMapping("/resend-reset-link")
+    public ResponseEntity<String> resendResetLink(@RequestParam String email) {
+        String result = authService.resendResetLink(email);
+        return ResponseEntity.ok(result);
     }
 }
