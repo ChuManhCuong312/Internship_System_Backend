@@ -8,12 +8,14 @@ import com.example.Internship_System.auth.entity.VerificationToken;
 import com.example.Internship_System.auth.service.AuthService;
 import com.example.Internship_System.repository.UserRepository;
 import com.example.Internship_System.repository.VerificationTokenRepository;
+import com.example.Internship_System.utils.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,13 +24,16 @@ public class AuthController {
     private final AuthService authService;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final EmailService emailService;
 
     public AuthController(AuthService authService,
                           UserRepository userRepository,
-                          VerificationTokenRepository verificationTokenRepository) {
+                          VerificationTokenRepository verificationTokenRepository,
+                          EmailService emailService) {
         this.authService = authService;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.emailService = emailService;
     }
     // 🔹 Register endpoint
     @PostMapping("/register")
@@ -55,20 +60,23 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/verify")
-    public ResponseEntity<String> verifyAccount(@RequestParam String token) {
-        Optional<VerificationToken> optionalToken = verificationTokenRepository.findByToken(token);
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
+        Optional<VerificationToken> optionalToken =
+                verificationTokenRepository.findByUser_EmailAndOtp(email, otp);
+
         if (optionalToken.isEmpty()) {
-            return ResponseEntity.badRequest().body("Invalid verification token");
+            return ResponseEntity.badRequest().body("Invalid OTP");
         }
 
         VerificationToken verificationToken = optionalToken.get();
+
         if (verificationToken.isUsed()) {
-            return ResponseEntity.badRequest().body("Token already used");
+            return ResponseEntity.badRequest().body("OTP already used");
         }
 
         if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            return ResponseEntity.badRequest().body("Token expired");
+            return ResponseEntity.badRequest().body("OTP expired");
         }
 
         User user = verificationToken.getUser();
@@ -78,6 +86,26 @@ public class AuthController {
         verificationToken.setUsed(true);
         verificationTokenRepository.save(verificationToken);
 
-        return ResponseEntity.ok("Email verified successfully! Please wait for admin approval.");
+        return ResponseEntity.ok("OTP verified successfully! Please wait for admin approval.");
+    }
+
+    // ============================
+    // 🔹 Resend OTP Endpoint
+    // ============================
+    @PostMapping("/resend-otp")
+    public ResponseEntity<String> resendOtp(@RequestParam String email) {
+        String message = authService.resendOtp(email);
+
+        // Handle rate-limit and other error messages gracefully
+        if (message.startsWith("Vui lòng") || message.contains("Email not found") || message.contains("User already")) {
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/oauth-success")
+    public ResponseEntity<String> oauthSuccess() {
+        return ResponseEntity.ok("OAuth login successful! Please wait for admin approval.");
     }
 }

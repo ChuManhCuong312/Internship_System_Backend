@@ -1,6 +1,7 @@
 package com.example.Internship_System.intern.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
@@ -10,22 +11,47 @@ public class InternProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "intern_id", nullable = false)
     private int internId;
+    
+    @NotNull(message = "User ID is required")
+    @Positive(message = "User ID must be a positive number")
     @Column(name = "user_id", nullable = false, unique = true)
-    private int userId;
+    private Integer userId;
+    
+    @NotBlank(message = "School is required")
+    @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
     @Column(name = "school", nullable = false)
     private String school;
+    
+    @NotBlank(message = "Major is required")
+    @Size(min = 2, max = 150, message = "Major must be between 2 and 150 characters")
     @Column(name = "major", nullable = false)
     private String major;
+    
+    @NotNull(message = "Date of birth is required")
+    @Past(message = "Date of birth must be in the past")
     @Column(name = "dob", nullable = false)
     private LocalDate dob;
+    
+    @NotBlank(message = "Address is required")
+    @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
     @Column(name = "address", nullable = false)
     private String address;
+    
+    @NotBlank(message = "CV path is required")
+    @Size(max = 255, message = "CV path must not exceed 255 characters")
     @Column(name = "cv_path", nullable = false)
     private String cvPath;
+    
+    @Size(max = 255, message = "CV file name must not exceed 255 characters")
     @Column(name = "cv_file")
     private String cvFile;
+    
+    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|ACTIVE|COMPLETED)?$", 
+             message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
     @Column(name = "status")
     private String status;
+    
+    @Size(max = 255, message = "Avatar path must not exceed 255 characters")
     @Column(name = "avatar")
     private String avatar;
 
@@ -38,11 +64,11 @@ public class InternProfile {
         this.internId = internId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
