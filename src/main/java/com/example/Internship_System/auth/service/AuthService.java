@@ -13,7 +13,7 @@ import com.example.Internship_System.repository.VerificationTokenRepository;
 import com.example.Internship_System.utils.EmailService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // ✅ Import this
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -26,7 +26,6 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
-    // inject repositories + emailService
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailService emailService;
 
@@ -40,7 +39,7 @@ public class AuthService {
         this.emailService = emailService;
     }
 
-    // 🔹 REGISTER
+    // REGISTER
     public String register(RegisterRequest request) {
         // Check if email exists
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -64,7 +63,7 @@ public class AuthService {
         return "Registration successful. Awaiting admin approval.";
     }
 
-    // 🔹 LOGIN (basic password verification)
+    // LOGIN (basic password verification)
     public String login(LoginRequest request) {
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
         if (userOpt.isEmpty()) {
@@ -78,7 +77,7 @@ public class AuthService {
             return null;
         }
 
-        // ✅ Generate JWT token with email + role
+        // Generate JWT token with email + role
         return jwtUtils.generateToken(user.getEmail(), user.getRole().getName());
     }
 
@@ -88,11 +87,12 @@ public class AuthService {
     }
 
     public void sendVerificationEmail(User user) {
-        verificationTokenRepository.deleteAllByUser(user);
+        verificationTokenRepository.deleteAllByUserAndPurpose(user, "EMAIL_VERIFICATION_OTP");
         String otp = String.format("%06d", new Random().nextInt(999999)); // 6-digit OTP
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setOtp(otp);
+        verificationToken.setPurpose("EMAIL_VERIFICATION_OTP");
         verificationToken.setUser(user);
         verificationToken.setCreatedAt(LocalDateTime.now());
         verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(10));
@@ -120,7 +120,8 @@ public class AuthService {
             return "User already verified or pending approval.";
         }
 
-        Optional<VerificationToken> lastTokenOpt = verificationTokenRepository.findByUser(user);
+        Optional<VerificationToken> lastTokenOpt =
+                verificationTokenRepository.findByUserAndPurpose(user, "EMAIL_VERIFICATION_OTP");
         if (lastTokenOpt.isPresent()) {
             VerificationToken lastToken = lastTokenOpt.get();
             long secondsSinceLast = java.time.Duration.between(lastToken.getCreatedAt(), LocalDateTime.now()).getSeconds();
@@ -130,13 +131,14 @@ public class AuthService {
             }
         }
 
-        verificationTokenRepository.deleteAllByUser(user);
+        verificationTokenRepository.deleteAllByUserAndPurpose(user, "EMAIL_VERIFICATION_OTP");
 
         String otp = String.format("%06d", new Random().nextInt(999999));
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setUser(user);
         verificationToken.setOtp(otp);
+        verificationToken.setPurpose("EMAIL_VERIFICATION_OTP");
         verificationToken.setUsed(false);
         verificationToken.setCreatedAt(LocalDateTime.now());
         verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(10));
@@ -153,5 +155,128 @@ public class AuthService {
         return "OTP mới đã được gửi đến email của bạn!";
     }
 
+    // Send Reset Link
+    @Transactional
+    public String sendResetLink(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return "User with this email does not exist.";
+        }
+
+        User user = userOpt.get();
+
+        verificationTokenRepository.deleteAllByUserAndPurpose(user, "RESET_PASSWORD_LINK");
+
+        // Generate reset token
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken(
+                token,
+                "RESET_PASSWORD_LINK",
+                LocalDateTime.now().plusMinutes(10),
+                user,
+                false
+        );
+
+        verificationTokenRepository.save(verificationToken);
+
+        // Create link to frontend reset page
+        String resetUrl = "http://localhost:5173/reset-password?token=" + token;
+
+        String subject = "🔐 Yêu cầu lấy lại mật khẩu đăng nhập System ";
+        String body = "Xin chào " + user.getFullName() + ",\n\n"
+                + "Chúng tôi đã nhận được yêu cầu lấy lại mật khẩu của bạn.\n"
+                + "Hãy bấm vào link bên dưới để thiết lập mật khẩu mới (Liên kết chỉ có hiệu lực trong 10 phút từ thời điểm yêu cầu):\n\n"
+                + resetUrl
+                + "\n\nNếu đây không phải là yêu cầu của bạn, hãy bỏ qua email này.";
+
+        emailService.sendEmail(user.getEmail(), subject, body);
+        return "Link thiết lập mẩu khẩu mới đã được gửi thành công.";
+    }
+
+    // Validate token before reset
+    public boolean validateResetToken(String token) {
+        Optional<VerificationToken> tokenOpt =
+                verificationTokenRepository.findByTokenAndPurpose(token, "RESET_PASSWORD_LINK");
+
+        if (tokenOpt.isEmpty()) return false;
+
+        VerificationToken vt = tokenOpt.get();
+        return !vt.isUsed() && !vt.isExpired();
+    }
+
+    // Perform reset password
+    @Transactional
+    public String resetPassword(String token, String newPassword) {
+        Optional<VerificationToken> tokenOpt =
+                verificationTokenRepository.findByTokenAndPurpose(token, "RESET_PASSWORD_LINK");
+
+        if (tokenOpt.isEmpty()) {
+            return "Invalid or expired token.";
+        }
+
+        VerificationToken vt = tokenOpt.get();
+        if (vt.isUsed() || vt.isExpired()) {
+            return "Invalid or expired token.";
+        }
+
+        User user = vt.getUser();
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        vt.setUsed(true);
+        verificationTokenRepository.save(vt);
+
+        return "Cập nhật mật khẩu thành công!";
+    }
+
+    @Transactional
+    public String resendResetLink(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            return "Email not found!";
+        }
+
+        User user = optionalUser.get();
+
+        // Check if an active (unused and unexpired) reset link already exists
+        Optional<VerificationToken> lastTokenOpt = verificationTokenRepository
+                .findByUserAndPurpose(user, "RESET_PASSWORD_LINK");
+
+        if (lastTokenOpt.isPresent()) {
+            VerificationToken lastToken = lastTokenOpt.get();
+            long secondsSinceLast = java.time.Duration.between(lastToken.getCreatedAt(), LocalDateTime.now()).getSeconds();
+            if (!lastToken.isUsed() && !lastToken.isExpired() && secondsSinceLast < 60) {
+                long waitSeconds = 60 - secondsSinceLast;
+                return "WAIT_" + waitSeconds;  // frontend can show countdown
+            }
+        }
+
+        // Delete old reset tokens
+        verificationTokenRepository.deleteAllByUserAndPurpose(user, "RESET_PASSWORD_LINK");
+
+        // Generate new reset token
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken(
+                token,
+                "RESET_PASSWORD_LINK",
+                LocalDateTime.now().plusMinutes(10),
+                user,
+                false
+        );
+
+        verificationTokenRepository.save(verificationToken);
+
+        // Send email
+        String resetUrl = "http://localhost:5173/reset-password?token=" + token;
+        String subject = "🔐 Yêu cầu lấy lại mật khẩu đăng nhập System";
+        String body = "Xin chào " + user.getFullName() + ",\n\n"
+                + "Hãy bấm vào link bên dưới để thiết lập mật khẩu mới (Liên kết chỉ có hiệu lực trong 10 phút):\n\n"
+                + resetUrl
+                + "\n\nNếu đây không phải là yêu cầu của bạn, hãy bỏ qua email này.";
+
+        emailService.sendEmail(user.getEmail(), subject, body);
+
+        return "Link thiết lập mật khẩu mới đã được gửi thành công!";
+    }
 
 }
