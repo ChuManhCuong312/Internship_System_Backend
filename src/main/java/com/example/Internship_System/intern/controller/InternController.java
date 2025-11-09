@@ -2,6 +2,7 @@ package com.example.Internship_System.intern.controller;
 
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.service.InternService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class InternController {
 
     // Create - Add new intern profile
     @PostMapping
-    public ResponseEntity<InternProfile> createInternProfile(@RequestBody InternProfile internProfile) {
+    public ResponseEntity<InternProfile> createInternProfile(@Valid @RequestBody InternProfile internProfile) {
         try {
             InternProfile savedProfile = internService.save(internProfile);
             return new ResponseEntity<>(savedProfile, HttpStatus.CREATED);
@@ -76,7 +77,7 @@ public class InternController {
     // Update - Update intern profile
     @PutMapping("/{id}")
     public ResponseEntity<InternProfile> updateInternProfile(@PathVariable("id") int id,
-            @RequestBody InternProfile internProfile) {
+            @Valid @RequestBody InternProfile internProfile) {
         Optional<InternProfile> existingProfile = internService.findById(id);
 
         if (existingProfile.isPresent()) {
@@ -99,7 +100,7 @@ public class InternController {
     // Update - Partial update (PATCH)
     @PatchMapping("/{id}")
     public ResponseEntity<InternProfile> partialUpdateInternProfile(@PathVariable("id") int id,
-            @RequestBody InternProfile internProfile) {
+            @Valid @RequestBody InternProfile internProfile) {
         Optional<InternProfile> existingProfile = internService.findById(id);
 
         if (existingProfile.isPresent()) {
