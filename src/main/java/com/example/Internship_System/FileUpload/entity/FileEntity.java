@@ -9,6 +9,7 @@ import lombok.Data;
 public class FileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "file_id")
     private Long fileId;
     @Column(name = "file_name")
     private String fileName;
