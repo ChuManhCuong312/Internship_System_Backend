@@ -60,7 +60,7 @@ public class AdminUserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/approve/{userId}")
     public ResponseEntity<?> approveIntern(@PathVariable Integer userId) {
-        return userRepository.findById(Long.valueOf(userId)) // ✅ match repository's Long ID type
+        return userRepository.findById(userId) // ✅ match repository's Long ID type
                 .map(user -> {
                     if (user.getStatus() != UserStatus.PENDING_APPROVAL) {
                         return ResponseEntity.badRequest().body("User must be PENDING_APPROVAL before approval.");
@@ -85,7 +85,7 @@ public class AdminUserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/reject/{userId}")
     public ResponseEntity<?> rejectIntern(@PathVariable Integer userId) {
-        return userRepository.findById(Long.valueOf(userId))
+        return userRepository.findById(userId)
                 .map(user -> {
                     if (user.getStatus() != UserStatus.PENDING_APPROVAL) {
                         return ResponseEntity.badRequest().body("User must be PENDING_APPROVAL before rejection.");

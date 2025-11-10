@@ -50,11 +50,6 @@ public class InternProfile {
              message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
     @Column(name = "status")
     private String status;
-    
-    @Size(max = 255, message = "Avatar path must not exceed 255 characters")
-    @Column(name = "avatar")
-    private String avatar;
-
 
     public int getInternId() {
         return internId;
@@ -118,14 +113,6 @@ public class InternProfile {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public String getCvFile() {
