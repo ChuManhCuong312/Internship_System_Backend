@@ -1,5 +1,6 @@
 package com.example.Internship_System.intern.controller;
 
+import com.example.Internship_System.intern.dto.InternProfileDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.service.InternService;
 import jakarta.validation.Valid;
@@ -20,12 +21,12 @@ public class InternController {
     private InternService internService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<InternProfile>> searchInterns(
+    public ResponseEntity<List<InternProfileDTO>> searchInterns(
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String major,
             @RequestParam(required = false) String status) {
         try {
-            List<InternProfile> results = internService.searchInterns(
+            List<InternProfileDTO> results = internService.searchInterns(
                     searchTerm, major, status);
 
             return new ResponseEntity<>(results, HttpStatus.OK);
@@ -56,9 +57,9 @@ public class InternController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InternProfile>> getAllInternProfiles() {
+    public ResponseEntity<List<InternProfileDTO>> getAllInternProfiles() {
         try {
-            List<InternProfile> profiles = internService.findAll();
+            List<InternProfileDTO> profiles = internService.getAllInterns();
             if (profiles.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
