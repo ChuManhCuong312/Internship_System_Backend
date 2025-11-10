@@ -61,6 +61,10 @@ public class InternProfile {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Positive(message = "GPA must be higher than 0")
+    @Column(name = "gpa", nullable = false)
+    private double gpa;
+
     public double getGpa() {
         return gpa;
     }
@@ -76,11 +80,6 @@ public class InternProfile {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
-    @Positive(message = "GPA must be higher than 0")
-    @Column(name = "gpa")
-    private double gpa;
-
 
 
     public int getInternId() {
