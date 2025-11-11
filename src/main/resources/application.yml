@@ -49,7 +49,7 @@ server:
 # --- JWT config (replace jwt.secret with secure string) ---
 jwt:
   secret: "S${JWT_SECRET}"
-  expirationMs: 1800000
+  expirationMs: 7200000
 cloudinary:
   cloud-name: "your_cloud_name"
   api-key: "your_api_key"
