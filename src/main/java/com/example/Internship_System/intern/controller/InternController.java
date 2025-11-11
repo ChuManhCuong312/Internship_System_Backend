@@ -113,6 +113,8 @@ public class InternController {
             profileToUpdate.setAddress(internProfile.getAddress());
             profileToUpdate.setCvPath(internProfile.getCvPath());
             profileToUpdate.setStatus(internProfile.getStatus());
+            profileToUpdate.setPhoneNumber(internProfile.getPhoneNumber());
+            profileToUpdate.setGpa(internProfile.getGpa());
 
             return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
         } else {
@@ -146,6 +148,12 @@ public class InternController {
             }
             if (internProfile.getStatus() != null) {
                 profileToUpdate.setStatus(internProfile.getStatus());
+            }
+            if(internProfile.getPhoneNumber() != null){
+                profileToUpdate.setStatus(internProfile.getPhoneNumber());
+            }
+            if(internProfile.getGpa() != 0.0){
+                profileToUpdate.setGpa(internProfile.getGpa());
             }
 
             return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
