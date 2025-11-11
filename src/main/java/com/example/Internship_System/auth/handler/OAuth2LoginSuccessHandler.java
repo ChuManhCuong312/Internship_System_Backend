@@ -1,7 +1,8 @@
 package com.example.Internship_System.auth.handler;
 
 import com.example.Internship_System.config.JwtUtils;
-import jakarta.servlet.http.Cookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,12 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        String email = authentication.getName();
+        var oAuth2User = (org.springframework.security.oauth2.core.user.OAuth2User) authentication.getPrincipal();
+        String email =   oAuth2User.getAttribute("email");
+        if (email == null) {
+            email = oAuth2User.getAttribute("login") + "@github.com"; // fallback for GitHub
+        }
+
         // Extract role from authorities
         String rawRole = authentication.getAuthorities().stream()
                 .findFirst()
@@ -34,16 +40,17 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String token = jwtUtils.generateToken(email, role);
 
         // Create a cookie for the token
-        Cookie cookie = new Cookie("token", token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(true) // use HTTPS in production
+                .path("/")
+                .maxAge(30 * 60) // 30 minutes
+                .sameSite("None")
+                .build();
 
-        cookie.setMaxAge(24 * 60 * 60); // 1 day
-        cookie.setAttribute("SameSite", "Lax");
-        response.addCookie(cookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         // Redirect back to frontend with token
-        String redirectUrl = "http://localhost:5173/oauth-success?token=" + token;
+        String redirectUrl = "http://localhost:5173/oauth-success";
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
