@@ -6,6 +6,7 @@ import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.auth.entity.UserStatus;
 import com.example.Internship_System.repository.RoleRepository;
 import com.example.Internship_System.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -68,7 +69,9 @@ public class AdminController {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Email đã tồn tại!");
         }
-
+        if (userRepository.existsByPhone(userDTO.getPhone())) {
+            return ResponseEntity.badRequest().body("Số điện thoại đã tồn tại!");
+        }
         // 2. Lấy role theo roleId
         Optional<Role> roleOpt = roleRepository.findById(userDTO.getRoleId());
         if (roleOpt.isEmpty()) {
@@ -157,7 +160,9 @@ public class AdminController {
         if (!user.getEmail().equals(userDTO.getEmail()) && userRepository.existsByEmail(userDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Email đã tồn tại!");
         }
-
+        if (userRepository.existsByPhone(userDTO.getPhone())) {
+            return ResponseEntity.badRequest().body("Số điện thoại đã tồn tại!");
+        }
         // 3. Cập nhật các trường cơ bản
         user.setFullName(userDTO.getFullName());
         user.setEmail(userDTO.getEmail());
@@ -188,19 +193,27 @@ public class AdminController {
     }
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Integer userId) {
-        // 1. Tìm user theo ID
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body("User không tồn tại!");
+        try {
+            // 1. Tìm user theo ID
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body("User không tồn tại!");
+            }
+
+            // 2. Thực hiện xóa user
+            userRepository.deleteById(userId);
+
+            // 3. Phản hồi thành công
+            return ResponseEntity.ok("Đã xoá user thành công");
+
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.badRequest()
+                    .body("Thông tin người dùng nằm trong hệ thống, không được xóa để tránh mất dữ liệu!");
+        } catch (Exception ex) {
+            // Các lỗi khác
+            return ResponseEntity.internalServerError()
+                    .body("Đã xảy ra lỗi trong quá trình xóa người dùng!");
         }
-
-        // 2. Xoá user
-        userRepository.deleteById(userId);
-
-        // 3. Phản hồi thành công
-        return ResponseEntity.ok("Đã xoá user thành công");
     }
-
-
 
 }
