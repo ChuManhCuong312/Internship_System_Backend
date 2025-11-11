@@ -3,6 +3,7 @@ package com.example.Internship_System.config;
 import com.example.Internship_System.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,14 +36,28 @@ public class JwtAuthFilter extends OncePerRequestFilter{
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+
         String token = null;
         String email = null;
 
-        if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7).trim();
+
+        // Read token from cookie
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+
+        // Extract email from token
+        if (token != null) {
             email = jwtUtils.extractEmail(token);
         }
+
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userOpt = userRepository.findByEmail(email);
