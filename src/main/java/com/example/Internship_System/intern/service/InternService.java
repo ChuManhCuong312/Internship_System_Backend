@@ -16,8 +16,10 @@ public class InternService {
 
     @Autowired
     private InternRepository repository;
+
     @Autowired
     private UserRepository userRepository;
+
     public InternProfileDTO toDTO(InternProfile intern) {
         User user = userRepository.findById(intern.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -25,18 +27,13 @@ public class InternService {
     }
 
     public List<InternProfileDTO> getAllInterns() {
-        return repository.findAll()
-                .stream()
+        return repository.findAll().stream()
                 .map(this::toDTO)
                 .toList();
     }
 
     public InternProfile save(InternProfile profile) {
         return repository.save(profile);
-    }
-
-    public List<InternProfile> findAll() {
-        return repository.findAll();
     }
 
     public Optional<InternProfile> findById(int id) {
@@ -55,18 +52,10 @@ public class InternService {
         repository.deleteById(id);
     }
 
-    public List<InternProfile> findByMajor(String major) {
-        return repository.findByMajorContainingIgnoreCase(major);
-    }
-
     public List<InternProfileDTO> searchInterns(String searchTerm, String major, String status) {
-        // Chuyển empty string thành null để query hiệu quả hơn
-        String search = (searchTerm != null && !searchTerm.trim().isEmpty())
-                ? searchTerm.trim() : null;
-        String majorFilter = (major != null && !major.trim().isEmpty())
-                ? major.trim() : null;
-        String statusFilter = (status != null && !status.trim().isEmpty())
-                ? status.trim() : null;
+        String search = (searchTerm != null && !searchTerm.trim().isEmpty()) ? searchTerm.trim() : null;
+        String majorFilter = (major != null && !major.trim().isEmpty()) ? major.trim() : null;
+        String statusFilter = (status != null && !status.trim().isEmpty()) ? status.trim() : null;
 
         return repository.searchInterns(search, majorFilter, statusFilter);
     }
