@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InternProfileMapper {
-
     public static InternProfileDTO toDTO(InternProfile intern, User user) {
         List<String> documents = new ArrayList<>();
         if (intern.getCvFile() != null && !intern.getCvFile().isEmpty()) {
