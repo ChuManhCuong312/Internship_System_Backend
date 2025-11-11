@@ -36,8 +36,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         // Create a cookie for the token
         Cookie cookie = new Cookie("token", token);
         cookie.setPath("/");
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
 
         cookie.setMaxAge(24 * 60 * 60); // 1 day
         cookie.setAttribute("SameSite", "Lax");

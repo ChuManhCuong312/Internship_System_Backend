@@ -6,9 +6,13 @@ import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.auth.entity.UserStatus;
 import com.example.Internship_System.auth.entity.VerificationToken;
 import com.example.Internship_System.auth.service.AuthService;
+import com.example.Internship_System.config.JwtUtils;
 import com.example.Internship_System.repository.UserRepository;
 import com.example.Internship_System.repository.VerificationTokenRepository;
 import com.example.Internship_System.utils.EmailService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +29,18 @@ public class AuthController {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailService emailService;
+    private final JwtUtils jwtUtils;
 
     public AuthController(AuthService authService,
                           UserRepository userRepository,
                           VerificationTokenRepository verificationTokenRepository,
-                          EmailService emailService) {
+                          EmailService emailService,
+                          JwtUtils jwtUtils) {
         this.authService = authService;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.emailService = emailService;
+        this.jwtUtils =jwtUtils;
     }
 
     @PostMapping("/register")
@@ -47,18 +54,52 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         try {
             String token = authService.login(request);
             if (token == null) {
                 return ResponseEntity.status(401).body(Map.of("error", "Invalid email or password."));
             }
 
-            return ResponseEntity.ok(Map.of("token", "Bearer " + token));
+            // Set JWT as HTTP-only cookie
+            ResponseCookie cookie = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .secure(true) // use HTTPS in production
+                    .path("/")
+                    .maxAge(30 * 60) // 30 minutes
+                    .sameSite("Strict")
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            return ResponseEntity.ok(Map.of("message", "Login successful"));
+
         } catch (RuntimeException e) {
             return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
         }
     }
+
+
+    @GetMapping("/current-user")
+    public ResponseEntity<?> getCurrentUser(@CookieValue(name = "token", required = false) String token) {
+        if (token == null || !jwtUtils.validateToken(token)) {
+            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+        }
+
+        String email = jwtUtils.extractEmail(token);
+        var userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+        }
+
+        var user = userOpt.get();
+        return ResponseEntity.ok(Map.of(
+                "email", user.getEmail(),
+                "role", user.getRole().getName()
+        ));
+    }
+
 
     @PostMapping("/verify-otp")
     public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
