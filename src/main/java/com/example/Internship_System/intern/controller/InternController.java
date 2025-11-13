@@ -1,5 +1,6 @@
 package com.example.Internship_System.intern.controller;
 
+import com.example.Internship_System.intern.dto.InternProfileDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.service.InternService;
 import jakarta.validation.Valid;
@@ -19,9 +20,34 @@ public class InternController {
     @Autowired
     private InternService internService;
 
-    // Create - Add new intern profile
+    @GetMapping("/search")
+    public ResponseEntity<List<InternProfileDTO>> searchInterns(
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) String major,
+            @RequestParam(required = false) String status) {
+        try {
+            List<InternProfileDTO> results = internService.searchInterns(
+                    searchTerm, major, status);
+
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/majors")
+    public ResponseEntity<List<String>> getMajors() {
+        try {
+            List<String> majors = internService.getDistinctMajors();
+            return new ResponseEntity<>(majors, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping
-    public ResponseEntity<InternProfile> createInternProfile(@Valid @RequestBody InternProfile internProfile) {
+    public ResponseEntity<InternProfile> createInternProfile(
+            @Valid @RequestBody InternProfile internProfile) {
         try {
             InternProfile savedProfile = internService.save(internProfile);
             return new ResponseEntity<>(savedProfile, HttpStatus.CREATED);
@@ -30,11 +56,10 @@ public class InternController {
         }
     }
 
-    // Read - Get all intern profiles
     @GetMapping
-    public ResponseEntity<List<InternProfile>> getAllInternProfiles() {
+    public ResponseEntity<List<InternProfileDTO>> getAllInternProfiles() {
         try {
-            List<InternProfile> profiles = internService.findAll();
+            List<InternProfileDTO> profiles = internService.getAllInterns();
             if (profiles.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -44,7 +69,6 @@ public class InternController {
         }
     }
 
-    // Read - Get intern profile by ID
     @GetMapping("/{id}")
     public ResponseEntity<InternProfile> getInternProfileById(@PathVariable("id") int id) {
         Optional<InternProfile> profile = internService.findById(id);
@@ -52,17 +76,17 @@ public class InternController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Read - Get intern profile by user ID
     @GetMapping("/user/{userId}")
-    public ResponseEntity<InternProfile> getInternProfileByUserId(@PathVariable("userId") int userId) {
+    public ResponseEntity<InternProfile> getInternProfileByUserId(
+            @PathVariable("userId") int userId) {
         Optional<InternProfile> profile = internService.findByUserId(userId);
         return profile.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Read - Get intern profiles by status
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<InternProfile>> getInternProfilesByStatus(@PathVariable("status") String status) {
+    public ResponseEntity<List<InternProfile>> getInternProfilesByStatus(
+            @PathVariable("status") String status) {
         try {
             List<InternProfile> profiles = internService.findByStatus(status);
             if (profiles.isEmpty()) {
@@ -74,9 +98,9 @@ public class InternController {
         }
     }
 
-    // Update - Update intern profile
     @PutMapping("/{id}")
-    public ResponseEntity<InternProfile> updateInternProfile(@PathVariable("id") int id,
+    public ResponseEntity<InternProfile> updateInternProfile(
+            @PathVariable("id") int id,
             @Valid @RequestBody InternProfile internProfile) {
         Optional<InternProfile> existingProfile = internService.findById(id);
 
@@ -89,17 +113,18 @@ public class InternController {
             profileToUpdate.setAddress(internProfile.getAddress());
             profileToUpdate.setCvPath(internProfile.getCvPath());
             profileToUpdate.setStatus(internProfile.getStatus());
+            profileToUpdate.setPhoneNumber(internProfile.getPhoneNumber());
+            profileToUpdate.setGpa(internProfile.getGpa());
 
-            return new ResponseEntity<>(internService.save(profileToUpdate),
-                    HttpStatus.OK);
+            return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Update - Partial update (PATCH)
     @PatchMapping("/{id}")
-    public ResponseEntity<InternProfile> partialUpdateInternProfile(@PathVariable("id") int id,
+    public ResponseEntity<InternProfile> partialUpdateInternProfile(
+            @PathVariable("id") int id,
             @Valid @RequestBody InternProfile internProfile) {
         Optional<InternProfile> existingProfile = internService.findById(id);
 
@@ -124,6 +149,12 @@ public class InternController {
             if (internProfile.getStatus() != null) {
                 profileToUpdate.setStatus(internProfile.getStatus());
             }
+            if(internProfile.getPhoneNumber() != null){
+                profileToUpdate.setStatus(internProfile.getPhoneNumber());
+            }
+            if(internProfile.getGpa() != 0.0){
+                profileToUpdate.setGpa(internProfile.getGpa());
+            }
 
             return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
         } else {
@@ -131,7 +162,6 @@ public class InternController {
         }
     }
 
-    // Delete - Delete intern profile by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteInternProfile(@PathVariable("id") int id) {
         try {
@@ -146,5 +176,4 @@ public class InternController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

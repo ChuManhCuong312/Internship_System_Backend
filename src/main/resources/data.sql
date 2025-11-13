@@ -6,20 +6,20 @@ INSERT INTO roles (role_id, name, description) VALUES
 
 INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role_id) VALUES
 (1, 'admin@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Quang Huy', '0987654321', 'ACTIVE', 1),
-(2, 'hr01@intern.vn', '123456', 'Trần Thu Hà', '0912000111', 'ACTIVE', 2),
-(3, 'hr02@intern.vn', '123456', 'Phạm Văn Cường', '0905999888', 'ACTIVE', 2),
-(4, 'mentor01@intern.vn', '123456', 'Đặng Minh Tâm', '0977222111', 'ACTIVE', 3),
-(5, 'mentor02@intern.vn', '123456', 'Lê Thị Hạnh', '0909888777', 'ACTIVE', 3),
-(6, 'mentor03@intern.vn', '123456', 'Phạm Tuấn Anh', '0912456789', 'ACTIVE', 3),
-(7, 'tts01@cmcuni.edu.vn', '123456', 'Nguyễn Hữu Nam', '0356789123', 'ACTIVE', 4),
-(8, 'tts02@cmcuni.edu.vn', '123456', 'Trần Thị Mai', '0389988776', 'ACTIVE', 4),
-(9, 'tts03@cmcuni.edu.vn', '123456', 'Phạm Minh Quân', '0366999888', 'ACTIVE', 4),
-(10, 'tts04@cmcuni.edu.vn', '123456', 'Nguyễn Thị Hằng', '0345678912', 'ACTIVE', 4),
-(11, 'tts05@cmcuni.edu.vn', '123456', 'Lê Văn Bình', '0329988777', 'ACTIVE', 4),
-(12, 'tts06@cmcuni.edu.vn', '123456', 'Trần Văn Đạt', '0377111222', 'ACTIVE', 4),
-(13, 'tts07@cmcuni.edu.vn', '123456', 'Phan Bảo Ngọc', '0399222111', 'ACTIVE', 4),
-(14, 'tts08@cmcuni.edu.vn', '123456', 'Hoàng Minh Đức', '0334455667', 'ACTIVE', 4),
-(15, 'tts09@cmcuni.edu.vn', '123456', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4);
+(2, 'hr01@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Thu Hà', '0912000111', 'ACTIVE', 2),
+(3, 'hr02@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Văn Cường', '0905999888', 'ACTIVE', 2),
+(4, 'mentor01@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Đặng Minh Tâm', '0977222111', 'ACTIVE', 3),
+(5, 'mentor02@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Thị Hạnh', '0909888777', 'ACTIVE', 3),
+(6, 'mentor03@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Tuấn Anh', '0912456789', 'ACTIVE', 3),
+(7, 'tts01@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Hữu Nam', '0356789123', 'ACTIVE', 4),
+(8, 'tts02@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Thị Mai', '0389988776', 'ACTIVE', 4),
+(9, 'tts03@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Minh Quân', '0366999888', 'REJECTED', 4),
+(10, 'tts04@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Thị Hằng', '0345678912', 'PENDING_APPROVAL', 4),
+(11, 'tts05@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Văn Bình', '0329988777', 'PENDING_APPROVAL', 4),
+(12, 'tts06@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Văn Đạt', '0377111222', 'PENDING_APPROVAL', 4),
+(13, 'tts07@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo Ngọc', '0399222111', 'REJECTED', 4),
+(14, 'tts08@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Hoàng Minh Đức', '0334455667', 'INACTIVE', 4),
+(15, 'tts09@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4);
 
 INSERT INTO admin_users (admin_id, user_id, position) VALUES
 (1, 1, 'Quản trị hệ thống chính');

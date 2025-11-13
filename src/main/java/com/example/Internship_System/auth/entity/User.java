@@ -25,7 +25,7 @@ public class User {
     private String phone;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE'")
+    @Column(name = "status", columnDefinition = "ENUM('ACTIVE','INACTIVE','REJECTED','PENDING_APPROVAL') DEFAULT 'ACTIVE'")
     private UserStatus status = UserStatus.ACTIVE;
 
     @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
