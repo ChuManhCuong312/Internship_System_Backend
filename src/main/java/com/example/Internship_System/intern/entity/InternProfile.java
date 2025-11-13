@@ -2,6 +2,8 @@ package com.example.Internship_System.intern.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
+import java.io.FilenameFilter;
 import java.time.LocalDate;
 
 @Entity
@@ -50,10 +52,34 @@ public class InternProfile {
              message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
     @Column(name = "status")
     private String status;
-    
+  
     @Size(max = 255, message = "Avatar path must not exceed 255 characters")
     @Column(name = "avatar")
     private String avatar;
+
+    @Size(max = 11)
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Positive(message = "GPA must be higher than 0")
+    @Column(name = "gpa", nullable = false)
+    private double gpa;
+
+    public double getGpa() {
+        return gpa;
+    }
+
+    public void setGpa(double gpa) {
+        this.gpa = gpa;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
 
     public int getInternId() {
@@ -118,14 +144,6 @@ public class InternProfile {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public String getCvFile() {
