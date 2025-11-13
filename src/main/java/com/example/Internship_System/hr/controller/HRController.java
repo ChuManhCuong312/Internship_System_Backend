@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/hr/interns")
@@ -17,31 +17,28 @@ public class HRController {
     @Autowired
     private HRService hrService;
 
-    //Lấy toàn bộ danh sách
     @GetMapping
-    public ResponseEntity<List<HRInternDTO>> getAllInternProfilesForHR() {
-        try {
-            List<HRInternDTO> profiles = hrService.getAllInternsForHR();
-            if (profiles.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(profiles, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Page<HRInternDTO>> getAllInternProfilesForHR(Pageable pageable) {
+        Page<HRInternDTO> profiles = hrService.getAllInternsForHR(pageable);
+        if (profiles.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(profiles, HttpStatus.OK);
     }
 
-    //Tìm kiếm, lọc
     @GetMapping("/search")
-    public ResponseEntity<List<HRInternDTO>> searchInternProfiles(
+    public ResponseEntity<Page<HRInternDTO>> searchInternProfiles(
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String major,
-            @RequestParam(required = false) String status
+            @RequestParam(required = false) String status,
+            Pageable pageable
     ) {
-        List<HRInternDTO> profiles = hrService.searchInterns(searchTerm, major, status);
+        Page<HRInternDTO> profiles = hrService.searchInterns(searchTerm, major, status, pageable);
         if (profiles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(profiles, HttpStatus.OK);
     }
 }
+
+
