@@ -58,8 +58,8 @@ public class InternProfile {
     private String status;
   
     @Size(max = 255, message = "Avatar path must not exceed 255 characters")
-    @Column(name = "avatar")
-    private String avatar;
+    @Column(name = "intern_image_path")
+    private String internImagePath;
 
     @Size(max = 11)
     @Column(name = "phone_number")
@@ -68,6 +68,10 @@ public class InternProfile {
     @Positive(message = "GPA must be higher than 0")
     @Column(name = "gpa", nullable = false)
     private double gpa;
+
+    @Column(name = "rejection_reason")
+    @Size(max = 255)
+    private String rejectionReason;
 
     public double getGpa() {
         return gpa;
@@ -161,4 +165,7 @@ public class InternProfile {
     public void setInternshipApplicationPath(String internshipApplicationPath) {
         this.internshipApplicationPath = internshipApplicationPath;
     }
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+
 }
