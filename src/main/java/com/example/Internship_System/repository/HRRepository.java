@@ -17,21 +17,20 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
             "i.cvPath, i.gpa, i.cvFile, i.status, i.major, i.school) " +
             "FROM InternProfile i JOIN User u ON i.userId = u.userId")
     List<HRInternDTO> findAllInternProfilesForHR();
-     @Query("SELECT new com.example.Internship_System.hr.dto.HRInternDTO(" +
-                "i.internId, u.userId, u.fullName, u.email, u.phone, " +
-                "i.cvPath, i.gpa, i.cvFile, i.status, i.major, i.school) " +
-                "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
-                "WHERE (:name IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%'))) " +
-                "AND (:email IS NULL OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))) " +
-                "AND (:phone IS NULL OR LOWER(u.phone) LIKE LOWER(CONCAT('%', :phone, '%'))) " +
-                "AND (:major IS NULL OR LOWER(i.major) LIKE LOWER(CONCAT('%', :major, '%'))) " +
-                "AND (:status IS NULL OR i.status = :status)")
-        List<HRInternDTO> searchInternProfilesForHR(
-                @Param("name") String name,
-                @Param("email") String email,
-                @Param("phone") String phone,
-                @Param("major") String major,
-                @Param("status") String status
-        );
-    }
+    @Query("SELECT new com.example.Internship_System.hr.dto.HRInternDTO(" +
+            "i.internId, u.userId, u.fullName, u.email, u.phone, " +
+            "i.cvPath, i.gpa, i.cvFile, i.status, i.major, i.school) " +
+            "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
+            "WHERE ((:searchTerm IS NULL) OR " +
+            "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(u.phone) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
+            "AND (:major IS NULL OR LOWER(i.major) LIKE LOWER(CONCAT('%', :major, '%'))) " +
+            "AND (:status IS NULL OR i.status = :status)")
+    List<HRInternDTO> searchInternProfilesForHR(
+            @Param("searchTerm") String searchTerm,
+            @Param("major") String major,
+            @Param("status") String status
+    );
+}
 

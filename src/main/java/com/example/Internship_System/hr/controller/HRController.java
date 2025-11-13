@@ -34,13 +34,11 @@ public class HRController {
     //Tìm kiếm, lọc
     @GetMapping("/search")
     public ResponseEntity<List<HRInternDTO>> searchInternProfiles(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String major,
             @RequestParam(required = false) String status
     ) {
-        List<HRInternDTO> profiles = hrService.searchInterns(name, email, phone, major, status);
+        List<HRInternDTO> profiles = hrService.searchInterns(searchTerm, major, status);
         if (profiles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
