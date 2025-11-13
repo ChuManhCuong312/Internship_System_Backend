@@ -1,5 +1,6 @@
 package com.example.Internship_System.intern.entity;
 
+import com.example.Internship_System.auth.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -13,11 +14,10 @@ public class InternProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "intern_id", nullable = false)
     private int internId;
-    
-    @NotNull(message = "User ID is required")
-    @Positive(message = "User ID must be a positive number")
-    @Column(name = "user_id", nullable = false, unique = true)
-    private Integer userId;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
     
     @NotBlank(message = "School is required")
     @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
@@ -90,12 +90,12 @@ public class InternProfile {
         this.internId = internId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getSchool() {
