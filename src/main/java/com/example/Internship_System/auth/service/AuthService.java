@@ -86,7 +86,8 @@ public class AuthService {
         response.put("token", token);
         response.put("userId", user.getUserId());
         response.put("role", user.getRole().getName());
-
+        response.put("email", user.getEmail());
+        response.put("fullName:", user.getFullName());
         return response;
     }
 

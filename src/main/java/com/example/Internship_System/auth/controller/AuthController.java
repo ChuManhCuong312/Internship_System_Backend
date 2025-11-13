@@ -10,12 +10,12 @@ import com.example.Internship_System.repository.UserRepository;
 import com.example.Internship_System.repository.VerificationTokenRepository;
 import com.example.Internship_System.utils.EmailService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -132,4 +132,5 @@ public class AuthController {
         String result = authService.resendResetLink(email);
         return ResponseEntity.ok(result);
     }
+
 }
