@@ -21,7 +21,7 @@ public class InternProfileDTO {
     private LocalDateTime createdAt;
     private List<String> documents;
 
-
+public InternProfileDTO(){}
 
     public InternProfileDTO(int internId, int userId, String fullName, String email,
                             String school, String major, String status, String gender,
