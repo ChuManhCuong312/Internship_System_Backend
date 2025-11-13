@@ -16,4 +16,9 @@ public class HRService {
     public List<HRInternDTO> getAllInternsForHR() {
         return repository.findAllInternProfilesForHR();
     }
+
+    public List<HRInternDTO> searchInterns(String name, String email,String phone, String major, String status) {
+        return repository.searchInternProfilesForHR(name, email,phone, major, status);
+    }
+
 }
