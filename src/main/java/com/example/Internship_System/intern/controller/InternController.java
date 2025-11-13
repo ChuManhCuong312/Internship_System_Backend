@@ -112,6 +112,7 @@ public class InternController {
             profileToUpdate.setDob(internProfile.getDob());
             profileToUpdate.setAddress(internProfile.getAddress());
             profileToUpdate.setCvPath(internProfile.getCvPath());
+            profileToUpdate.setPermissionFile(internProfile.getPermissionFile());
             profileToUpdate.setStatus(internProfile.getStatus());
             profileToUpdate.setPhoneNumber(internProfile.getPhoneNumber());
             profileToUpdate.setGpa(internProfile.getGpa());
@@ -147,6 +148,10 @@ public class InternController {
             if (internProfile.getCvPath() != null) {
                 profileToUpdate.setCvPath(internProfile.getCvPath());
             }
+            if (internProfile.getPermissionFile() != null) {
+                profileToUpdate.setCvPath(internProfile.getCvPath());
+            }
+
             if (internProfile.getStatus() != null) {
                 profileToUpdate.setStatus(internProfile.getStatus());
             }

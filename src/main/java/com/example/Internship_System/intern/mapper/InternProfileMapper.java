@@ -13,6 +13,9 @@ public class InternProfileMapper {
         if (intern.getCvPath() != null && !intern.getCvPath().isEmpty()) {
             documents.add(intern.getCvPath());
         }
+        if (intern.getPermissionFile() != null && !intern.getPermissionFile().isEmpty()) {
+            documents.add(intern.getPermissionFile());
+        }
 
         return new InternProfileDTO(
                 intern.getInternId(),
