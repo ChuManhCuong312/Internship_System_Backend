@@ -44,10 +44,6 @@ public class InternProfile {
     @Column(name = "cv_path", nullable = false)
     private String cvPath;
     
-    @Size(max = 255, message = "CV file name must not exceed 255 characters")
-    @Column(name = "cv_file")
-    private String cvFile;
-    
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|ACTIVE|COMPLETED)?$", 
              message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
     @Column(name = "status")
@@ -148,14 +144,6 @@ public class InternProfile {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getCvFile() {
-        return cvFile;
-    }
-
-    public void setCvFile(String cvFile) {
-        this.cvFile = cvFile;
     }
 
     public String getAvatar() {
