@@ -14,12 +14,7 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
 
     @Query("SELECT new com.example.Internship_System.hr.dto.HRInternDTO(" +
             "i.internId, u.userId, u.fullName, u.email, u.phone, " +
-            "i.cvPath, i.gpa, i.cvFile, i.status, i.major, i.school) " +
-            "FROM InternProfile i JOIN User u ON i.userId = u.userId")
-    List<HRInternDTO> findAllInternProfilesForHR();
-    @Query("SELECT new com.example.Internship_System.hr.dto.HRInternDTO(" +
-            "i.internId, u.userId, u.fullName, u.email, u.phone, " +
-            "i.cvPath, i.gpa, i.cvFile, i.status, i.major, i.school) " +
+            "i.cvPath, i.internshipApplicationPath, i.gpa, i.status, i.major, i.school) " +
             "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
             "WHERE ((:searchTerm IS NULL) OR " +
             "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -27,10 +22,9 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
             "LOWER(u.phone) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
             "AND (:major IS NULL OR LOWER(i.major) LIKE LOWER(CONCAT('%', :major, '%'))) " +
             "AND (:status IS NULL OR i.status = :status)")
-    List<HRInternDTO> searchInternProfilesForHR(
+    List<HRInternDTO> findAllInternProfilesForHR(
             @Param("searchTerm") String searchTerm,
             @Param("major") String major,
             @Param("status") String status
     );
 }
-

@@ -47,9 +47,13 @@ public class InternProfile {
     @Size(max = 255, message = "CV file name must not exceed 255 characters")
     @Column(name = "cv_file")
     private String cvFile;
-    
-    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|ACTIVE|COMPLETED)?$", 
-             message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
+
+    @Size(max = 255, message = "Application path must not exceed 255 characters")
+    @Column(name = "internship_application_path")
+    private String internshipApplicationPath;
+
+    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
+             message = "Status must be one of: PENDING, APPROVED, REJECTED, NO_FILE")
     @Column(name = "status")
     private String status;
   
@@ -80,8 +84,9 @@ public class InternProfile {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
-
+    public String getInternshipApplicationPath() {
+        return internshipApplicationPath;
+    }
     public int getInternId() {
         return internId;
     }
@@ -152,5 +157,8 @@ public class InternProfile {
 
     public void setCvFile(String cvFile) {
         this.cvFile = cvFile;
+    }
+    public void setInternshipApplicationPath(String internshipApplicationPath) {
+        this.internshipApplicationPath = internshipApplicationPath;
     }
 }
