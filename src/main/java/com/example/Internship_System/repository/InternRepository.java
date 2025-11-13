@@ -13,13 +13,13 @@ import java.util.Optional;
 @Repository
 public interface InternRepository extends JpaRepository<InternProfile, Integer> {
 
-    Optional<InternProfile> findByUserId(int userId);
+    Optional<InternProfile> findByUser_UserId(int userId);
     List<InternProfile> findByStatus(String status);
     List<InternProfile> findByMajorContainingIgnoreCase(String major);
 
     @Query("SELECT new com.example.Internship_System.intern.dto.InternProfileDTO(" +
-            "i.internId, i.userId, u.fullName, u.email, i.school, i.major, i.status) " +
-            "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
+            "i.internId, u.userId, u.fullName, u.email, i.school, i.major, i.status) " +
+            "FROM InternProfile i JOIN i.user u " +
             "WHERE (:searchTerm IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
             "AND (:major IS NULL OR LOWER(i.major) LIKE LOWER(CONCAT('%', :major, '%'))) " +
