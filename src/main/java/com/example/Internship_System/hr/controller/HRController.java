@@ -17,6 +17,7 @@ public class HRController {
     @Autowired
     private HRService hrService;
 
+    //Lấy toàn bộ danh sách
     @GetMapping
     public ResponseEntity<List<HRInternDTO>> getAllInternProfilesForHR() {
         try {
@@ -28,5 +29,21 @@ public class HRController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //Tìm kiếm, lọc
+    @GetMapping("/search")
+    public ResponseEntity<List<HRInternDTO>> searchInternProfiles(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String major,
+            @RequestParam(required = false) String status
+    ) {
+        List<HRInternDTO> profiles = hrService.searchInterns(name, email, phone, major, status);
+        if (profiles.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(profiles, HttpStatus.OK);
     }
 }
