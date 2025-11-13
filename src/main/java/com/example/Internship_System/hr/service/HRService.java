@@ -13,11 +13,13 @@ public class HRService {
     @Autowired
     private HRRepository repository;
 
+    // Lấy toàn bộ (không lọc)
     public List<HRInternDTO> getAllInternsForHR() {
-        return repository.findAllInternProfilesForHR();
+        return repository.findAllInternProfilesForHR(null, null, null);
     }
 
+    // Lọc theo điều kiện
     public List<HRInternDTO> searchInterns(String searchTerm, String major, String status) {
-        return repository.searchInternProfilesForHR(searchTerm, major, status);
+        return repository.findAllInternProfilesForHR(searchTerm, major, status);
     }
 }

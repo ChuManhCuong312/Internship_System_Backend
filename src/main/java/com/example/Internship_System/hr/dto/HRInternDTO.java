@@ -16,8 +16,8 @@ public class HRInternDTO {
     public HRInternDTO() {}
 
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
-                              String cvPath, double gpa, String internshipApplicationPath,
-                              String status, String major, String school) {
+                       String cvPath, String internshipApplicationPath, double gpa,
+                       String status, String major, String school) {
         this.internId = internId;
         this.userId = userId;
         this.fullName = fullName;
