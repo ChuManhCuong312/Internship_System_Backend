@@ -10,9 +10,6 @@ import java.util.List;
 public class InternProfileMapper {
     public static InternProfileDTO toDTO(InternProfile intern, User user) {
         List<String> documents = new ArrayList<>();
-        if (intern.getCvFile() != null && !intern.getCvFile().isEmpty()) {
-            documents.add(intern.getCvFile());
-        }
         if (intern.getCvPath() != null && !intern.getCvPath().isEmpty()) {
             documents.add(intern.getCvPath());
         }
