@@ -3,6 +3,7 @@
 -- ======================================
 CREATE DATABASE internship_system;
 USE internship_system;
+-- drop database internship_system
 
 -- ======================================
 -- 1. USERS & ROLES
@@ -71,11 +72,35 @@ CREATE TABLE intern_users (
     user_id INT NOT NULL,
     school VARCHAR(150),
     major VARCHAR(150),
+    gpa DOUBLE,
     dob DATE,
     address VARCHAR(255),
+    intern_image_path VARCHAR(255),
+    internship_application_path VARCHAR(255),
     cv_path VARCHAR(255),
-    status ENUM('PENDING','APPROVED','REJECTED','ACTIVE','COMPLETED') DEFAULT 'PENDING',
+    status ENUM('PENDING','APPROVED','REJECTED','NO_FILE') DEFAULT 'NO_FILE',
+    rejection_reason  VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+-- Bổ sung bảng Hợp đồng
+CREATE TABLE contract_documents (
+    document_id INT AUTO_INCREMENT PRIMARY KEY,
+    intern_id INT,
+    file_path VARCHAR(255),
+    contract_status ENUM('NOT_UPLOAD','UPLOAD') DEFAULT 'NOT_UPLOAD',
+    intern_confirm_status ENUM('APPROVED','PENDING') DEFAULT 'PENDING',
+    confirm_at DATETIME,
+    note TEXT,
+    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
+);
+-- Bổ sung bảng Quan hệ phân công Mentor ↔ Intern
+CREATE TABLE mentor_assignments (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    mentor_id INT NOT NULL,
+    intern_id INT NOT NULL,
+    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id),
+    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
 
 -- ======================================
@@ -183,56 +208,14 @@ CREATE TABLE evaluations (
 );
 
 -- ======================================
--- 7. DOCUMENTS & AUDIT
+-- 7. AUDIT
 -- ======================================
-
-CREATE TABLE documents (
-    document_id INT AUTO_INCREMENT PRIMARY KEY,
-    intern_id INT,
-    type ENUM('CV','REPORT','OTHERS') DEFAULT 'CV',
-    file_path VARCHAR(255),
-    status ENUM('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
-    reviewed_by INT,
-    reviewed_at DATETIME,
-    review_note TEXT,
-    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id),
-    FOREIGN KEY (reviewed_by) REFERENCES hr_users(hr_id)
-);
 
 CREATE TABLE audit_logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     action VARCHAR(255),
     ip_address VARCHAR(45),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-
--- Bổ sung bảng Quan hệ phân công Mentor ↔ Intern
-CREATE TABLE mentor_assignments (
-    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
-    mentor_id INT NOT NULL,
-    intern_id INT NOT NULL,
-    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('ACTIVE','COMPLETED','CANCELLED') DEFAULT 'ACTIVE',
-    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id),
-    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
-);
-
--- Thêm bảng Profiles để lưu profiles thực tập sinh
-CREATE TABLE profiles (
-    profile_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    photo_path VARCHAR(255),
-    full_name VARCHAR(100) NOT NULL,
-    gender ENUM('Nam','Nữ','Khác') DEFAULT 'Khác',
-    dob DATE,
-    school VARCHAR(150),
-    major VARCHAR(150),
-    gpa DECIMAL(3,2) CHECK (gpa BETWEEN 0 AND 4.00),
-    phone VARCHAR(20),
-    address VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
