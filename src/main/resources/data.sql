@@ -33,16 +33,27 @@ INSERT INTO mentor_users (mentor_id, user_id, department, expertise) VALUES
 (2, 5, 'Kinh doanh', 'Digital Marketing, SEO, Google Ads'),
 (3, 6, 'Phân tích dữ liệu', 'Python, Power BI, SQL nâng cao');
 
-INSERT INTO intern_users (intern_id, user_id, school, major, dob, address, cv_path, status) VALUES
-(1, 7, 'CMC University', 'Công nghệ thông tin', '2003-01-15', 'Hà Đông, Hà Nội', 'cv_nam.pdf', 'APPROVED'),
-(2, 8, 'CMC University', 'Thiết kế đồ họa', '2003-03-22', 'Hà Đông, Hà Nội', 'cv_mai.pdf', 'APPROVED'),
-(3, 9, 'CMC University', 'Công nghệ thông tin', '2003-02-10', 'Hà Đông, Hà Nội', 'cv_quan.pdf', 'APPROVED'),
-(4, 10, 'CMC University', 'Kinh tế số', '2002-12-05', 'Hà Đông, Hà Nội', 'cv_hang.pdf', 'PENDING'),
-(5, 11, 'CMC University', 'Phân tích dữ liệu', '2003-05-19', 'Hà Đông, Hà Nội', 'cv_binh.pdf', 'APPROVED'),
-(6, 12, 'CMC University', 'Công nghệ thông tin', '2003-04-08', 'Hà Đông, Hà Nội', 'cv_dat.pdf', 'ACTIVE'),
-(7, 13, 'CMC University', 'Thiết kế đồ họa', '2003-07-14', 'Hà Đông, Hà Nội', 'cv_ngoc.pdf', 'ACTIVE'),
-(8, 14, 'CMC University', 'Phân tích dữ liệu', '2003-09-23', 'Hà Đông, Hà Nội', 'cv_duc.pdf', 'ACTIVE'),
-(9, 15, 'CMC University', 'Công nghệ thông tin', '2003-06-01', 'Hà Đông, Hà Nội', 'cv_anh.pdf', 'ACTIVE');
+INSERT INTO intern_users (intern_id, user_id, school, major, gpa, dob, address, intern_image_path, internship_application_path, cv_path, status, rejection_reason) VALUES
+(1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', NULL),
+(2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', NULL),
+(3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', NULL),
+(4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', NULL),
+(5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', NULL),
+(6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', NULL),
+(7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
+(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', NULL),
+(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL);
+
+INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
+(1, 1, 'contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(2, 2, 'contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NULL, 'Đang chờ xác nhận'),
+(3, 3, 'contracts/quan_contract.pdf', 'NOT_UPLOAD', 'PENDING', NULL, NULL);
+
+INSERT INTO mentor_assignments (assignment_id, mentor_id, intern_id, assigned_at) VALUES
+(1, 1, 1, NOW()),
+(2, 1, 3, NOW()),
+(3, 2, 4, NOW()),
+(4, 3, 5, NOW());
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, max_interns, created_by) VALUES
 (1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 10, 1),
@@ -87,12 +98,6 @@ INSERT INTO evaluations (intern_id, mentor_id, technical, communication, discipl
 (3, 1, 8, 8, 9, 8, 'Tốt, cần cải thiện tốc độ xử lý'),
 (5, 3, 9, 9, 8, 9, 'Hiểu dữ liệu tốt, cần luyện kỹ năng trình bày'),
 (7, 2, 8, 8, 8, 9, 'Thực hiện đầy đủ yêu cầu của mentor');
-
-INSERT INTO documents (document_id, intern_id, type, file_path, status, reviewed_by, reviewed_at, review_note) VALUES
-(1, 1, 'CV', 'uploads/cv_nam.pdf', 'APPROVED', 1, NOW(), 'CV đạt yêu cầu'),
-(2, 3, 'CV', 'uploads/cv_quan.pdf', 'APPROVED', 2, NOW(), 'Đủ điều kiện'),
-(3, 5, 'CV', 'uploads/cv_binh.pdf', 'APPROVED', 1, NOW(), 'Tốt'),
-(4, 4, 'CV', 'uploads/cv_hang.pdf', 'PENDING', NULL, NULL, NULL);
 
 INSERT INTO audit_logs (user_id, action, ip_address) VALUES
 (1, 'Tạo chương trình thực tập Web', '192.168.1.10'),
