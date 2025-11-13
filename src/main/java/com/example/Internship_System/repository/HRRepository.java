@@ -13,7 +13,7 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
 
     @Query("SELECT new com.example.Internship_System.hr.dto.HRInternDTO(" +
             "i.internId, u.userId, u.fullName, u.email, u.phone, " +
-            "i.cvPath, i.gpa, i.cvFile, i.status, i.major) " +
+            "i.cvPath, i.gpa, i.cvFile, i.status, i.major, i.school) " +
             "FROM InternProfile i JOIN User u ON i.userId = u.userId")
     List<HRInternDTO> findAllInternProfilesForHR();
 }
