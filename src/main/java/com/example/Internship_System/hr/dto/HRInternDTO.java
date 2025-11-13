@@ -62,6 +62,6 @@ public class HRInternDTO {
     public String getMajor() { return major; }
     public void setMajor(String major) { this.major = major; }
 
-    public String getSchool() { return major; }
+    public String getSchool() { return school; }
     public void setSchool(String school) { this.school = school; }
 }
