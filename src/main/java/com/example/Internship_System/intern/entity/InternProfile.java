@@ -17,7 +17,7 @@ public class InternProfile {
     @NotNull(message = "User ID is required")
     @Positive(message = "User ID must be a positive number")
     @Column(name = "user_id", nullable = false, unique = true)
-    private Integer userId;
+    private int userId;
     
     @NotBlank(message = "School is required")
     @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
@@ -52,6 +52,11 @@ public class InternProfile {
              message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
     @Column(name = "status")
     private String status;
+
+    @Pattern(regexp = "^(MALE|FEMALE)?$",
+            message = "Choose a gender")
+    @Column(name = "gender")
+    private String gender;
   
     @Size(max = 255, message = "Avatar path must not exceed 255 characters")
     @Column(name = "avatar")
@@ -81,7 +86,6 @@ public class InternProfile {
         this.phoneNumber = phoneNumber;
     }
 
-
     public int getInternId() {
         return internId;
     }
@@ -90,11 +94,11 @@ public class InternProfile {
         this.internId = internId;
     }
 
-    public Integer getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -152,5 +156,21 @@ public class InternProfile {
 
     public void setCvFile(String cvFile) {
         this.cvFile = cvFile;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

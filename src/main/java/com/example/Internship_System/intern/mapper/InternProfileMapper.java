@@ -25,7 +25,8 @@ public class InternProfileMapper {
                 intern.getSchool(),
                 intern.getMajor(),
                 intern.getStatus(),
-                user.getCreatedAt(),
+                intern.getGender(),
+                user.getCreatedAt(),  // Pass LocalDateTime directly, not String
                 documents
         );
     }
