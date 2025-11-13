@@ -12,6 +12,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.Internship_System.intern.entity.InternProfile;
+import java.util.Optional;
+
 @Service
 public class HRService {
 
@@ -25,5 +28,21 @@ public class HRService {
     public Page<HRInternDTO> searchInterns(String searchTerm, String major, String status, Pageable pageable) {
         return repository.findAllInternProfilesForHR(searchTerm, major, status, pageable);
     }
+
+    public void updateStatus(int internId, String status, String rejectionReason) {
+        InternProfile intern = repository.findById(internId)
+                .orElseThrow(() -> new RuntimeException("Intern profile not found with id: " + internId));
+
+        intern.setStatus(status);
+
+        if ("REJECTED".equalsIgnoreCase(status)) {
+            intern.setRejectionReason(rejectionReason);
+        } else {
+            intern.setRejectionReason(null);
+        }
+
+        repository.save(intern);
+    }
 }
+
 

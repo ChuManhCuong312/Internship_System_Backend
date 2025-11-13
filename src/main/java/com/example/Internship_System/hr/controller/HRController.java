@@ -39,6 +39,15 @@ public class HRController {
         }
         return new ResponseEntity<>(profiles, HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateInternStatus(
+            @PathVariable int id,
+            @RequestParam String status,
+            @RequestParam(required = false) String rejectionReason) {
+        hrService.updateStatus(id, status, rejectionReason);
+        return ResponseEntity.ok().build();
+    }
 }
 
 
