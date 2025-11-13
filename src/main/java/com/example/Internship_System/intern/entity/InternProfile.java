@@ -43,6 +43,11 @@ public class InternProfile {
     @Size(max = 255, message = "CV path must not exceed 255 characters")
     @Column(name = "cv_path", nullable = false)
     private String cvPath;
+
+    @NotBlank(message = "Permission file is required")
+    @Size(max = 255, message = "Must not exceed 255 characters")
+    @Column(name = "permission_file", nullable = false)
+    private String permissionFile;
     
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|ACTIVE|COMPLETED)?$", 
              message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
@@ -160,5 +165,13 @@ public class InternProfile {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getPermissionFile() {
+        return permissionFile;
+    }
+
+    public void setPermissionFile(String permissionFile) {
+        this.permissionFile = permissionFile;
     }
 }
