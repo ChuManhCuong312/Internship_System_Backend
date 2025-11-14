@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.example.Internship_System.auth.entity.User;
+import com.example.Internship_System.intern.entity.InternProfile;
 
 @RestController
 @RequestMapping("/api/hr/interns")
@@ -59,6 +60,19 @@ public class HRController {
         }
         return new ResponseEntity<>(candidates, HttpStatus.OK);
     }
+
+    @PostMapping("/{userId}/profile")
+    public ResponseEntity<Void> createInternProfile(
+            @PathVariable int userId,
+            @ModelAttribute InternProfile profileData) {
+        User user = new User();
+        user.setUserId(userId);
+
+        hrService.createInternProfileForUser(user, profileData);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
 }
 
 
