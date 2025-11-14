@@ -51,14 +51,24 @@ public class InternProfile {
     @Column(name = "internship_application_path")
     private String internshipApplicationPath;
 
-    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
-             message = "Status must be one of: PENDING, APPROVED, REJECTED, NO_FILE")
+    @NotBlank(message = "Permission file is required")
+    @Size(max = 255, message = "Must not exceed 255 characters")
+    @Column(name = "permission_file", nullable = false)
+    private String permissionFile;
+
+    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|ACTIVE|COMPLETED)?$",
+            message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
+    @Column(name = "status")
     private String status;
 
     @Pattern(regexp = "^(MALE|FEMALE)?$",
             message = "Choose a gender")
     @Column(name = "gender")
     private String gender;
+
+    @Size(max = 255, message = "Avatar path must not exceed 255 characters")
+    @Column(name = "avatar")
+    private String avatar;
   
     @Size(max = 255, message = "Avatar path must not exceed 255 characters")
     @Column(name = "intern_image_path")
