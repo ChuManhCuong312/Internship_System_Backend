@@ -1,5 +1,7 @@
 package com.example.Internship_System.hr.dto;
 
+import java.time.LocalDate;
+
 public class HRInternDTO {
     private int internId;
     private int userId;
@@ -12,23 +14,28 @@ public class HRInternDTO {
     private String status;
     private String major;
     private String school;
+    private LocalDate dob;
+    private String address;
 
     public HRInternDTO() {}
 
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
-                       String cvFile, String internshipApplicationPath, double gpa,
-                       String status, String major, String school) {
+                       String cvFile, String permissionFile, double gpa,
+                       String status, String major, String school,
+                       LocalDate dob, String address) {
         this.internId = internId;
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.cvFile = cvFile;
+        this.permissionFile = permissionFile;
         this.gpa = gpa;
-        this.permissionFile = internshipApplicationPath;
         this.status = status;
         this.major = major;
         this.school = school;
+        this.dob = dob;
+        this.address = address;
     }
 
     // Getters & Setters
@@ -64,4 +71,11 @@ public class HRInternDTO {
 
     public String getSchool() { return school; }
     public void setSchool(String school) { this.school = school; }
+
+    public LocalDate getDob() { return dob; }
+    public void setDob(LocalDate dob) { this.dob = dob; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
 }
