@@ -43,8 +43,6 @@ public class InternProfile {
     @Column(name = "cv_file")
     private String cvFile;
 
-
-    @NotBlank(message = "Permission file is required")
     @Size(max = 255, message = "Must not exceed 255 characters")
     @Column(name = "permission_file", nullable = false)
     private String permissionFile;
