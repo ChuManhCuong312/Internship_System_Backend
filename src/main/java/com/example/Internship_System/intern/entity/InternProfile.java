@@ -43,14 +43,19 @@ public class InternProfile {
     @Size(max = 255, message = "CV path must not exceed 255 characters")
     @Column(name = "cv_path", nullable = false)
     private String cvPath;
-
-    @NotBlank(message = "Permission file is required")
-    @Size(max = 255, message = "Must not exceed 255 characters")
-    @Column(name = "permission_file", nullable = false)
-    private String permissionFile;
     
-    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|ACTIVE|COMPLETED)?$", 
-             message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
+    @Size(max = 255, message = "CV file name must not exceed 255 characters")
+    @Column(name = "cv_file")
+    private String cvFile;
+
+    @Size(max = 255, message = "Application path must not exceed 255 characters")
+    @Column(name = "internship_application_path")
+    private String internshipApplicationPath;
+
+    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
+             message = "Status must be one of: PENDING, APPROVED, REJECTED, NO_FILE")
+    private String status;
+
     @Column(name = "status")
     private String status;
 
@@ -60,8 +65,8 @@ public class InternProfile {
     private String gender;
   
     @Size(max = 255, message = "Avatar path must not exceed 255 characters")
-    @Column(name = "avatar")
-    private String avatar;
+    @Column(name = "intern_image_path")
+    private String internImagePath;
 
     @Size(max = 11)
     @Column(name = "phone_number")
@@ -70,6 +75,10 @@ public class InternProfile {
     @Positive(message = "GPA must be higher than 0")
     @Column(name = "gpa", nullable = false)
     private double gpa;
+
+    @Column(name = "rejection_reason")
+    @Size(max = 255)
+    private String rejectionReason;
 
     public double getGpa() {
         return gpa;
@@ -87,6 +96,10 @@ public class InternProfile {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getInternshipApplicationPath() {
+        return internshipApplicationPath;
+    }
+  
     public int getInternId() {
         return internId;
     }
@@ -174,4 +187,10 @@ public class InternProfile {
     public void setPermissionFile(String permissionFile) {
         this.permissionFile = permissionFile;
     }
+    public void setInternshipApplicationPath(String internshipApplicationPath) {
+        this.internshipApplicationPath = internshipApplicationPath;
+    }
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+
 }
