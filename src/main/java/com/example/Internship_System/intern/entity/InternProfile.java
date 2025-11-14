@@ -39,25 +39,16 @@ public class InternProfile {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Size(max = 255, message = "CV path must not exceed 255 characters")
-    @Column(name = "cv_path")
-    private String cvPath;
-    
     @Size(max = 255, message = "CV file name must not exceed 255 characters")
     @Column(name = "cv_file")
     private String cvFile;
 
-    @Size(max = 255, message = "Application path must not exceed 255 characters")
-    @Column(name = "internship_application_path")
-    private String internshipApplicationPath;
-
-    @NotBlank(message = "Permission file is required")
     @Size(max = 255, message = "Must not exceed 255 characters")
     @Column(name = "permission_file", nullable = false)
     private String permissionFile;
 
-    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|ACTIVE|COMPLETED)?$",
-            message = "Status must be one of: PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED")
+    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
+            message = "Status must be one of: PENDING, APPROVED, REJECTED, NO_FILE")
     @Column(name = "status")
     private String status;
 
@@ -102,8 +93,8 @@ public class InternProfile {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getInternshipApplicationPath() {
-        return internshipApplicationPath;
+    public String getPermissionFile() {
+        return permissionFile;
     }
   
     public int getInternId() {
@@ -154,12 +145,12 @@ public class InternProfile {
         this.address = address;
     }
 
-    public String getCvPath() {
-        return cvPath;
+    public String getCvFile() {
+        return cvFile;
     }
 
-    public void setCvPath(String cvPath) {
-        this.cvPath = cvPath;
+    public void setCvFile(String cvFile) {
+        this.cvFile = cvFile;
     }
 
     public String getStatus() {

@@ -111,7 +111,7 @@ public class InternController {
             profileToUpdate.setMajor(internProfile.getMajor());
             profileToUpdate.setDob(internProfile.getDob());
             profileToUpdate.setAddress(internProfile.getAddress());
-            profileToUpdate.setCvPath(internProfile.getCvPath());
+            profileToUpdate.setCvFile(internProfile.getCvFile());
             profileToUpdate.setStatus(internProfile.getStatus());
             profileToUpdate.setPhoneNumber(internProfile.getPhoneNumber());
             profileToUpdate.setGpa(internProfile.getGpa());
@@ -144,8 +144,8 @@ public class InternController {
             if (internProfile.getAddress() != null) {
                 profileToUpdate.setAddress(internProfile.getAddress());
             }
-            if (internProfile.getCvPath() != null) {
-                profileToUpdate.setCvPath(internProfile.getCvPath());
+            if (internProfile.getCvFile() != null) {
+                profileToUpdate.setCvFile(internProfile.getCvFile());
             }
 
             if (internProfile.getStatus() != null) {

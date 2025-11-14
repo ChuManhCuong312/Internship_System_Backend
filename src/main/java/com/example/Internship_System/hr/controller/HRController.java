@@ -73,6 +73,13 @@ public class HRController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<Void> updateInternProfile(
+            @PathVariable int id,
+            @RequestBody InternProfile updatedProfile) {
+        hrService.updateInternProfile(id, updatedProfile);
+        return ResponseEntity.ok().build();
+    }
 }
 
 
