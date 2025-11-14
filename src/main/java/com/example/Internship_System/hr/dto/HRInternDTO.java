@@ -1,34 +1,41 @@
 package com.example.Internship_System.hr.dto;
 
+import java.time.LocalDate;
+
 public class HRInternDTO {
     private int internId;
     private int userId;
     private String fullName;
     private String email;
     private String phone;
-    private String cvPath;
+    private String cvFile;
     private double gpa;
-    private String internshipApplicationPath;
+    private String permissionFile;
     private String status;
     private String major;
     private String school;
+    private LocalDate dob;
+    private String address;
 
     public HRInternDTO() {}
 
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
-                       String cvPath, String internshipApplicationPath, double gpa,
-                       String status, String major, String school) {
+                       String cvFile, String permissionFile, double gpa,
+                       String status, String major, String school,
+                       LocalDate dob, String address) {
         this.internId = internId;
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
-        this.cvPath = cvPath;
+        this.cvFile = cvFile;
+        this.permissionFile = permissionFile;
         this.gpa = gpa;
-        this.internshipApplicationPath = internshipApplicationPath;
         this.status = status;
         this.major = major;
         this.school = school;
+        this.dob = dob;
+        this.address = address;
     }
 
     // Getters & Setters
@@ -47,14 +54,14 @@ public class HRInternDTO {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public String getCvPath() { return cvPath; }
-    public void setCvPath(String cvPath) { this.cvPath = cvPath; }
+    public String getCvFile() { return cvFile; }
+    public void setCvFile(String cvPath) { this.cvFile = cvFile; }
 
     public double getGpa() { return gpa; }
     public void setGpa(double gpa) { this.gpa = gpa; }
 
-    public String getInternshipApplicationPath() { return internshipApplicationPath; }
-    public void setInternshipApplicationPath(String internshipApplicationPath) { this.internshipApplicationPath = internshipApplicationPath; }
+    public String getPermissionFile() { return permissionFile; }
+    public void setPermissionFile(String permissionFile) { this.permissionFile = permissionFile; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
@@ -64,4 +71,11 @@ public class HRInternDTO {
 
     public String getSchool() { return school; }
     public void setSchool(String school) { this.school = school; }
+
+    public LocalDate getDob() { return dob; }
+    public void setDob(LocalDate dob) { this.dob = dob; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
 }
