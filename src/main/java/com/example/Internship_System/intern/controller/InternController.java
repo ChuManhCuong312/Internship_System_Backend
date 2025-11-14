@@ -106,7 +106,7 @@ public class InternController {
 
         if (existingProfile.isPresent()) {
             InternProfile profileToUpdate = existingProfile.get();
-            profileToUpdate.setUser(internProfile.getUser());
+            profileToUpdate.setUserId(internProfile.getUserId());
             profileToUpdate.setSchool(internProfile.getSchool());
             profileToUpdate.setMajor(internProfile.getMajor());
             profileToUpdate.setDob(internProfile.getDob());
