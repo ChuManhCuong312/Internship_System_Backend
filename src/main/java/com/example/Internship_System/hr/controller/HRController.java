@@ -1,5 +1,6 @@
 package com.example.Internship_System.hr.controller;
 
+import com.example.Internship_System.hr.dto.CandidateDTO;
 import com.example.Internship_System.hr.dto.HRInternDTO;
 import com.example.Internship_System.hr.service.HRService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.example.Internship_System.auth.entity.User;
 
 @RestController
 @RequestMapping("/api/hr/interns")
@@ -47,6 +49,15 @@ public class HRController {
             @RequestParam(required = false) String rejectionReason) {
         hrService.updateStatus(id, status, rejectionReason);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/candidates")
+    public ResponseEntity<Page<CandidateDTO>> getInternCandidatesWithoutProfile(Pageable pageable) {
+        Page<CandidateDTO> candidates = hrService.getInternCandidatesWithoutProfile(pageable);
+        if (candidates.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(candidates, HttpStatus.OK);
     }
 }
 
