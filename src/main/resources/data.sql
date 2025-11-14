@@ -99,9 +99,20 @@ INSERT INTO evaluations (intern_id, mentor_id, technical, communication, discipl
 (5, 3, 9, 9, 8, 9, 'Hiểu dữ liệu tốt, cần luyện kỹ năng trình bày'),
 (7, 2, 8, 8, 8, 9, 'Thực hiện đầy đủ yêu cầu của mentor');
 
-INSERT INTO audit_logs (user_id, action, ip_address) VALUES
-(1, 'Tạo chương trình thực tập Web', '192.168.1.10'),
-(2, 'Phê duyệt CV của Nguyễn Hữu Nam', '192.168.1.11'),
-(4, 'Thêm task mới cho thực tập sinh', '192.168.1.12'),
-(7, 'Đăng nhập hệ thống', '192.168.1.13'),
-(9, 'Nộp báo cáo tháng 2', '192.168.1.14');
+INSERT INTO admin_logs (details) VALUES
+(' Admin tạo HR01 với role HR'),
+(' Admin tạo HR02 với role HR'),
+(' Admin cập nhật thông tin mentor Đặng Minh Tâm'),
+(' Admin xóa thực tập sinh Nguyễn Đức Anh');
+INSERT INTO hr_logs (hr_id, details) VALUES
+(1, 'HR duyệt hồ sơ intern Nguyễn Hữu Nam'),
+(1, 'HR upload hợp đồng cho intern Trần Thị Mai'),
+(2, 'HR gửi email thông báo hợp đồng cho intern Phạm Minh Quân'),
+(2, 'HR duyệt hồ sơ intern Nguyễn Thị Hằng'),
+(1, 'HR upload hợp đồng cho intern Lê Văn Bình');
+INSERT INTO intern_logs (intern_id, details) VALUES
+(1, ' Intern xác nhận hợp đồng'),
+(2, ' Intern upload CV bổ sung'),
+(3, ' Intern cập nhật số điện thoại'),
+(4, ' Intern gửi yêu cầu hỗ trợ về hợp đồng'),
+(5, ' Intern xác nhận hợp đồng');

@@ -10,11 +10,11 @@ import java.util.List;
 public class InternProfileMapper {
     public static InternProfileDTO toDTO(InternProfile intern, User user) {
         List<String> documents = new ArrayList<>();
-        if (intern.getCvFile() != null && !intern.getCvFile().isEmpty()) {
-            documents.add(intern.getCvFile());
-        }
         if (intern.getCvPath() != null && !intern.getCvPath().isEmpty()) {
             documents.add(intern.getCvPath());
+        }
+        if (intern.getPermissionFile() != null && !intern.getPermissionFile().isEmpty()) {
+            documents.add(intern.getPermissionFile());
         }
 
         return new InternProfileDTO(
@@ -25,7 +25,8 @@ public class InternProfileMapper {
                 intern.getSchool(),
                 intern.getMajor(),
                 intern.getStatus(),
-                user.getCreatedAt(),
+                intern.getGender(),
+                user.getCreatedAt(),  // Pass LocalDateTime directly, not String
                 documents
         );
     }
