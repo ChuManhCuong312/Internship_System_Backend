@@ -50,6 +50,27 @@ public class HRService {
     public Page<CandidateDTO> getInternCandidatesWithoutProfile(Pageable pageable) {
         return repository.findInternUsersWithoutProfile(pageable);
     }
+
+    public void updateInternProfile(int internId, InternProfile updatedProfile) {
+        InternProfile existing = repository.findById(internId)
+                .orElseThrow(() -> new RuntimeException("Intern profile not found with id: " + internId));
+
+        // Chỉ cho phép sửa khi status = APPROVED
+        if (!"APPROVED".equalsIgnoreCase(existing.getStatus())) {
+            throw new RuntimeException("Chỉ được sửa hồ sơ đã duyệt");
+        }
+
+        // Cập nhật thông tin cơ bản
+        if (updatedProfile.getSchool() != null) existing.setSchool(updatedProfile.getSchool());
+        if (updatedProfile.getMajor() != null) existing.setMajor(updatedProfile.getMajor());
+        if (updatedProfile.getDob() != null) existing.setDob(updatedProfile.getDob());
+        if (updatedProfile.getAddress() != null) existing.setAddress(updatedProfile.getAddress());
+        if (updatedProfile.getGender() != null) existing.setGender(updatedProfile.getGender());
+        if (updatedProfile.getPhoneNumber() != null) existing.setPhoneNumber(updatedProfile.getPhoneNumber());
+        if (updatedProfile.getGpa() > 0) existing.setGpa(updatedProfile.getGpa());
+
+        repository.save(existing);
+    }
 }
 
 
