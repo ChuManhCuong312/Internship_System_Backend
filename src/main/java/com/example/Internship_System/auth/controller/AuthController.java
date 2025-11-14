@@ -10,12 +10,12 @@ import com.example.Internship_System.repository.UserRepository;
 import com.example.Internship_System.repository.VerificationTokenRepository;
 import com.example.Internship_System.utils.EmailService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,16 +49,19 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
-            String token = authService.login(request);
-            if (token == null) {
+            Map<String, Object> loginResponse = authService.login(request);
+            if (loginResponse == null) {
                 return ResponseEntity.status(401).body(Map.of("error", "Invalid email or password."));
             }
 
-            return ResponseEntity.ok(Map.of("token", "Bearer " + token));
+            // Add "Bearer " prefix to token
+            loginResponse.put("token", loginResponse.get("token"));
+
+            return ResponseEntity.ok(loginResponse);
         } catch (RuntimeException e) {
             return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
         }
-    }
+        }
 
     @PostMapping("/verify-otp")
     public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
@@ -129,4 +132,5 @@ public class AuthController {
         String result = authService.resendResetLink(email);
         return ResponseEntity.ok(result);
     }
+
 }
