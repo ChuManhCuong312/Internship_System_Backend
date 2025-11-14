@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface InternRepository extends JpaRepository<InternProfile, Integer> {
 
-    Optional<InternProfile> findByUserId(int userId);
+    Optional<InternProfile> findByUser_UserId(int userId);
     List<InternProfile> findByStatus(String status);
     List<InternProfile> findByMajorContainingIgnoreCase(String major);
 
@@ -31,6 +31,4 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
 
     @Query("SELECT DISTINCT i.major FROM InternProfile i ORDER BY i.major")
     List<String> findDistinctMajors();
-
-
 }
