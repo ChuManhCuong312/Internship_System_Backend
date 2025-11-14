@@ -208,14 +208,26 @@ CREATE TABLE evaluations (
 );
 
 -- ======================================
--- 7. AUDIT
+-- 7. AUDIT-log
 -- ======================================
 
-CREATE TABLE audit_logs (
+CREATE TABLE admin_logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    action VARCHAR(255),
-    ip_address VARCHAR(45),
+    details TEXT, -- CREATE_USER/UPDATE_USER/DELETE_USER
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE hr_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    hr_id INT NOT NULL,
+    details TEXT, --  'APPROVE_INTERN', 'REJECT_INTERN', 'UPLOAD_CONTRACT', 'SEND_EMAIL'
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (hr_id) REFERENCES hr_users(hr_id)
+);
+CREATE TABLE intern_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    intern_id INT NOT NULL,
+    details TEXT, -- 'CONFIRM_CONTRACT','UPLOAD_DOCUMENT','UPDATE_PROFILE','SEND_SUPPORT_REQUEST'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
