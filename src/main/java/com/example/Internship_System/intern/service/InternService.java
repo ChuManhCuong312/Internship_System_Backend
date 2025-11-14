@@ -21,7 +21,7 @@ public class InternService {
     private UserRepository userRepository;
 
     public InternProfileDTO toDTO(InternProfile intern) {
-        User user = userRepository.findById(intern.getUser().getUserId())
+        User user = userRepository.findById(intern.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return InternProfileMapper.toDTO(intern, user);
     }
@@ -41,7 +41,7 @@ public class InternService {
     }
 
     public Optional<InternProfile> findByUserId(int userId) {
-        return repository.findByUser_UserId(userId);
+        return repository.findByUserId(userId);
     }
 
     public List<InternProfile> findByStatus(String status) {
