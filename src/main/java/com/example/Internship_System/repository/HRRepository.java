@@ -14,7 +14,8 @@ import org.springframework.data.domain.Pageable;
 public interface HRRepository extends JpaRepository<InternProfile, Integer> {
     @Query("SELECT new com.example.Internship_System.hr.dto.HRInternDTO(" +
             "i.internId, u.userId, u.fullName, u.email, u.phone, " +
-            "i.cvFile, i.permissionFile, i.gpa, i.status, i.major, i.school) " +
+            "i.cvFile, i.permissionFile, i.gpa, i.status, i.major, i.school, " +
+            "i.dob, i.address) " +
             "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
             "WHERE (:searchTerm IS NULL OR " +
             "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -28,6 +29,7 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
             @Param("status") String status,
             Pageable pageable
     );
+
     @Query("SELECT new com.example.Internship_System.hr.dto.CandidateDTO(" +
             "u.userId, u.fullName, u.email, u.phone) " +
             "FROM User u WHERE u.role.roleId = 4 " +
