@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class AuthService {
@@ -64,7 +66,7 @@ public class AuthService {
     }
 
     // LOGIN (basic password verification)
-    public String login(LoginRequest request) {
+    public Map<String, Object> login(LoginRequest request) {
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
         if (userOpt.isEmpty()) {
             return null;
@@ -72,13 +74,21 @@ public class AuthService {
 
         User user = userOpt.get();
 
-
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             return null;
         }
 
         // Generate JWT token with email + role
-        return jwtUtils.generateToken(user.getEmail(), user.getRole().getName());
+        String token = jwtUtils.generateToken(user.getEmail(), user.getRole().getName());
+
+        // Return both token and user info
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("userId", user.getUserId());
+        response.put("role", user.getRole().getName());
+        response.put("email", user.getEmail());
+        response.put("fullName:", user.getFullName());
+        return response;
     }
 
     // Encode passowrd using BCrypt
