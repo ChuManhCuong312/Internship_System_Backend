@@ -18,7 +18,8 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
     List<InternProfile> findByMajorContainingIgnoreCase(String major);
 
     @Query("SELECT new com.example.Internship_System.intern.dto.InternProfileDTO(" +
-            "i.internId, i.userId, u.fullName, u.email, i.school, i.major, i.status) " +
+            "i.internId, i.userId, u.fullName, u.email, i.school, i.major, i.status, " +
+            "i.gender, u.createdAt, NULL) " +
             "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
             "WHERE (:searchTerm IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
@@ -30,4 +31,6 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
 
     @Query("SELECT DISTINCT i.major FROM InternProfile i ORDER BY i.major")
     List<String> findDistinctMajors();
+
+
 }

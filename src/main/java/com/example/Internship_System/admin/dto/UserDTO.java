@@ -12,8 +12,6 @@ public class UserDTO {
     private int roleId;
     private String password; // thêm trường này để nhận mật khẩu khi tạo/sửa
 
-    public UserDTO() {}
-
     public UserDTO(int userId, String email, String fullName, String phone,
                    String status, LocalDateTime createdAt, int roleId, String password) {
         this.userId = userId;

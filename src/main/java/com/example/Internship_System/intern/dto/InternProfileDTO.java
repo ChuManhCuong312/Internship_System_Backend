@@ -2,6 +2,7 @@ package com.example.Internship_System.intern.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,24 +17,14 @@ public class InternProfileDTO {
     private String school;
     private String major;
     private String status;
+    private String gender;
     private LocalDateTime createdAt;
     private List<String> documents;
 
-    public InternProfileDTO() {}
+public InternProfileDTO(){}
 
     public InternProfileDTO(int internId, int userId, String fullName, String email,
-                            String school, String major, String status) {
-        this.internId = internId;
-        this.userId = userId;
-        this.fullName = fullName;
-        this.email = email;
-        this.school = school;
-        this.major = major;
-        this.status = status;
-    }
-
-    public InternProfileDTO(int internId, int userId, String fullName, String email,
-                            String school, String major, String status,
+                            String school, String major, String status, String gender,
                             LocalDateTime createdAt, List<String> documents) {
         this.internId = internId;
         this.userId = userId;
@@ -42,8 +33,18 @@ public class InternProfileDTO {
         this.school = school;
         this.major = major;
         this.status = status;
+        this.gender = gender;
         this.createdAt = createdAt;
         this.documents = documents;
+
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public int getInternId() { return internId; }
@@ -72,4 +73,5 @@ public class InternProfileDTO {
 
     public List<String> getDocuments() { return documents; }
     public void setDocuments(List<String> documents) { this.documents = documents; }
+
 }
