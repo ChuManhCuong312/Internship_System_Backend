@@ -6,9 +6,9 @@ public class HRInternDTO {
     private String fullName;
     private String email;
     private String phone;
-    private String cvPath;
+    private String cvFile;
     private double gpa;
-    private String internshipApplicationPath;
+    private String permissionFile;
     private String status;
     private String major;
     private String school;
@@ -16,16 +16,16 @@ public class HRInternDTO {
     public HRInternDTO() {}
 
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
-                       String cvPath, String internshipApplicationPath, double gpa,
+                       String cvFile, String internshipApplicationPath, double gpa,
                        String status, String major, String school) {
         this.internId = internId;
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
-        this.cvPath = cvPath;
+        this.cvFile = cvFile;
         this.gpa = gpa;
-        this.internshipApplicationPath = internshipApplicationPath;
+        this.permissionFile = internshipApplicationPath;
         this.status = status;
         this.major = major;
         this.school = school;
@@ -47,14 +47,14 @@ public class HRInternDTO {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public String getCvPath() { return cvPath; }
-    public void setCvPath(String cvPath) { this.cvPath = cvPath; }
+    public String getCvFile() { return cvFile; }
+    public void setCvFile(String cvPath) { this.cvFile = cvFile; }
 
     public double getGpa() { return gpa; }
     public void setGpa(double gpa) { this.gpa = gpa; }
 
-    public String getInternshipApplicationPath() { return internshipApplicationPath; }
-    public void setInternshipApplicationPath(String internshipApplicationPath) { this.internshipApplicationPath = internshipApplicationPath; }
+    public String getPermissionFile() { return permissionFile; }
+    public void setPermissionFile(String permissionFile) { this.permissionFile = permissionFile; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
