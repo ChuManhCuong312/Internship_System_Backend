@@ -38,10 +38,9 @@ public class InternProfile {
     @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
     @Column(name = "address", nullable = false)
     private String address;
-    
-    @NotBlank(message = "CV path is required")
+
     @Size(max = 255, message = "CV path must not exceed 255 characters")
-    @Column(name = "cv_path", nullable = false)
+    @Column(name = "cv_path")
     private String cvPath;
     
     @Size(max = 255, message = "CV file name must not exceed 255 characters")
@@ -171,14 +170,6 @@ public class InternProfile {
         this.status = status;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public String getGender() {
         return gender;
     }
@@ -187,16 +178,6 @@ public class InternProfile {
         this.gender = gender;
     }
 
-    public String getPermissionFile() {
-        return permissionFile;
-    }
-
-    public void setPermissionFile(String permissionFile) {
-        this.permissionFile = permissionFile;
-    }
-    public void setInternshipApplicationPath(String internshipApplicationPath) {
-        this.internshipApplicationPath = internshipApplicationPath;
-    }
     public String getRejectionReason() { return rejectionReason; }
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 

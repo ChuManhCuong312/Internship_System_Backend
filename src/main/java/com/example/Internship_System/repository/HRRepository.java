@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.query.Param;
+import com.example.Internship_System.hr.dto.CandidateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
 
 @Repository
 public interface HRRepository extends JpaRepository<InternProfile, Integer> {
@@ -28,5 +28,10 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
             @Param("status") String status,
             Pageable pageable
     );
+    @Query("SELECT new com.example.Internship_System.hr.dto.CandidateDTO(" +
+            "u.userId, u.fullName, u.email, u.phone) " +
+            "FROM User u WHERE u.role.roleId = 4 " +
+            "AND NOT EXISTS (SELECT 1 FROM InternProfile i WHERE i.userId = u.userId)")
+    Page<CandidateDTO> findInternUsersWithoutProfile(Pageable pageable);
 }
 
