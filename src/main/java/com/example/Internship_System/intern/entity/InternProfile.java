@@ -56,9 +56,6 @@ public class InternProfile {
              message = "Status must be one of: PENDING, APPROVED, REJECTED, NO_FILE")
     private String status;
 
-    @Column(name = "status")
-    private String status;
-
     @Pattern(regexp = "^(MALE|FEMALE)?$",
             message = "Choose a gender")
     @Column(name = "gender")
@@ -164,32 +161,14 @@ public class InternProfile {
         this.status = status;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public String getGender() {
-        return gender;
+        return status;
     }
 
     public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public String getPermissionFile() {
-        return permissionFile;
-    }
-
-    public void setPermissionFile(String permissionFile) {
-        this.permissionFile = permissionFile;
-    }
-    public void setInternshipApplicationPath(String internshipApplicationPath) {
-        this.internshipApplicationPath = internshipApplicationPath;
-    }
     public String getRejectionReason() { return rejectionReason; }
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 
