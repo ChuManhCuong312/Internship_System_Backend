@@ -55,14 +55,14 @@ public class HRService {
 
         repository.save(intern);
 
-        // 🔹 Lấy thông tin User từ userId
+        // Lấy thông tin User từ userId
         User user = userRepository.findById(intern.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         String fullName = user.getFullName();
         String email = user.getEmail();
 
-        // --- Gửi email ---
+        // Gửi email
         String subject;
         String body;
 
@@ -85,7 +85,7 @@ public class HRService {
 
         emailService.sendEmail(email, subject, body);
 
-        // --- Tạo log ---
+        // Tạo log
         InternLog log = new InternLog();
         log.setUserId(intern.getUserId());
         log.setMessage("Trạng thái hồ sơ đã được cập nhật: " + status);
@@ -112,7 +112,6 @@ public class HRService {
             throw new RuntimeException("Chỉ được sửa hồ sơ đã duyệt");
         }
 
-        // Cập nhật thông tin cơ bản
         if (updatedProfile.getSchool() != null) existing.setSchool(updatedProfile.getSchool());
         if (updatedProfile.getMajor() != null) existing.setMajor(updatedProfile.getMajor());
         if (updatedProfile.getDob() != null) existing.setDob(updatedProfile.getDob());
