@@ -116,6 +116,7 @@ public class InternController {
             profileToUpdate.setPhoneNumber(internProfile.getPhoneNumber());
             profileToUpdate.setGpa(internProfile.getGpa());
             profileToUpdate.setGender(internProfile.getGender());
+            profileToUpdate.setPermissionFile(internProfile.getPermissionFile());
 
             return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
         } else {
@@ -160,6 +161,9 @@ public class InternController {
             if(internProfile.getGpa() != 0.0){
                 profileToUpdate.setGpa(internProfile.getGpa());
             }
+            if(internProfile.getPermissionFile() != null){
+                profileToUpdate.setPermissionFile(internProfile.getPermissionFile());
+            }
 
 
             return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
@@ -182,4 +186,5 @@ public class InternController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
