@@ -74,6 +74,7 @@ CREATE TABLE intern_users (
     major VARCHAR(150),
     gpa DOUBLE,
     dob DATE,
+    phone_number VARCHAR(11),
     address VARCHAR(255),
     avatar VARCHAR(255),
     permission_file VARCHAR(255),
