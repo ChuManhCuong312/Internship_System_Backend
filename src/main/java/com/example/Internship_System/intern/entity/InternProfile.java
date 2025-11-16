@@ -3,7 +3,6 @@ package com.example.Internship_System.intern.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-import java.io.FilenameFilter;
 import java.time.LocalDate;
 
 @Entity
