@@ -79,7 +79,7 @@ CREATE TABLE intern_users (
     permission_file VARCHAR(255),
     cv_path VARCHAR(255),
     status ENUM('PENDING','APPROVED','REJECTED','NO_FILE') DEFAULT 'NO_FILE',
-    gender ENUM('MALE', 'FEMALE')
+    gender ENUM('MALE', 'FEMALE'),
     rejection_reason  VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
