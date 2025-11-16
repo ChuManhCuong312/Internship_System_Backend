@@ -77,7 +77,7 @@ CREATE TABLE intern_users (
     address VARCHAR(255),
     avatar VARCHAR(255),
     permission_file VARCHAR(255),
-    cv_path VARCHAR(255),
+    cv_file VARCHAR(255),
     status ENUM('PENDING','APPROVED','REJECTED','NO_FILE') DEFAULT 'NO_FILE',
     gender ENUM('MALE', 'FEMALE'),
     rejection_reason  VARCHAR(255),
