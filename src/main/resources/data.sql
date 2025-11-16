@@ -33,17 +33,16 @@ INSERT INTO mentor_users (mentor_id, user_id, department, expertise) VALUES
 (2, 5, 'Kinh doanh', 'Digital Marketing, SEO, Google Ads'),
 (3, 6, 'Phân tích dữ liệu', 'Python, Power BI, SQL nâng cao');
 
-INSERT INTO intern_users (intern_id, user_id, school, major, gpa, dob, address, avatar, permission_file, cv_file, status, gender, rejection_reason) VALUES
-(1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', 'MALE', NULL),
-(2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', 'FEMALE', NULL),
-(3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', 'MALE', NULL),
-(4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', 'FEMALE', NULL),
-(5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', 'MALE', NULL),
-(6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', 'MALE', NULL),
-(7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'FEMALE', 'Thiếu hồ sơ bổ sung'),
-(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', 'MALE', NULL),
-(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', 'FEMALE', NULL);
-
+IINSERT INTO intern_users (intern_id, user_id, school, major, gpa, dob, phone_number, address, avatar, permission_file, cv_path, status, gender, rejection_reason) VALUES
+ (1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', '09012345671', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', 'MALE', NULL),
+ (2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', '09012345672', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', 'FEMALE', NULL),
+ (3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', '09012345673', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', 'MALE', NULL),
+ (4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', '09012345674', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', 'FEMALE', NULL),
+ (5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', '09012345675', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', 'MALE', NULL),
+ (6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', '09012345676', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', 'MALE', NULL),
+ (7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', '09012345677', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'FEMALE', 'Thiếu hồ sơ bổ sung'),
+ (8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', '09012345678', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', 'MALE', NULL),
+ (9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', '09012345679', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', 'FEMALE', NULL);
 INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
 (1, 1, 'contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 (2, 2, 'contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NULL, 'Đang chờ xác nhận'),
