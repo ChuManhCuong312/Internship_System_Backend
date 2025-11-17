@@ -1,6 +1,5 @@
 package com.example.Internship_System.intern.entity;
 
-import com.example.Internship_System.auth.entity.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
