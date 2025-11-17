@@ -8,9 +8,9 @@ public class HRInternDTO {
     private String fullName;
     private String email;
     private String phone;
-    private String cvFile;
+    private String cvPath;
     private double gpa;
-    private String permissionFile;
+    private String internshipApplictionPath;
     private String status;
     private String major;
     private String school;
@@ -20,7 +20,7 @@ public class HRInternDTO {
     public HRInternDTO() {}
 
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
-                       String cvFile, String permissionFile, double gpa,
+                       String cvPath, String internshipApplictionPath, double gpa,
                        String status, String major, String school,
                        LocalDate dob, String address) {
         this.internId = internId;
@@ -28,8 +28,8 @@ public class HRInternDTO {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
-        this.cvFile = cvFile;
-        this.permissionFile = permissionFile;
+        this.cvPath = cvPath;
+        this.internshipApplictionPath = internshipApplictionPath;
         this.gpa = gpa;
         this.status = status;
         this.major = major;
@@ -54,14 +54,14 @@ public class HRInternDTO {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public String getCvFile() { return cvFile; }
-    public void setCvFile(String cvPath) { this.cvFile = cvFile; }
+    public String getCvPath() { return cvPath; }
+    public void setCvPath(String cvPath) { this.cvPath = cvPath; }
 
     public double getGpa() { return gpa; }
     public void setGpa(double gpa) { this.gpa = gpa; }
 
-    public String getPermissionFile() { return permissionFile; }
-    public void setPermissionFile(String permissionFile) { this.permissionFile = permissionFile; }
+    public String getInternshipApplictionPath() { return internshipApplictionPath; }
+    public void setInternshipApplictionPath(String internshipApplictionPath) { this.internshipApplictionPath = internshipApplictionPath; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
