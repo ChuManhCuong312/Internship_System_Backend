@@ -3,6 +3,8 @@ package com.example.Internship_System.repository;
 import com.example.Internship_System.hr.dto.InternAssignmentViewDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.dto.InternProfileDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,6 +35,7 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
     @Query("SELECT DISTINCT i.major FROM InternProfile i ORDER BY i.major")
     List<String> findDistinctMajors();
 
+
     @Query("SELECT new com.example.Internship_System.hr.dto.InternAssignmentViewDTO(" +
             "i.internId, u.fullName, cd.internConfirmStatus, m.mentorId, mu.fullName, ma.assignedAt) " +
             "FROM InternProfile i " +
@@ -43,6 +46,12 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
             "LEFT JOIN User mu ON m.user = mu " +
             "WHERE (:searchTerm IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
             "OR LOWER(mu.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
-            "ORDER BY i.internId")
-    List<InternAssignmentViewDTO> findInternsWithAssignments(@Param("searchTerm") String searchTerm);
+            "AND (:filter = 'all' OR " +
+            "(:filter = 'withMentor' AND m.mentorId IS NOT NULL) OR " +
+            "(:filter = 'withoutMentor' AND m.mentorId IS NULL) OR " +
+            "(:filter = 'unapproved' AND cd.internConfirmStatus <> 'APPROVED'))")
+    Page<InternAssignmentViewDTO> findInternsWithAssignments(@Param("searchTerm") String searchTerm,
+                                                             @Param("filter") String filter,
+                                                             Pageable pageable);
+
 }
