@@ -8,6 +8,10 @@ import com.example.Internship_System.hr.entity.MentorAssignment;
 import com.example.Internship_System.hr.mapper.MentorAssignmentMapper;
 import com.example.Internship_System.hr.service.MentorAssignmentService;
 import com.example.Internship_System.intern.entity.InternProfile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -65,13 +71,24 @@ public class MentorAssignmentController {
         );
         return ResponseEntity.ok(MentorAssignmentMapper.toDTO(updated));
     }
-
     @GetMapping("/interns")
-    public ResponseEntity<List<InternAssignmentViewDTO>> getInternsWithAssignments(
+    public ResponseEntity<Map<String, Object>> getInternsWithAssignments(
             @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "filter", required = false, defaultValue = "all") String filter
+            @RequestParam(value = "filter", required = false, defaultValue = "all") String filter,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        List<InternAssignmentViewDTO> list = mentorAssignmentService.listInternsWithAssignments(search, filter);
-        return ResponseEntity.ok(list);
+        int pageIndex = page - 1; // Spring pages are 0-based
+        Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.ASC, "internId")); // adjust sort field
+
+        Page<InternAssignmentViewDTO> internPage = mentorAssignmentService.listInternsWithAssignments(search, filter, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", internPage.getContent());
+        response.put("currentPage", internPage.getNumber() + 1);
+        response.put("totalItems", internPage.getTotalElements());
+        response.put("totalPages", internPage.getTotalPages());
+
+        return ResponseEntity.ok(response);
     }
 }

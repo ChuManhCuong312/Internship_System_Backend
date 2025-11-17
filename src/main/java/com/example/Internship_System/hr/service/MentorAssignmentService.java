@@ -7,6 +7,9 @@ import com.example.Internship_System.intern.entity.InternConfirmStatus;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -75,24 +78,11 @@ public class MentorAssignmentService {
         return mentorAssignmentRepository.save(assignment);
     }
 
-    public List<InternAssignmentViewDTO> listInternsWithAssignments(String searchTerm, String filter) {
-        List<InternAssignmentViewDTO> list = internRepository.findInternsWithAssignments(searchTerm);
 
-        if (filter == null || "all".equals(filter)) {
-            return list;
-        }
-
-        switch (filter) {
-            case "withMentor":
-                return list.stream().filter(dto -> dto.getMentorId() != null).toList();
-            case "withoutMentor":
-                return list.stream().filter(dto -> dto.getMentorId() == null).toList();
-            case "unapproved":
-                return list.stream().filter(dto -> !"APPROVED".equals(dto.getInternConfirmStatus())).toList();
-            default:
-                return list;
-        }
+    public Page<InternAssignmentViewDTO> listInternsWithAssignments(String searchTerm, String filter, Pageable pageable) {
+        return internRepository.findInternsWithAssignments(searchTerm, filter, pageable);
     }
+
 
 
     public MentorAssignment reassignMentor(Integer internId, Integer mentorId) {
