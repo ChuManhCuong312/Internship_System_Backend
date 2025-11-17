@@ -2,6 +2,7 @@ package com.example.Internship_System.repository;
 
 import com.example.Internship_System.hr.dto.HRInternDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,8 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(u.phone) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
             "AND (:major IS NULL OR LOWER(i.major) LIKE LOWER(CONCAT('%', :major, '%'))) " +
-            "AND (:status IS NULL OR i.status = :status)")
+            "AND (:status IS NULL OR i.status = :status)" +
+            "ORDER BY i.internId DESC")
     Page<HRInternDTO> findAllInternProfilesForHR(
             @Param("searchTerm") String searchTerm,
             @Param("major") String major,
