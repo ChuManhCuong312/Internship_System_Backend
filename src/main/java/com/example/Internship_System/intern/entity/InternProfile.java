@@ -3,7 +3,6 @@ package com.example.Internship_System.intern.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-import java.io.FilenameFilter;
 import java.time.LocalDate;
 
 @Entity
@@ -60,10 +59,6 @@ public class InternProfile {
     @Size(max = 255, message = "Avatar path must not exceed 255 characters")
     @Column(name = "avatar")
     private String avatar;
-  
-    @Size(max = 255, message = "Avatar path must not exceed 255 characters")
-    @Column(name = "intern_image_path")
-    private String internImagePath;
 
     @Size(max = 11)
     @Column(name = "phone_number")
@@ -91,10 +86,6 @@ public class InternProfile {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getPermissionFile() {
-        return permissionFile;
     }
   
     public int getInternId() {
@@ -170,6 +161,22 @@ public class InternProfile {
     }
 
     public String getRejectionReason() { return rejectionReason; }
+
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 
+    public String getPermissionFile() {
+        return permissionFile;
+    }
+
+    public void setPermissionFile(String permissionFile) {
+        this.permissionFile = permissionFile;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 }

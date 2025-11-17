@@ -74,11 +74,13 @@ CREATE TABLE intern_users (
     major VARCHAR(150),
     gpa DOUBLE,
     dob DATE,
+    phone_number VARCHAR(11),
     address VARCHAR(255),
-    intern_image_path VARCHAR(255),
-    internship_application_path VARCHAR(255),
-    cv_path VARCHAR(255),
+    avatar VARCHAR(255),
+    permission_file VARCHAR(255),
+    cv_file VARCHAR(255),
     status ENUM('PENDING','APPROVED','REJECTED','NO_FILE') DEFAULT 'NO_FILE',
+    gender ENUM('MALE', 'FEMALE'),
     rejection_reason  VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
