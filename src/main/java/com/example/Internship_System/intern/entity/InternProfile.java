@@ -39,7 +39,7 @@ public class InternProfile {
     private String address;
 
     @Size(max = 255, message = "CV file name must not exceed 255 characters")
-    @Column(name = "cv_file")
+    @Column(name = "cv_path")
     private String cvFile;
 
     @Size(max = 255, message = "Must not exceed 255 characters")
