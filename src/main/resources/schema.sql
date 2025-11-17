@@ -75,16 +75,15 @@ CREATE TABLE intern_users (
     gpa DOUBLE,
     dob DATE,
     phone_number VARCHAR(11),
+    gender ENUM('MALE', 'FEMALE')
     address VARCHAR(255),
-    avatar VARCHAR(255),
-    permission_file VARCHAR(255),
-    cv_file VARCHAR(255),
+    intern_image_path VARCHAR(255),
+    internship_application_path VARCHAR(255),
+    cv_path VARCHAR(255),
     status ENUM('PENDING','APPROVED','REJECTED','NO_FILE') DEFAULT 'NO_FILE',
-    gender ENUM('MALE', 'FEMALE'),
     rejection_reason  VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
--- Bổ sung bảng Hợp đồng
 CREATE TABLE contract_documents (
     document_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
@@ -108,23 +107,22 @@ CREATE TABLE mentor_assignments (
 -- ======================================
 -- 3. PROGRAM MANAGEMENT
 -- ======================================
-
 CREATE TABLE programs (
     program_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     department VARCHAR(100),
     start_date DATE,
     end_date DATE,
-    max_interns INT DEFAULT 10,
-    created_by INT,
-    FOREIGN KEY (created_by) REFERENCES hr_users(hr_id)
+    program_status ENUM('UPCOMING','ON_GOING','FINISHED') DEFAULT 'UPCOMING',
+    detail TEXT,
+    max_interns INT DEFAULT 10
 );
 
 CREATE TABLE intern_program (
+	intern_program_id INT AUTO_INCREMENT PRIMARY KEY,
     program_id INT,
     intern_id INT,
     assigned_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (program_id, intern_id),
     FOREIGN KEY (program_id) REFERENCES programs(program_id),
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
@@ -135,6 +133,7 @@ CREATE TABLE intern_program (
 
 CREATE TABLE tasks (
     task_id INT AUTO_INCREMENT PRIMARY KEY,
+    program_id INT,
     title VARCHAR(200),
     description TEXT,
     assigned_by INT,
@@ -143,8 +142,16 @@ CREATE TABLE tasks (
     priority ENUM('LOW','MEDIUM','HIGH') DEFAULT 'MEDIUM',
     status ENUM('TODO','IN_PROGRESS','DONE','REVIEWED') DEFAULT 'TODO',
     deadline DATE,
+    due_soon BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id),
-    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
+    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id),
+    FOREIGN KEY (program_id) REFERENCES programs(program_id)
+);
+CREATE TABLE tasks_files (
+    task_files_id INT AUTO_INCREMENT PRIMARY KEY,
+	task_id INT,
+    link_file VARCHAR(255),
+    FOREIGN KEY (task_id) REFERENCES tasks(task_id)
 );
 
 CREATE TABLE task_progress (
@@ -186,7 +193,6 @@ CREATE TABLE allowances (
 CREATE TABLE support_requests (
     request_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
-    type ENUM('TECHNICAL','ADMIN','HR','OTHER') DEFAULT 'OTHER',
     description TEXT,
     file_path VARCHAR(255),
     status ENUM('OPEN','IN_PROGRESS','RESOLVED','REJECTED') DEFAULT 'OPEN',
@@ -210,7 +216,7 @@ CREATE TABLE evaluations (
 );
 
 -- ======================================
--- 7. AUDIT-log
+-- 7. DOCUMENTS & AUDIT
 -- ======================================
 
 CREATE TABLE admin_logs (
