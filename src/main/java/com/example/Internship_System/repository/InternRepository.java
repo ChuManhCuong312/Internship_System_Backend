@@ -1,5 +1,6 @@
 package com.example.Internship_System.repository;
 
+import com.example.Internship_System.hr.dto.InternAssignmentViewDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.dto.InternProfileDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,5 +33,16 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
     @Query("SELECT DISTINCT i.major FROM InternProfile i ORDER BY i.major")
     List<String> findDistinctMajors();
 
-
+    @Query("SELECT new com.example.Internship_System.hr.dto.InternAssignmentViewDTO(" +
+            "i.internId, u.fullName, cd.internConfirmStatus, m.mentorId, mu.fullName, ma.assignedAt) " +
+            "FROM InternProfile i " +
+            "LEFT JOIN User u ON i.userId = u.userId " +
+            "LEFT JOIN ContractDocument cd ON cd.intern = i " +
+            "LEFT JOIN MentorAssignment ma ON ma.intern = i " +
+            "LEFT JOIN MentorUser m ON ma.mentor = m " +
+            "LEFT JOIN User mu ON m.user = mu " +
+            "WHERE (:searchTerm IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+            "OR LOWER(mu.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
+            "ORDER BY i.internId")
+    List<InternAssignmentViewDTO> findInternsWithAssignments(@Param("searchTerm") String searchTerm);
 }
