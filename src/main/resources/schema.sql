@@ -74,6 +74,8 @@ CREATE TABLE intern_users (
     major VARCHAR(150),
     gpa DOUBLE,
     dob DATE,
+    phone_number VARCHAR(11),
+    gender ENUM('MALE', 'FEMALE')
     address VARCHAR(255),
     intern_image_path VARCHAR(255),
     internship_application_path VARCHAR(255),
