@@ -33,7 +33,7 @@ INSERT INTO mentor_users (mentor_id, user_id, department, expertise) VALUES
 (2, 5, 'Kinh doanh', 'Digital Marketing, SEO, Google Ads'),
 (3, 6, 'Phân tích dữ liệu', 'Python, Power BI, SQL nâng cao');
 
-IINSERT INTO intern_users (intern_id, user_id, school, major, gpa, dob, phone_number, address, avatar, permission_file, cv_path, status, gender, rejection_reason) VALUES
+INSERT INTO intern_users (intern_id, user_id, school, major, gpa, dob, phone_number, address, avatar, permission_file, cv_file, status, gender, rejection_reason) VALUES
  (1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', '09012345671', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', 'MALE', NULL),
  (2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', '09012345672', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', 'FEMALE', NULL),
  (3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', '09012345673', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', 'MALE', NULL),
