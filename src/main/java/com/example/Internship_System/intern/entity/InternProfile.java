@@ -43,7 +43,7 @@ public class InternProfile {
     private String cvFile;
 
     @Size(max = 255, message = "Must not exceed 255 characters")
-    @Column(name = "permission_file", nullable = false)
+    @Column(name = "internship_application_path", nullable = false)
     private String permissionFile;
 
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
@@ -57,7 +57,7 @@ public class InternProfile {
     private String gender;
 
     @Size(max = 255, message = "Avatar path must not exceed 255 characters")
-    @Column(name = "avatar")
+    @Column(name = "intern_image_path")
     private String avatar;
 
     @Size(max = 11)
