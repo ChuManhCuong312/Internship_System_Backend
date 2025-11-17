@@ -19,8 +19,8 @@ INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role
 (12, 'tts06@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Văn Đạt', '0377111222', 'PENDING_APPROVAL', 4),
 (13, 'tts07@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo Ngọc', '0399222111', 'REJECTED', 4),
 (14, 'tts08@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Hoàng Minh Đức', '0334455667', 'INACTIVE', 4),
-(15, 'tts09@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4);
-
+(15, 'tts09@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4),
+(16, 'tts10@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Hà', '0377123488', 'ACTIVE', 4);
 INSERT INTO admin_users (admin_id, user_id, position) VALUES
 (1, 1, 'Quản trị hệ thống chính');
 
@@ -33,16 +33,17 @@ INSERT INTO mentor_users (mentor_id, user_id, department, expertise) VALUES
 (2, 5, 'Kinh doanh', 'Digital Marketing, SEO, Google Ads'),
 (3, 6, 'Phân tích dữ liệu', 'Python, Power BI, SQL nâng cao');
 
-IINSERT INTO intern_users (intern_id, user_id, school, major, gpa, dob, phone_number, address, avatar, permission_file, cv_path, status, gender, rejection_reason) VALUES
- (1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', '09012345671', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', 'MALE', NULL),
- (2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', '09012345672', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', 'FEMALE', NULL),
- (3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', '09012345673', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', 'MALE', NULL),
- (4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', '09012345674', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', 'FEMALE', NULL),
- (5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', '09012345675', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', 'MALE', NULL),
- (6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', '09012345676', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', 'MALE', NULL),
- (7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', '09012345677', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'FEMALE', 'Thiếu hồ sơ bổ sung'),
- (8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', '09012345678', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', 'MALE', NULL),
- (9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', '09012345679', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', 'FEMALE', NULL);
+INSERT INTO intern_users (intern_id, user_id, school, major, gpa, dob, address, intern_image_path, internship_application_path, cv_path, status, rejection_reason) VALUES
+(1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', NULL),
+(2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', NULL),
+(3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', NULL),
+(4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', NULL),
+(5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', NULL),
+(6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', NULL),
+(7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
+(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', NULL),
+(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL);
+
 INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
 (1, 1, 'contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 (2, 2, 'contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NULL, 'Đang chờ xác nhận'),
@@ -54,22 +55,22 @@ INSERT INTO mentor_assignments (assignment_id, mentor_id, intern_id, assigned_at
 (3, 2, 4, NOW()),
 (4, 3, 5, NOW());
 
-INSERT INTO programs (program_id, name, department, start_date, end_date, max_interns, created_by) VALUES
-(1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 10, 1),
-(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-02-01', '2025-05-01', 8, 2),
-(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-03-01', '2025-06-01', 6, 1);
+INSERT INTO programs (program_id, name, department, start_date, end_date, max_interns) VALUES
+(1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 10),
+(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-02-01', '2025-05-01', 8),
+(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-03-01', '2025-06-01', 6);
+
 
 INSERT INTO intern_program (program_id, intern_id, assigned_date) VALUES
 (1, 1, NOW()), (1, 3, NOW()), (1, 6, NOW()), (1, 9, NOW()),
 (2, 4, NOW()), (2, 7, NOW()),
 (3, 5, NOW()), (3, 8, NOW());
 
-INSERT INTO tasks (task_id, title, description, mentor_id, intern_id, priority, status, deadline) VALUES
-(1, 'Xây dựng trang đăng nhập', 'Tạo giao diện đăng nhập ReactJS và API Spring Boot', 1, 1, 'HIGH', 'IN_PROGRESS', '2025-03-01'),
-(2, 'Tạo bảng dashboard', 'Hiển thị thống kê bằng biểu đồ', 1, 3, 'MEDIUM', 'TODO', '2025-03-10'),
-(3, 'Thiết kế landing page', 'Dựng giao diện quảng bá chương trình thực tập', 2, 7, 'HIGH', 'DONE', '2025-02-25'),
-(4, 'Viết báo cáo SEO tháng 2', 'Tổng hợp từ khóa, lượng truy cập website', 2, 4, 'MEDIUM', 'DONE', '2025-02-28'),
-(5, 'Phân tích dữ liệu điểm danh', 'Tạo biểu đồ trực quan trên Power BI', 3, 5, 'HIGH', 'IN_PROGRESS', '2025-03-15');
+INSERT INTO tasks (task_id, program_id, title, description, mentor_id, intern_id, priority, status, deadline, due_soon) VALUES
+(1, 1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 1, 'HIGH', 'IN_PROGRESS', '2025-03-01', 0),
+(2, 1, 'Dashboard', 'Biểu đồ thống kê', 1, 2, 'MEDIUM', 'TODO', '2025-03-10', 0),
+(3, 2, 'Landing Page', 'Thiết kế giao diện', 2, 4, 'HIGH', 'DONE', '2025-02-25', 0);
+
 
 INSERT INTO attendance (intern_id, date, check_in, check_out, location) VALUES
 (1, '2025-02-10', '08:05:00', '17:00:00', 'CMC Tower Hà Đông'),
@@ -86,11 +87,11 @@ INSERT INTO allowances (intern_id, type, amount, date_applied) VALUES
 (6, 'MEAL', 50000, '2025-02-11'),
 (7, 'TRANSPORT', 30000, '2025-02-11');
 
-INSERT INTO support_requests (intern_id, type, description, status, created_at) VALUES
-(1, 'TECHNICAL', 'Không thể truy cập hệ thống task', 'OPEN', NOW()),
-(3, 'ADMIN', 'Sai tên trong hệ thống', 'IN_PROGRESS', NOW()),
-(5, 'HR', 'Thắc mắc về phụ cấp tháng 2', 'RESOLVED', NOW()),
-(7, 'OTHER', 'Xin nghỉ phép 1 ngày', 'OPEN', NOW());
+INSERT INTO support_requests (intern_id, description, file_path, status, created_at) VALUES
+(1, 'Không truy cập được hệ thống', NULL, 'OPEN', NOW()),
+(2, 'Yêu cầu sửa thông tin', NULL, 'IN_PROGRESS', NOW()),
+(5, 'Thắc mắc về phụ cấp tháng 2',NULL, 'RESOLVED', NOW()),
+(7, 'Xin nghỉ phép 1 ngày',NULL, 'OPEN', NOW());
 
 INSERT INTO evaluations (intern_id, mentor_id, technical, communication, discipline, attitude, note) VALUES
 (1, 1, 9, 8, 9, 9, 'Thực tập sinh chăm chỉ, hoàn thành tốt công việc'),
@@ -115,3 +116,4 @@ INSERT INTO intern_logs (intern_id, details) VALUES
 (3, ' Intern cập nhật số điện thoại'),
 (4, ' Intern gửi yêu cầu hỗ trợ về hợp đồng'),
 (5, ' Intern xác nhận hợp đồng');
+select * from users;
