@@ -111,11 +111,12 @@ public class InternController {
             profileToUpdate.setMajor(internProfile.getMajor());
             profileToUpdate.setDob(internProfile.getDob());
             profileToUpdate.setAddress(internProfile.getAddress());
-            profileToUpdate.setCvFile(internProfile.getCvFile());
+
             profileToUpdate.setStatus(internProfile.getStatus());
             profileToUpdate.setGpa(internProfile.getGpa());
             profileToUpdate.setGender(internProfile.getGender());
-            profileToUpdate.setPermissionFile(internProfile.getPermissionFile());
+
+            profileToUpdate.setRejectionReason(internProfile.getRejectionReason());
 
             return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
         } else {
@@ -144,9 +145,7 @@ public class InternController {
             if (internProfile.getAddress() != null) {
                 profileToUpdate.setAddress(internProfile.getAddress());
             }
-            if (internProfile.getCvFile() != null) {
-                profileToUpdate.setCvFile(internProfile.getCvFile());
-            }
+
 
             if (internProfile.getStatus() != null) {
                 profileToUpdate.setStatus(internProfile.getStatus());
@@ -157,8 +156,9 @@ public class InternController {
             if(internProfile.getGpa() != 0.0){
                 profileToUpdate.setGpa(internProfile.getGpa());
             }
-            if(internProfile.getPermissionFile() != null){
-                profileToUpdate.setPermissionFile(internProfile.getPermissionFile());
+
+            if(internProfile.getRejectionReason() != null){
+                profileToUpdate.setRejectionReason(internProfile.getRejectionReason());
             }
 
 
