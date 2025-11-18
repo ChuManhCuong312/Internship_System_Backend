@@ -10,7 +10,7 @@ public class HRInternDTO {
     private String phone;
     private String cvPath;
     private double gpa;
-    private String internshipApplictionPath;
+    private String permissionFile;
     private String status;
     private String major;
     private String school;
@@ -20,7 +20,7 @@ public class HRInternDTO {
     public HRInternDTO() {}
 
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
-                       String cvPath, String internshipApplictionPath, double gpa,
+                       String cvPath, String permissionFile, double gpa,
                        String status, String major, String school,
                        LocalDate dob, String address) {
         this.internId = internId;
@@ -29,7 +29,7 @@ public class HRInternDTO {
         this.email = email;
         this.phone = phone;
         this.cvPath = cvPath;
-        this.internshipApplictionPath = internshipApplictionPath;
+        this.permissionFile = permissionFile;
         this.gpa = gpa;
         this.status = status;
         this.major = major;
@@ -60,8 +60,8 @@ public class HRInternDTO {
     public double getGpa() { return gpa; }
     public void setGpa(double gpa) { this.gpa = gpa; }
 
-    public String getInternshipApplictionPath() { return internshipApplictionPath; }
-    public void setInternshipApplictionPath(String internshipApplictionPath) { this.internshipApplictionPath = internshipApplictionPath; }
+    public String getPermissionFile() { return permissionFile; }
+    public void setPermissionFile(String permissionFile) { this.permissionFile = permissionFile; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

@@ -39,11 +39,11 @@ public class InternProfile {
     private String address;
 
     @Size(max = 255, message = "CV file name must not exceed 255 characters")
-    @Column(name = "cv_file")
-    private String cvFile;
+    @Column(name = "cv_path")
+    private String cvPath;
 
     @Size(max = 255, message = "Must not exceed 255 characters")
-    @Column(name = "internship_application_path", nullable = false)
+    @Column(name = "internship_application_path")
     private String permissionFile;
 
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
@@ -137,11 +137,11 @@ public class InternProfile {
     }
 
     public String getCvFile() {
-        return cvFile;
+        return cvPath;
     }
 
     public void setCvFile(String cvFile) {
-        this.cvFile = cvFile;
+        this.cvPath = cvFile;
     }
 
     public String getStatus() {
