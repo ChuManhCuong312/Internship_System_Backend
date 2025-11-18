@@ -4,6 +4,7 @@ package com.example.Internship_System.hr.controller;
 import com.example.Internship_System.hr.dto.InternAssignmentViewDTO;
 import com.example.Internship_System.hr.dto.MentorAssignmentDTO;
 import com.example.Internship_System.hr.dto.MentorAssignmentRequestDTO;
+import com.example.Internship_System.hr.dto.MentorViewDTO;
 import com.example.Internship_System.hr.entity.MentorAssignment;
 import com.example.Internship_System.hr.mapper.MentorAssignmentMapper;
 import com.example.Internship_System.hr.service.MentorAssignmentService;
@@ -90,5 +91,10 @@ public class MentorAssignmentController {
         response.put("totalPages", internPage.getTotalPages());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/mentors")
+    public ResponseEntity<List<MentorViewDTO>> getMentorsForDropdown() {
+        return ResponseEntity.ok(mentorAssignmentService.getMentorsWithInternCount());
     }
 }
