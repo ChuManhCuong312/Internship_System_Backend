@@ -1,6 +1,8 @@
 package com.example.Internship_System.auth.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,7 +23,8 @@ public class User {
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Column(name = "phone", length = 20)
+    @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số")
+    @Column(name = "phone", length = 20, unique = true)
     private String phone;
 
     @Enumerated(EnumType.STRING)
