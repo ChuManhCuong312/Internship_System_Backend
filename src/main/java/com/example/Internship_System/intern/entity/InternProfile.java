@@ -12,27 +12,27 @@ public class InternProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "intern_id", nullable = false)
     private int internId;
-    
+
     @NotNull(message = "User ID is required")
     @Positive(message = "User ID must be a positive number")
     @Column(name = "user_id", nullable = false, unique = true)
     private int userId;
-    
+
     @NotBlank(message = "School is required")
     @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
     @Column(name = "school", nullable = false)
     private String school;
-    
+
     @NotBlank(message = "Major is required")
     @Size(min = 2, max = 150, message = "Major must be between 2 and 150 characters")
     @Column(name = "major", nullable = false)
     private String major;
-    
+
     @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
     @Column(name = "dob", nullable = false)
     private LocalDate dob;
-    
+
     @NotBlank(message = "Address is required")
     @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
     @Column(name = "address", nullable = false)
@@ -60,10 +60,6 @@ public class InternProfile {
     @Column(name = "intern_image_path")
     private String avatar;
 
-    @Size(max = 11)
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
     @Positive(message = "GPA must be higher than 0")
     @Column(name = "gpa", nullable = false)
     private double gpa;
@@ -80,14 +76,6 @@ public class InternProfile {
         this.gpa = gpa;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-  
     public int getInternId() {
         return internId;
     }
@@ -142,6 +130,7 @@ public class InternProfile {
 
     public void setCvFile(String cvFile) {
         this.cvPath = cvFile;
+        updateStatusBasedOnFiles();
     }
 
     public String getStatus() {
@@ -160,9 +149,13 @@ public class InternProfile {
         this.gender = gender;
     }
 
-    public String getRejectionReason() { return rejectionReason; }
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
 
-    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
 
     public String getPermissionFile() {
         return permissionFile;
@@ -170,6 +163,7 @@ public class InternProfile {
 
     public void setPermissionFile(String permissionFile) {
         this.permissionFile = permissionFile;
+        updateStatusBasedOnFiles();
     }
 
     public String getAvatar() {
@@ -178,5 +172,16 @@ public class InternProfile {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+@PrePersist
+@PreUpdate
+    private void updateStatusBasedOnFiles() {
+        if ((cvPath == null || cvPath.isBlank()) || (permissionFile == null || permissionFile.isBlank())) {
+            this.status = "NO_FILE";
+        } else {
+            this.status = "PENDING";
+        }
+
     }
 }
