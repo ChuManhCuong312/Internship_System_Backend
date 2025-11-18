@@ -20,7 +20,7 @@ INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role
 (13, 'tts07@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo Ngọc', '0399222111', 'REJECTED', 4),
 (14, 'tts08@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Hoàng Minh Đức', '0334455667', 'INACTIVE', 4),
 (15, 'tts09@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4),
-(16, 'tts10@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Hà', '0377123488', 'ACTIVE', 4)
+(16, 'tts10@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Hà', '0377123488', 'ACTIVE', 4),
 (17, 'tts11@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Tuấn Bảo', '0357356787', 'INACTIVE', 4),
 (18, 'tts12@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Gia Huy', '0127465497', 'PENDING_APPROVAL', 4),
 (19, 'tts13@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Minh Đức', '0477326788', 'ACTIVE', 4),
@@ -47,7 +47,7 @@ INSERT INTO intern_users ( intern_id, user_id, school, major, gpa, dob, gender,a
 (6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'FEMALE', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', NULL),
 (7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', 'MALE', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
 (8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'FEMALE', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', NULL),
-(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'MALE', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL)
+(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'MALE', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL),
 (10, 16, 'CMC University', 'Khoa học máy tính', 3.2, '2003-08-01', 'MALE', 'Hà Đông, Hà Nội', 'img_ha.jpg', 'app_ha.pdf', 'cv_ha.pdf', 'APPROVED', NULL),
 (11, 17, 'CMC University', 'Khoa học máy tính', 3.1, '2003-09-11', 'MALE', 'Hà Đông, Hà Nội', 'img_bao.jpg', 'app_bao.pdf', 'cv_bao.pdf', 'NO_FILE', NULL),
 (12, 18, 'CMC University', 'An toàn thông tin', 2.7, '2003-07-07', 'MALE', 'Hà Đông, Hà Nội', 'img_huy.jpg', 'app_huy.pdf', 'cv_huy.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
