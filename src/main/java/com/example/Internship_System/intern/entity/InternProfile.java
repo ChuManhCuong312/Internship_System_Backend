@@ -82,7 +82,7 @@ public class InternProfile {
         this.internId = internId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
