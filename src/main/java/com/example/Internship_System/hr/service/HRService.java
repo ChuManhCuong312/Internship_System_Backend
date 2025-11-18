@@ -117,7 +117,6 @@ public class HRService {
         if (updatedProfile.getDob() != null) existing.setDob(updatedProfile.getDob());
         if (updatedProfile.getAddress() != null) existing.setAddress(updatedProfile.getAddress());
         if (updatedProfile.getGender() != null) existing.setGender(updatedProfile.getGender());
-        if (updatedProfile.getPhoneNumber() != null) existing.setPhoneNumber(updatedProfile.getPhoneNumber());
         if (updatedProfile.getGpa() > 0) existing.setGpa(updatedProfile.getGpa());
 
         repository.save(existing);
