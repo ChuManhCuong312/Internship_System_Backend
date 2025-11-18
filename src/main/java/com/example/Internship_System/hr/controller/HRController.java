@@ -2,8 +2,11 @@ package com.example.Internship_System.hr.controller;
 
 import com.example.Internship_System.hr.dto.CandidateDTO;
 import com.example.Internship_System.hr.dto.HRInternDTO;
+import com.example.Internship_System.hr.dto.InternUpdateDTO;
 import com.example.Internship_System.hr.service.HRService;
+import com.example.Internship_System.repository.UserRepository;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,23 +67,24 @@ public class HRController {
     }
 
     @PostMapping("/{userId}/profile")
-    public ResponseEntity<Void> createInternProfile(
+    public ResponseEntity<?> createInternProfile(
             @PathVariable int userId,
+            @RequestParam(required = false) String phone,
             @ModelAttribute InternProfile profileData) {
-        User user = new User();
-        user.setUserId(userId);
-
-        hrService.createInternProfileForUser(user, profileData);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        try {
+            hrService.createInternProfileForUser(userId, phone, profileData);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/profile")
     public ResponseEntity<?> updateInternProfile(
             @PathVariable int id,
-            @RequestBody InternProfile updatedProfile) {
+            @Valid @RequestBody InternUpdateDTO dto) {
         try {
-            hrService.updateInternProfile(id, updatedProfile);
+            hrService.updateInternProfile(id, dto);
             return ResponseEntity.ok().build();
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
             String msg = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
