@@ -16,23 +16,18 @@ public class InternProfile {
     @Column(name = "user_id", nullable = false, unique = true)
     private Integer userId;
 
-    @NotBlank(message = "School is required")
     @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
     @Column(name = "school")
     private String school;
 
-
-    @NotBlank(message = "Major is required")
     @Size(min = 2, max = 150, message = "Major must be between 2 and 150 characters")
     @Column(name = "major")
     private String major;
 
-    @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
     @Column(name = "dob")
     private LocalDate dob;
 
-    @NotBlank(message = "Address is required")
     @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
     @Column(name = "address")
     private String address;
