@@ -20,7 +20,12 @@ INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role
 (13, 'tts07@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo Ngọc', '0399222111', 'REJECTED', 4),
 (14, 'tts08@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Hoàng Minh Đức', '0334455667', 'INACTIVE', 4),
 (15, 'tts09@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4),
-(16, 'tts10@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Hà', '0377123488', 'ACTIVE', 4);
+(16, 'tts10@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Hà', '0377123488', 'ACTIVE', 4)
+(17, 'tts11@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Tuấn Bảo', '0357356787', 'INACTIVE', 4),
+(18, 'tts12@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Gia Huy', '0127465497', 'PENDING_APPROVAL', 4),
+(19, 'tts13@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Minh Đức', '0477326788', 'ACTIVE', 4),
+(20, 'tts14@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Thị Anh', '0379296795', 'REJECTED', 4),
+(21, 'tts15@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Nguyên Chương', '0521163478', 'ACTIVE', 4);
 INSERT INTO admin_users (admin_id, user_id, position) VALUES
 (1, 1, 'Quản trị hệ thống chính');
 
@@ -33,28 +38,39 @@ INSERT INTO mentor_users (mentor_id, user_id, department, expertise) VALUES
 (2, 5, 'Kinh doanh', 'Digital Marketing, SEO, Google Ads'),
 (3, 6, 'Phân tích dữ liệu', 'Python, Power BI, SQL nâng cao');
 
-INSERT INTO intern_users ( intern_id, user_id, school, major, gpa, dob, phone_number, gender,address, intern_image_path, internship_application_path, cv_path, status, rejection_reason) VALUES
-(1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', '0987654321', 'MALE', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', NULL),
-(2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', '0912345678', 'FEMALE', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', NULL),
-(3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', '0978123456', 'MALE', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', NULL),
-(4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', '0934567890', 'FEMALE', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', NULL),
-(5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', '0965432109', 'MALE', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', NULL),
-(6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', '0943210987', 'FEMALE', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', NULL),
-(7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', '0923456789', 'MALE', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
-(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', '0956789123', 'FEMALE', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', NULL),
-(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', '0909876543', 'MALE', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL);
+INSERT INTO intern_users ( intern_id, user_id, school, major, gpa, dob, gender,address, intern_image_path, internship_application_path, cv_path, status, rejection_reason) VALUES
+(1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', 'MALE', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', NULL),
+(2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', 'FEMALE', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', NULL),
+(3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', 'MALE', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', NULL),
+(4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', 'FEMALE', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', NULL),
+(5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'MALE', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', NULL),
+(6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'FEMALE', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', NULL),
+(7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', 'MALE', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
+(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'FEMALE', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', NULL),
+(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'MALE', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL)
+(10, 16, 'CMC University', 'Khoa học máy tính', 3.2, '2003-08-01', 'MALE', 'Hà Đông, Hà Nội', 'img_ha.jpg', 'app_ha.pdf', 'cv_ha.pdf', 'APPROVED', NULL),
+(11, 17, 'CMC University', 'Khoa học máy tính', 3.1, '2003-09-11', 'MALE', 'Hà Đông, Hà Nội', 'img_bao.jpg', 'app_bao.pdf', 'cv_bao.pdf', 'NO_FILE', NULL),
+(12, 18, 'CMC University', 'An toàn thông tin', 2.7, '2003-07-07', 'MALE', 'Hà Đông, Hà Nội', 'img_huy.jpg', 'app_huy.pdf', 'cv_huy.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
+(13, 19, 'CMC University', 'Kỹ sư phần mềm', 3.7, '2003-02-21', 'MALE', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'PENDING', NULL),
+(14, 20, 'CMC University', 'Hệ thống thông tin', 3.1, '2003-11-28', 'FEMALE', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL),
+(15, 21, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội', 'img_chuong.jpg', 'app_chuong.pdf', 'cv_chuong.pdf', 'APPROVED', NULL);
 
 
 INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
 (1, 1, 'contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 (2, 2, 'contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NULL, 'Đang chờ xác nhận'),
 (3, 3, 'contracts/quan_contract.pdf', 'NOT_UPLOAD', 'PENDING', NULL, NULL);
+(4, 5, 'contracts/binh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(5, 6, 'contracts/dat_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(6, 9, 'contracts/anh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(7, 10, 'contracts/ha_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 
 INSERT INTO mentor_assignments (assignment_id, mentor_id, intern_id, assigned_at) VALUES
 (1, 1, 1, NOW()),
 (2, 1, 3, NOW()),
-(3, 2, 4, NOW()),
-(4, 3, 5, NOW());
+(3, 2, 5, NOW()),
+(4, 3, 6, NOW());
+(5, 3, 9, NOW());
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, max_interns) VALUES
 (1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 10),
