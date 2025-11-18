@@ -18,22 +18,23 @@ public class InternProfile {
 
     @NotBlank(message = "School is required")
     @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
-    @Column(name = "school", nullable = false)
+    @Column(name = "school")
     private String school;
+
 
     @NotBlank(message = "Major is required")
     @Size(min = 2, max = 150, message = "Major must be between 2 and 150 characters")
-    @Column(name = "major", nullable = false)
+    @Column(name = "major")
     private String major;
 
     @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
-    @Column(name = "dob", nullable = false)
+    @Column(name = "dob")
     private LocalDate dob;
 
     @NotBlank(message = "Address is required")
     @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
     @Size(max = 255, message = "CV file name must not exceed 255 characters")
@@ -181,5 +182,9 @@ public class InternProfile {
             this.status = "PENDING";
         }
 
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
