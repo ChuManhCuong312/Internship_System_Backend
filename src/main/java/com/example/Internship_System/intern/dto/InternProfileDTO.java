@@ -18,13 +18,14 @@ public class InternProfileDTO {
     private String major;
     private String status;
     private String gender;
+    private String phone;
     private LocalDateTime createdAt;
     private List<String> documents;
 
 public InternProfileDTO(){}
 
     public InternProfileDTO(int internId, int userId, String fullName, String email,
-                            String school, String major, String status, String gender,
+                            String school, String major, String status, String gender, String phone,
                             LocalDateTime createdAt, List<String> documents) {
         this.internId = internId;
         this.userId = userId;
@@ -34,6 +35,7 @@ public InternProfileDTO(){}
         this.major = major;
         this.status = status;
         this.gender = gender;
+        this.phone = phone;
         this.createdAt = createdAt;
         this.documents = documents;
 
@@ -74,4 +76,11 @@ public InternProfileDTO(){}
     public List<String> getDocuments() { return documents; }
     public void setDocuments(List<String> documents) { this.documents = documents; }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

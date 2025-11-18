@@ -8,10 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InternProfileMapper {
+
+
     public static InternProfileDTO toDTO(InternProfile intern, User user) {
         List<String> documents = new ArrayList<>();
         if (intern.getCvFile() != null && !intern.getCvFile().isEmpty()) {
             documents.add(intern.getCvFile());
+        }
+        if (intern.getPermissionFile() != null && !intern.getPermissionFile().isEmpty()) {
+            documents.add(intern.getPermissionFile());
         }
 
         return new InternProfileDTO(
@@ -23,6 +28,7 @@ public class InternProfileMapper {
                 intern.getMajor(),
                 intern.getStatus(),
                 intern.getGender(),
+                user.getPhone(),
                 user.getCreatedAt(),  // Pass LocalDateTime directly, not String
                 documents
         );
