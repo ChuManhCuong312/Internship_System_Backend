@@ -95,8 +95,30 @@ public class HRService {
         logRepository.save(log);
     }
 
-    public void createInternProfileForUser(User user, InternProfile profileData) {
-        profileData.setUserId(user.getUserId());
+    @Transactional
+    public void createInternProfileForUser(int userId, String phone, InternProfile profileData) {
+        // Lấy thông tin user từ database
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (phone != null && !phone.trim().isEmpty()) {
+            String newPhone = phone.trim();
+
+            if (!newPhone.matches("^0\\d{9}$")) {
+                throw new RuntimeException("Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số");
+            }
+
+            if (!newPhone.equals(existingUser.getPhone())) {
+                if (userRepository.existsByPhone(newPhone)) {
+                    throw new RuntimeException("Số điện thoại đã tồn tại trong hệ thống");
+                }
+
+                existingUser.setPhone(newPhone);
+                userRepository.saveAndFlush(existingUser);
+            }
+        }
+
+        profileData.setUserId(userId);
         profileData.setStatus("NO_FILE");
         repository.save(profileData);
     }
