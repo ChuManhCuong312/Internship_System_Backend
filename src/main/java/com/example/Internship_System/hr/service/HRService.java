@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.example.Internship_System.repository.InternLogRepository;
 import com.example.Internship_System.intern.entity.InternLog;
+import com.example.Internship_System.hr.dto.InternUpdateDTO;
 import java.time.LocalDateTime;
 
 import com.example.Internship_System.intern.entity.InternProfile;
@@ -94,8 +95,30 @@ public class HRService {
         logRepository.save(log);
     }
 
-    public void createInternProfileForUser(User user, InternProfile profileData) {
-        profileData.setUserId(user.getUserId());
+    @Transactional
+    public void createInternProfileForUser(int userId, String phone, InternProfile profileData) {
+        // Lấy thông tin user từ database
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (phone != null && !phone.trim().isEmpty()) {
+            String newPhone = phone.trim();
+
+            if (!newPhone.matches("^0\\d{9}$")) {
+                throw new RuntimeException("Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số");
+            }
+
+            if (!newPhone.equals(existingUser.getPhone())) {
+                if (userRepository.existsByPhone(newPhone)) {
+                    throw new RuntimeException("Số điện thoại đã tồn tại trong hệ thống");
+                }
+
+                existingUser.setPhone(newPhone);
+                userRepository.saveAndFlush(existingUser);
+            }
+        }
+
+        profileData.setUserId(userId);
         profileData.setStatus("NO_FILE");
         repository.save(profileData);
     }
@@ -105,29 +128,35 @@ public class HRService {
     }
 
     @Transactional
-    public void updateInternProfile(int internId, InternProfile updatedProfile) {
+    public void updateInternProfile(int internId, InternUpdateDTO dto) {
         InternProfile existing = repository.findById(internId)
                 .orElseThrow(() -> new RuntimeException("Intern profile not found with id: " + internId));
 
         if (!"APPROVED".equalsIgnoreCase(existing.getStatus())) {
             throw new RuntimeException("Chỉ được sửa hồ sơ đã duyệt");
         }
-        if (updatedProfile.getSchool() != null) existing.setSchool(updatedProfile.getSchool());
-        if (updatedProfile.getMajor() != null) existing.setMajor(updatedProfile.getMajor());
-        if (updatedProfile.getDob() != null) existing.setDob(updatedProfile.getDob());
-        if (updatedProfile.getAddress() != null) existing.setAddress(updatedProfile.getAddress());
-        if (updatedProfile.getGender() != null) existing.setGender(updatedProfile.getGender());
-        if (updatedProfile.getGpa() > 0) existing.setGpa(updatedProfile.getGpa());
 
-        if (updatedProfile.getPhoneNumber() != null) {
+        if (dto.getSchool() != null) existing.setSchool(dto.getSchool());
+        if (dto.getMajor() != null) existing.setMajor(dto.getMajor());
+        if (dto.getDob() != null) existing.setDob(dto.getDob());
+        if (dto.getAddress() != null) existing.setAddress(dto.getAddress());
+        if (dto.getGender() != null) existing.setGender(dto.getGender());
+        if (dto.getGpa() > 0) existing.setGpa(dto.getGpa());
+
+        if (dto.getPhone() != null) {
             User user = userRepository.findById(existing.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            if (!updatedProfile.getPhoneNumber().equals(user.getPhone())) {
-                user.setPhone(updatedProfile.getPhoneNumber());
+            if (!dto.getPhone().equals(user.getPhone())) {
+                if (userRepository.existsByPhone(dto.getPhone())) {
+                    throw new RuntimeException("Số điện thoại đã tồn tại trong hệ thống");
+                }
+
+                user.setPhone(dto.getPhone());
                 userRepository.saveAndFlush(user);
             }
         }
+
         repository.saveAndFlush(existing);
     }
 }
