@@ -21,6 +21,7 @@ public class InternProfile {
     @Column(name = "school")
     private String school;
 
+
     @NotBlank(message = "Major is required")
     @Size(min = 2, max = 150, message = "Major must be between 2 and 150 characters")
     @Column(name = "major")

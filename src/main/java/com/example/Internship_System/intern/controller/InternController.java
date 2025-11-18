@@ -168,6 +168,7 @@ public class InternController {
         }
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteInternProfile(@PathVariable("id") int id) {
         try {
