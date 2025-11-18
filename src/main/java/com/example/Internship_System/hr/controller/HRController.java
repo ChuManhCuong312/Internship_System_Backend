@@ -2,8 +2,10 @@ package com.example.Internship_System.hr.controller;
 
 import com.example.Internship_System.hr.dto.CandidateDTO;
 import com.example.Internship_System.hr.dto.HRInternDTO;
+import com.example.Internship_System.hr.dto.InternUpdateDTO;
 import com.example.Internship_System.hr.service.HRService;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,9 +80,9 @@ public class HRController {
     @PatchMapping("/{id}/profile")
     public ResponseEntity<?> updateInternProfile(
             @PathVariable int id,
-            @RequestBody InternProfile updatedProfile) {
+            @Valid @RequestBody InternUpdateDTO dto) {
         try {
-            hrService.updateInternProfile(id, updatedProfile);
+            hrService.updateInternProfile(id, dto);
             return ResponseEntity.ok().build();
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
             String msg = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
