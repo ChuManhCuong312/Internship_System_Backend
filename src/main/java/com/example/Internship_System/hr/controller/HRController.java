@@ -3,9 +3,11 @@ package com.example.Internship_System.hr.controller;
 import com.example.Internship_System.hr.dto.CandidateDTO;
 import com.example.Internship_System.hr.dto.HRInternDTO;
 import com.example.Internship_System.hr.service.HRService;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,11 +76,35 @@ public class HRController {
     }
 
     @PatchMapping("/{id}/profile")
-    public ResponseEntity<Void> updateInternProfile(
+    public ResponseEntity<?> updateInternProfile(
             @PathVariable int id,
             @RequestBody InternProfile updatedProfile) {
-        hrService.updateInternProfile(id, updatedProfile);
-        return ResponseEntity.ok().build();
+        try {
+            hrService.updateInternProfile(id, updatedProfile);
+            return ResponseEntity.ok().build();
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            String msg = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
+            if (msg.contains("phone")) {
+                return ResponseEntity.badRequest().body("Số điện thoại đã tồn tại trong hệ thống");
+            } else if (msg.contains("email")) {
+                return ResponseEntity.badRequest().body("Email đã tồn tại trong hệ thống");
+            }
+            return ResponseEntity.badRequest().body("Dữ liệu bị trùng hoặc vi phạm ràng buộc");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationErrors(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations().iterator().next().getMessage();
+        return ResponseEntity.badRequest().body(errorMessage);
     }
 }
 
