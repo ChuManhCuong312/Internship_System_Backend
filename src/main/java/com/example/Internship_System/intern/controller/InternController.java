@@ -113,7 +113,6 @@ public class InternController {
             profileToUpdate.setAddress(internProfile.getAddress());
             profileToUpdate.setCvFile(internProfile.getCvFile());
             profileToUpdate.setStatus(internProfile.getStatus());
-            profileToUpdate.setPhoneNumber(internProfile.getPhoneNumber());
             profileToUpdate.setGpa(internProfile.getGpa());
             profileToUpdate.setGender(internProfile.getGender());
             profileToUpdate.setPermissionFile(internProfile.getPermissionFile());
@@ -151,9 +150,6 @@ public class InternController {
 
             if (internProfile.getStatus() != null) {
                 profileToUpdate.setStatus(internProfile.getStatus());
-            }
-            if(internProfile.getPhoneNumber() != null){
-                profileToUpdate.setStatus(internProfile.getPhoneNumber());
             }
             if(internProfile.getGender() != null){
                 profileToUpdate.setGender(internProfile.getGender());

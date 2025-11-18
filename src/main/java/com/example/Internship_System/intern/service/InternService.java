@@ -33,6 +33,16 @@ public class InternService {
     }
 
     public InternProfile save(InternProfile profile) {
+        // Check CV and Permission file
+        boolean hasCv = profile.getCvFile() != null && !profile.getCvFile().isBlank();
+        boolean hasPermissionFile = profile.getPermissionFile() != null && !profile.getPermissionFile().isBlank();
+
+        if (hasCv && hasPermissionFile) {
+            profile.setStatus("PENDING");
+        } else {
+            profile.setStatus("NO_FILE");
+        }
+
         return repository.save(profile);
     }
 
