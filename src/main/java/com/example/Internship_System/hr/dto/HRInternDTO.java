@@ -8,6 +8,7 @@ public class HRInternDTO {
     private String fullName;
     private String email;
     private String phone;
+    private String gender;
     private String cvPath;
     private double gpa;
     private String permissionFile;
@@ -22,12 +23,13 @@ public class HRInternDTO {
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
                        String cvPath, String permissionFile, double gpa,
                        String status, String major, String school,
-                       LocalDate dob, String address) {
+                       LocalDate dob, String address, String gender) {
         this.internId = internId;
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
+        this.gender = gender;
         this.cvPath = cvPath;
         this.permissionFile = permissionFile;
         this.gpa = gpa;
@@ -78,4 +80,6 @@ public class HRInternDTO {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
 
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
 }
