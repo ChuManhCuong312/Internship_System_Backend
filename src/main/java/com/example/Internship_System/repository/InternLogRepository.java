@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface InternLogRepository extends JpaRepository<InternLog, Long> {
-    List<InternLog> findByUserIdOrderByCreatedAtDesc(int userId);
+    List<InternLog> findByInternIdOrderByCreatedAtDesc(int internId);
 }
 

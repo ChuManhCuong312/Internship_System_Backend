@@ -129,7 +129,6 @@ public class InternProfile {
 
     public void setCvFile(String cvFile) {
         this.cvPath = cvFile;
-        updateStatusBasedOnFiles();
     }
 
     public String getStatus() {
@@ -162,7 +161,6 @@ public class InternProfile {
 
     public void setPermissionFile(String permissionFile) {
         this.permissionFile = permissionFile;
-        updateStatusBasedOnFiles();
     }
 
     public String getAvatar() {
@@ -171,17 +169,6 @@ public class InternProfile {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-@PrePersist
-@PreUpdate
-    private void updateStatusBasedOnFiles() {
-        if ((cvPath == null || cvPath.isBlank()) || (permissionFile == null || permissionFile.isBlank())) {
-            this.status = "NO_FILE";
-        } else {
-            this.status = "PENDING";
-        }
-
     }
 
     public void setUserId(Integer userId) {
