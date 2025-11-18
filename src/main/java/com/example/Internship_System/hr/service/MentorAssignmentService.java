@@ -1,6 +1,7 @@
 package com.example.Internship_System.hr.service;
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.hr.dto.InternAssignmentViewDTO;
+import com.example.Internship_System.hr.dto.MentorViewDTO;
 import com.example.Internship_System.hr.entity.MentorAssignment;
 import com.example.Internship_System.intern.entity.ContractDocument;
 import com.example.Internship_System.intern.entity.InternConfirmStatus;
@@ -12,9 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MentorAssignmentService {
@@ -107,5 +106,28 @@ public class MentorAssignmentService {
         existingAssignment.setMentor(mentor);
 
         return mentorAssignmentRepository.save(existingAssignment);
+    }
+
+    public List<MentorViewDTO> getMentorsWithInternCount(){
+        List<MentorUser> mentors = mentorRepository.findAllWithUser();
+
+        List<Object[]> counts = mentorAssignmentRepository.countAssignedInterns();
+
+        Map<Integer,Integer> countMap = new HashMap<>();
+        for(Object[] row : counts){
+            Integer mentorId = ((Number) row[0]).intValue();
+            Integer count = ((Number) row[1]).intValue();
+            countMap.put(mentorId,count);
+        }
+
+        List<MentorViewDTO> result = new ArrayList<>();
+        for(MentorUser mentor : mentors){
+            Integer mentorId = mentor.getMentorId();
+            String name = mentor.getUser().getFullName();
+            Integer assigned = countMap.getOrDefault(mentorId, 0);
+
+            result.add(new MentorViewDTO(mentorId, name, assigned));
+        }
+        return result;
     }
 }
