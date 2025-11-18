@@ -12,12 +12,10 @@ public class InternProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "intern_id", nullable = false)
     private int internId;
-    
-    @NotNull(message = "User ID is required")
-    @Positive(message = "User ID must be a positive number")
+
     @Column(name = "user_id", nullable = false, unique = true)
-    private int userId;
-    
+    private Integer userId;
+
     @NotBlank(message = "School is required")
     @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
     @Column(name = "school", nullable = false)
