@@ -160,7 +160,7 @@ public class AdminController {
         if (!user.getEmail().equals(userDTO.getEmail()) && userRepository.existsByEmail(userDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Email đã tồn tại!");
         }
-        if (userRepository.existsByPhone(userDTO.getPhone())) {
+        if (!user.getPhone().equals(userDTO.getPhone()) && userRepository.existsByPhone(userDTO.getPhone())) {
             return ResponseEntity.badRequest().body("Số điện thoại đã tồn tại!");
         }
         // 3. Cập nhật các trường cơ bản
@@ -177,13 +177,7 @@ public class AdminController {
             user.setRole(roleOpt.get());
         }
 
-        // 5. Kiểm tra nếu có nhập password thì cập nhật & mã hóa
-        if (userDTO.getPassword() != null && !userDTO.getPassword().trim().isEmpty()) {
-            user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
-        }
-
-        // ⚠️ Không thay đổi: createdAt và status
-        // => giữ nguyên user.getCreatedAt() và user.getStatus()
+        //  Không thay đổi: createdAt, status và password
 
         // 6. Lưu lại vào DB
         userRepository.save(user);
