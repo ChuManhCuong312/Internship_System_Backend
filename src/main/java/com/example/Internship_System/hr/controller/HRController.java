@@ -4,6 +4,7 @@ import com.example.Internship_System.hr.dto.CandidateDTO;
 import com.example.Internship_System.hr.dto.HRInternDTO;
 import com.example.Internship_System.hr.dto.InternUpdateDTO;
 import com.example.Internship_System.hr.service.HRService;
+import com.example.Internship_System.repository.UserRepository;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,15 +67,16 @@ public class HRController {
     }
 
     @PostMapping("/{userId}/profile")
-    public ResponseEntity<Void> createInternProfile(
+    public ResponseEntity<?> createInternProfile(
             @PathVariable int userId,
+            @RequestParam(required = false) String phone,
             @ModelAttribute InternProfile profileData) {
-        User user = new User();
-        user.setUserId(userId);
-
-        hrService.createInternProfileForUser(user, profileData);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        try {
+            hrService.createInternProfileForUser(userId, phone, profileData);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/profile")
