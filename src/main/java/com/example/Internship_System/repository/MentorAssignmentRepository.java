@@ -4,6 +4,7 @@ import com.example.Internship_System.hr.entity.MentorAssignment;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface MentorAssignmentRepository extends JpaRepository<MentorAssignme
     boolean existsByIntern(InternProfile intern);
 
     boolean existsByMentor(MentorUser mentor);
+
+    @Query("SELECT ma.mentor.mentorId, COUNT(ma) FROM MentorAssignment ma GROUP BY ma.mentor.mentorId")
+    List<Object[]> countAssignedInterns();
 }
