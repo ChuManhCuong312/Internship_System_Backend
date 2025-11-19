@@ -16,45 +16,45 @@ public class InternProfile {
     @Column(name = "user_id", nullable = false, unique = true)
     private Integer userId;
 
-    @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
+    @Size(min = 2, max = 150, message = "Tên trường của bạn phải ít hơn 120 kí tự")
     @Column(name = "school")
     private String school;
 
-    @Size(min = 2, max = 150, message = "Major must be between 2 and 150 characters")
+    @Size(min = 2, max = 150, message = "Tên ngành phải it hơn 150 kí tự")
     @Column(name = "major")
     private String major;
 
-    @Past(message = "Date of birth must be in the past")
+    @Past(message = "Bạn phải trên 18 tuổi")
     @Column(name = "dob")
     private LocalDate dob;
 
-    @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
+    @Size(min = 5, max = 255, message = "Địa chỉ phải ít hơn 255 từ")
     @Column(name = "address")
     private String address;
 
-    @Size(max = 255, message = "CV file name must not exceed 255 characters")
+    @Size(max = 255, message = "Đuờng dẫn file phải ngắn hơn 255 kí tự")
     @Column(name = "cv_path")
     private String cvPath;
 
-    @Size(max = 255, message = "Must not exceed 255 characters")
+    @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 kí tự")
     @Column(name = "internship_application_path")
     private String permissionFile;
 
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
-            message = "Status must be one of: PENDING, APPROVED, REJECTED, NO_FILE")
+            message = "Trạng thái phải hợp lệ: PENDING, APPROVED, REJECTED, NO_FILE")
     @Column(name = "status")
     private String status;
 
     @Pattern(regexp = "^(MALE|FEMALE)?$",
-            message = "Choose a gender")
+            message = "Chọn 1 giới tính")
     @Column(name = "gender")
     private String gender;
 
-    @Size(max = 255, message = "Avatar path must not exceed 255 characters")
+    @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 kí tự, định dạng .png hoặc .jpg")
     @Column(name = "intern_image_path")
     private String avatar;
 
-    @Positive(message = "GPA must be higher than 0")
+    @Positive(message = "GPA phải lớn hơn 0 và nhỏ hơn 4")
     @Column(name = "gpa", nullable = false)
     private double gpa;
 
@@ -122,9 +122,8 @@ public class InternProfile {
         return cvPath;
     }
 
-    public void setCvFile(String cvFile) {
-        this.cvPath = cvFile;
-        updateStatusBasedOnFiles();
+    public void setCvFile(String cvPath) {
+        this.cvPath = cvPath;
     }
 
     public String getStatus() {
@@ -157,7 +156,6 @@ public class InternProfile {
 
     public void setPermissionFile(String permissionFile) {
         this.permissionFile = permissionFile;
-        updateStatusBasedOnFiles();
     }
 
     public String getAvatar() {
@@ -166,17 +164,6 @@ public class InternProfile {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-@PrePersist
-@PreUpdate
-    private void updateStatusBasedOnFiles() {
-        if ((cvPath == null || cvPath.isBlank()) || (permissionFile == null || permissionFile.isBlank())) {
-            this.status = "NO_FILE";
-        } else {
-            this.status = "PENDING";
-        }
-
     }
 
     public void setUserId(Integer userId) {
