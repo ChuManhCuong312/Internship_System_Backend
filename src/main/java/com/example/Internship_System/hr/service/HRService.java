@@ -14,6 +14,7 @@ import com.example.Internship_System.repository.InternLogRepository;
 import com.example.Internship_System.intern.entity.InternLog;
 import com.example.Internship_System.hr.dto.InternUpdateDTO;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.auth.entity.User;
@@ -36,11 +37,18 @@ public class HRService {
     private UserRepository userRepository;
 
     public Page<HRInternDTO> getAllInternsForHR(Pageable pageable) {
-        return repository.findAllInternProfilesForHR(null, null, null, pageable);
+        return repository.findAllInternProfilesForHR(null, null, null,null, pageable);
     }
 
-    public Page<HRInternDTO> searchInterns(String searchTerm, String major, String status, Pageable pageable) {
-        return repository.findAllInternProfilesForHR(searchTerm, major, status, pageable);
+    public Page<HRInternDTO> searchInterns(String searchTerm, String major, String school, String status, Pageable pageable) {
+        return repository.findAllInternProfilesForHR(searchTerm, major, school, status, pageable);
+    }
+
+    public List<String> getAllMajors() {
+        return repository.findDistinctMajors();
+    }
+    public List<String> getAllSchools() {
+        return repository.findDistinctSchools();
     }
 
     public void updateStatus(int internId, String status, String rejectionReason) {
