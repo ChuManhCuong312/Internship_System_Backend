@@ -1,5 +1,6 @@
 package com.example.Internship_System.intern.entity;
 
+import com.example.Internship_System.validation.MinimumAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -16,28 +17,29 @@ public class InternProfile {
     @Column(name = "user_id", nullable = false, unique = true)
     private Integer userId;
 
-    @NotBlank(message = "School is required")
-    @Size(min = 2, max = 150, message = "School must be between 2 and 150 characters")
+    @NotBlank(message = "Trường học là bắt buộc")
+    @Size(min = 2, max = 150, message = "Tên trường phải từ 2 đến 150 ký tự")
     @Column(name = "school")
     private String school;
 
 
-    @NotBlank(message = "Major is required")
-    @Size(min = 2, max = 150, message = "Major must be between 2 and 150 characters")
+    @NotBlank(message = "Ngành học là bắt buộc")
+    @Size(min = 2, max = 150, message = "Tên ngành phải từ 2 đến 150 ký tự")
     @Column(name = "major")
     private String major;
 
-    @NotNull(message = "Date of birth is required")
-    @Past(message = "Date of birth must be in the past")
+    @NotNull(message = "Ngày sinh là bắt buộc")
+    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
+    @MinimumAge(value = 18, message = "Tuổi phải từ 18 trở lên")
     @Column(name = "dob")
     private LocalDate dob;
 
-    @NotBlank(message = "Address is required")
-    @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
+    @NotBlank(message = "Địa chỉ là bắt buộc")
+    @Size(min = 5, max = 255, message = "Địa chỉ phải từ 5 đến 255 ký tự")
     @Column(name = "address")
     private String address;
 
-    @Size(max = 255, message = "CV file name must not exceed 255 characters")
+    @Size(max = 255, message = "Tên file CV không được vượt quá 255 ký tự")
     @Column(name = "cv_path")
     private String cvPath;
 
@@ -46,20 +48,20 @@ public class InternProfile {
     private String permissionFile;
 
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
-            message = "Status must be one of: PENDING, APPROVED, REJECTED, NO_FILE")
+            message = "Trạng thái phải là một trong: PENDING, APPROVED, REJECTED, NO_FILE")
     @Column(name = "status")
     private String status;
 
     @Pattern(regexp = "^(MALE|FEMALE)?$",
-            message = "Choose a gender")
+            message = "Giới tính phải là MALE hoặc FEMALE")
     @Column(name = "gender")
     private String gender;
 
-    @Size(max = 255, message = "Avatar path must not exceed 255 characters")
+    @Size(max = 255, message = "Đường dẫn ảnh đại diện không được vượt quá 255 ký tự")
     @Column(name = "intern_image_path")
     private String avatar;
 
-    @Positive(message = "GPA must be higher than 0")
+    @Positive(message = "GPA phải lớn hơn 0")
     @Column(name = "gpa", nullable = false)
     private double gpa;
 
