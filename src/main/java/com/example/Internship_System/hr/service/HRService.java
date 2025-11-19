@@ -127,10 +127,6 @@ public class HRService {
         InternProfile existing = repository.findById(internId)
                 .orElseThrow(() -> new RuntimeException("Intern profile not found with id: " + internId));
 
-        if (!"APPROVED".equalsIgnoreCase(existing.getStatus())) {
-            throw new RuntimeException("Chỉ được sửa hồ sơ đã duyệt");
-        }
-
         if (dto.getSchool() != null) existing.setSchool(dto.getSchool());
         if (dto.getMajor() != null) existing.setMajor(dto.getMajor());
         if (dto.getDob() != null) existing.setDob(dto.getDob());
@@ -153,6 +149,13 @@ public class HRService {
         }
 
         repository.saveAndFlush(existing);
+
+        // Tạo log
+        InternLog log = new InternLog();
+        log.setInternId(existing.getInternId());
+        log.setDetails("Hồ sơ đã được cập nhật bởi HR");
+        log.setCreatedAt(LocalDateTime.now());
+        logRepository.save(log);
     }
 }
 
