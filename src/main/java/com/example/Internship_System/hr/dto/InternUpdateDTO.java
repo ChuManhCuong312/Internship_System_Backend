@@ -1,14 +1,33 @@
 package com.example.Internship_System.hr.dto;
 
+import com.example.Internship_System.validation.MinimumAge;
+import com.example.Internship_System.validation.ValidPhone;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 public class InternUpdateDTO {
+
+    @Size(min = 2, max = 150, message = "Tên trường phải từ 2 đến 150 ký tự")
     private String school;
+
+    @Size(min = 2, max = 150, message = "Tên ngành phải từ 2 đến 150 ký tự")
     private String major;
+
+    @Past(message = "Ngày sinh phải ở quá khứ")
+    @MinimumAge(value = 18, message = "Tuổi phải từ 18 trở lên")
     private LocalDate dob;
+
+    @Size(min = 5, max = 255, message = "Địa chỉ phải từ 5 đến 255 ký tự")
     private String address;
+
+    @Pattern(regexp = "^(MALE|FEMALE)?$", message = "Giới tính phải là MALE hoặc FEMALE")
     private String gender;
+
+    @Positive(message = "GPA phải lớn hơn 0")
+    @DecimalMax(value = "4.0", message = "GPA phải nhỏ hơn 4")
     private double gpa;
+
+    @ValidPhone(message = "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số")
     private String phone;
 
     // Getters & Setters
