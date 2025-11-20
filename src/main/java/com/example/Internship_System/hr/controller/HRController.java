@@ -17,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.intern.entity.InternProfile;
 
+import java.util.Collections;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/hr/interns")
 @CrossOrigin(origins = "*")
@@ -38,10 +41,11 @@ public class HRController {
     public ResponseEntity<Page<HRInternDTO>> searchInternProfiles(
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String major,
+            @RequestParam(required = false) String school,
             @RequestParam(required = false) String status,
             Pageable pageable
     ) {
-        Page<HRInternDTO> profiles = hrService.searchInterns(searchTerm, major, status, pageable);
+        Page<HRInternDTO> profiles = hrService.searchInterns(searchTerm, major, school, status, pageable);
         if (profiles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -109,6 +113,24 @@ public class HRController {
     public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
         String errorMessage = ex.getConstraintViolations().iterator().next().getMessage();
         return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @GetMapping("/majors")
+    public ResponseEntity<List<String>> getAllMajors() {
+        List<String> majors = hrService.getAllMajors();
+        if (majors.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.emptyList());
+        }
+        return ResponseEntity.ok(majors);
+    }
+
+    @GetMapping("/schools")
+    public ResponseEntity<List<String>> getAllSchools() {
+        List<String> schools = hrService.getAllSchools();
+        if (schools.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.emptyList());
+        }
+        return ResponseEntity.ok(schools);
     }
 }
 
