@@ -17,11 +17,11 @@ public class InternProfile {
     @Column(name = "user_id", nullable = false, unique = true)
     private Integer userId;
 
-    @Size(min = 2, max = 150, message = "Tên trường của bạn phải ít hơn 120 kí tự")
+    @Size(min = 2, max = 150, message = "Tên trường của bạn phải từ 2 đến 150 ký tự")
     @Column(name = "school")
     private String school;
 
-    @Size(min = 2, max = 150, message = "Tên ngành phải it hơn 150 kí tự")
+    @Size(min = 2, max = 150, message = "Tên ngành phải từ 2 đến 150 ký tự")
     @Column(name = "major")
     private String major;
 
@@ -29,7 +29,7 @@ public class InternProfile {
     @Column(name = "dob")
     private LocalDate dob;
 
-    @Size(min = 5, max = 255, message = "Địa chỉ phải ít hơn 255 từ")
+    @Size(min = 5, max = 255, message = "Địa chỉ phải từ 5 đến 255 ký tự")
     @Column(name = "address")
     private String address;
 
