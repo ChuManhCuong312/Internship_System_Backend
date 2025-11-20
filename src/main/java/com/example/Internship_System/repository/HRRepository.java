@@ -2,7 +2,6 @@ package com.example.Internship_System.repository;
 
 import com.example.Internship_System.hr.dto.HRInternDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,7 +24,7 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(u.phone) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
             "AND (:major IS NULL OR LOWER(i.major) LIKE LOWER(CONCAT('%', :major, '%'))) " +
-            "AND (:school IS NULL OR LOWER(i.school) = LOWER(:school)) " +
+            "AND (:school IS NULL OR LOWER(i.school) LIKE LOWER(CONCAT('%', :school, '%'))) " +
             "AND (:status IS NULL OR i.status = :status)" +
             "ORDER BY i.internId DESC")
     Page<HRInternDTO> findAllInternProfilesForHR(
@@ -38,8 +37,8 @@ public interface HRRepository extends JpaRepository<InternProfile, Integer> {
 
     @Query("SELECT new com.example.Internship_System.hr.dto.CandidateDTO(" +
             "u.userId, u.fullName, u.email, u.phone) " +
-            "FROM User u WHERE u.role.roleId = 4 " +
-            "AND NOT EXISTS (SELECT 1 FROM InternProfile i WHERE i.userId = u.userId)")
+            "FROM User u LEFT JOIN InternProfile i ON u.userId = i.userId " +
+            "WHERE u.role.roleId = 4 AND i.userId IS NULL")
     Page<CandidateDTO> findInternUsersWithoutProfile(Pageable pageable);
 
     @Query("SELECT DISTINCT i.major FROM InternProfile i WHERE i.major IS NOT NULL ORDER BY i.major ASC")
