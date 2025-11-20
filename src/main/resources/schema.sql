@@ -145,13 +145,12 @@ CREATE TABLE tasks (
     title VARCHAR(200),
     description TEXT,
     assigned_by INT,
-    mentor_id INT,
     intern_id INT,
     priority ENUM('LOW','MEDIUM','HIGH') DEFAULT 'MEDIUM',
     status ENUM('TODO','IN_PROGRESS','DONE','REVIEWED') DEFAULT 'TODO',
     deadline DATE,
     due_soon BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id),
+    FOREIGN KEY (assigned_by) REFERENCES mentor_users(mentor_id),
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id),
     FOREIGN KEY (program_id) REFERENCES programs(program_id)
 );
