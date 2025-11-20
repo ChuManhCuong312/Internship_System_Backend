@@ -127,7 +127,7 @@ CREATE TABLE teams (
 );
 
 CREATE TABLE team_intern(
-    intern_group_id INT AUTO_INCREMENT PRIMARY KEY,
+    team_intern_id INT AUTO_INCREMENT PRIMARY KEY,
     team_id INT,
     intern_id INT,
     assigned_date DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -145,14 +145,20 @@ CREATE TABLE tasks (
     title VARCHAR(200),
     description TEXT,
     assigned_by INT,
-    intern_id INT,
     priority ENUM('LOW','MEDIUM','HIGH') DEFAULT 'MEDIUM',
     status ENUM('TODO','IN_PROGRESS','DONE','REVIEWED') DEFAULT 'TODO',
     deadline DATE,
     due_soon BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (assigned_by) REFERENCES mentor_users(mentor_id),
-    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id),
     FOREIGN KEY (program_id) REFERENCES programs(program_id)
+);
+
+CREATE TABLE task_team_assignments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_id INT NOT NULL,
+    team_id INT NOT NULL,
+    FOREIGN KEY (task_id) REFERENCES tasks(task_id),
+    FOREIGN KEY (team_id) REFERENCES teams(team_id)
 );
 CREATE TABLE tasks_files (
     task_files_id INT AUTO_INCREMENT PRIMARY KEY,
