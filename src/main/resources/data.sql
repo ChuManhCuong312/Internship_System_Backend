@@ -83,7 +83,7 @@ INSERT INTO teams (team_id, program_id, mentor_id, assigned_date) VALUES
 (3, 3, 3, NOW()); -- Team Data
 
 -- Gán intern vào teams
-INSERT INTO team_intern (intern_group_id, team_id, intern_id, assigned_date) VALUES
+INSERT INTO team_intern (team_intern_id, team_id, intern_id, assigned_date) VALUES
 (1, 1, 1, NOW()), -- Nam - Team Web
 (2, 1, 3, NOW()), -- Quân - Team Web
 (3, 1, 6, NOW()), -- Đạt - Team Web
@@ -93,11 +93,17 @@ INSERT INTO team_intern (intern_group_id, team_id, intern_id, assigned_date) VAL
 (7, 3, 5, NOW()), -- Bình - Team Data
 (8, 3, 8, NOW()); -- Đức - Team Data
 
-INSERT INTO tasks (task_id, program_id, title, description, assigned_by, intern_id, priority, status, deadline, due_soon) VALUES
-(1, 1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 1, 'HIGH', 'IN_PROGRESS', '2025-03-01', 0),
-(2, 1, 'Dashboard', 'Biểu đồ thống kê', 1, 3, 'MEDIUM', 'TODO', '2025-03-10', 0),
-(3, 2, 'Landing Page', 'Thiết kế giao diện', 2, 4, 'HIGH', 'DONE', '2025-02-25', 0);
+INSERT INTO tasks (program_id, title, description, assigned_by, priority, status, deadline, due_soon)
+VALUES
+(1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 'HIGH', 'IN_PROGRESS', '2025-03-01', FALSE),
+(1, 'Dashboard', 'Biểu đồ thống kê', 1, 'MEDIUM', 'TODO', '2025-03-10', FALSE),
+(2, 'Landing Page', 'Thiết kế giao diện', 2, 'HIGH', 'DONE', '2025-02-25', FALSE);
 
+INSERT INTO task_team_assignments (task_id, team_id)
+VALUES
+(1, 1),
+(2, 1),
+(3, 2);
 
 INSERT INTO attendance (intern_id, date, check_in, check_out, location) VALUES
 (1, '2025-02-10', '08:05:00', '17:00:00', 'CMC Tower Hà Đông'),
