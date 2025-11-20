@@ -17,13 +17,15 @@ public class HRInternDTO {
     private String school;
     private LocalDate dob;
     private String address;
+    private String universityConfirm;
 
     public HRInternDTO() {}
 
     public HRInternDTO(int internId, int userId, String fullName, String email, String phone,
                        String cvPath, String permissionFile, double gpa,
                        String status, String major, String school,
-                       LocalDate dob, String address, String gender) {
+                       LocalDate dob, String address, String gender,
+                       String universityConfirm) {
         this.internId = internId;
         this.userId = userId;
         this.fullName = fullName;
@@ -38,6 +40,7 @@ public class HRInternDTO {
         this.school = school;
         this.dob = dob;
         this.address = address;
+        this.universityConfirm = universityConfirm;
     }
 
     // Getters & Setters
@@ -82,4 +85,7 @@ public class HRInternDTO {
 
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
+
+    public String getUniversityConfirm() { return universityConfirm; }
+    public void setUniversityConfirm(String universityConfirm) { this.universityConfirm = universityConfirm; }
 }
