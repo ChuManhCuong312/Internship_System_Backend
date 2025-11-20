@@ -147,7 +147,6 @@ public class InternController {
                 profileToUpdate.setAddress(internProfile.getAddress());
             }
 
-
             if (internProfile.getStatus() != null) {
                 profileToUpdate.setStatus(internProfile.getStatus());
             }
@@ -161,7 +160,6 @@ public class InternController {
             if(internProfile.getRejectionReason() != null){
                 profileToUpdate.setRejectionReason(internProfile.getRejectionReason());
             }
-
 
             return new ResponseEntity<>(internService.save(profileToUpdate), HttpStatus.OK);
         } else {

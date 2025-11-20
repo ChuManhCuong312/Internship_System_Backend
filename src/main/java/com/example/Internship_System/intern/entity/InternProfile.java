@@ -46,6 +46,10 @@ public class InternProfile {
     @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 ký tự")
     private String permissionFile;
 
+    @Column(name = "university_confirm")
+    @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 ký tự")
+    private String universityConfirm;
+
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
             message = "Trạng thái phải hợp lệ: PENDING, APPROVED, REJECTED, NO_FILE")
     @Column(name = "status")
@@ -176,4 +180,13 @@ public class InternProfile {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
+    public String getUniversityConfirm() {
+        return universityConfirm;
+    }
+
+    public void setUniversityConfirm(String universityConfirm) {
+        this.universityConfirm = universityConfirm;
+    }
+
 }
