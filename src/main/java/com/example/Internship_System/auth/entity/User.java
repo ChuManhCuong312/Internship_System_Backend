@@ -27,7 +27,10 @@ public class User {
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số")
+    @Pattern(
+            regexp = "^(?:\\+84|0)(?:3|5|7|8|9)\\d{8}$",
+            message = "Số điện thoại Việt Nam không hợp lệ. Ví dụ: 0901234567 hoặc +84901234567"
+    )
     @Column(name = "phone", length = 20, unique = true)
     private String phone;
 
