@@ -18,6 +18,9 @@ public class InternProfileMapper {
         if (intern.getPermissionFile() != null && !intern.getPermissionFile().isEmpty()) {
             documents.add(intern.getPermissionFile());
         }
+        if (intern.getUniversityConfirm() != null && !intern.getUniversityConfirm().isEmpty()) {
+            documents.add(intern.getUniversityConfirm());
+        }
 
         return new InternProfileDTO(
                 intern.getInternId(),
