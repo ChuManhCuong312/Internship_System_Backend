@@ -342,6 +342,84 @@ public class CloudinaryController {
     }
 
     // ============================================
+    // UNIVERSITY UPLOAD & RETRIEVAL
+    // ============================================
+
+    @PostMapping(value = "/upload/university-confirm", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Map<String, Object>> uploadUniversityConfirmationFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "internId", required = false) Integer internId) {
+        try {
+            // Upload to avatars folder
+            Map<String, Object> uploadResult = cloudinaryService.upload(file, "university_confirm");
+            String fileUrl = (String) uploadResult.get("url");
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("url", fileUrl);
+            response.put("publicId", uploadResult.get("public_id"));
+            response.put("message", "File uploaded successfully");
+
+            // If internId is provided, update the InternProfile
+            if (internId != null) {
+                Optional<InternProfile> profileOpt = internService.findById(internId);
+                if (profileOpt.isPresent()) {
+                    InternProfile profile = profileOpt.get();
+                    // Delete old avatar if exists
+                    if (profile.getAvatar() != null && !profile.getAvatar().isEmpty()) {
+                        try {
+                            // Extract publicId from URL or use the stored value
+                            String oldPublicId = extractPublicIdFromUrl(profile.getAvatar());
+                            if (oldPublicId != null) {
+                                cloudinaryService.delete(oldPublicId);
+                            }
+                        } catch (Exception e) {
+                            // Log but don't fail if old file deletion fails
+                            System.err.println("Failed to delete file: " + e.getMessage());
+                        }
+                    }
+                    profile.setAvatar(fileUrl);
+                    internService.save(profile);
+                    response.put("internId", internId);
+                    response.put("updated", true);
+                } else {
+                    response.put("warning", "Intern profile not found for internId: " + internId);
+                }
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
+
+    @GetMapping("/university-confirm/{internId}")
+    public ResponseEntity<Map<String, Object>> getUniversityConfirmationFile(@PathVariable("internId") int internId) {
+        try {
+            Optional<InternProfile> profileOpt = internService.findById(internId);
+            if (profileOpt.isPresent()) {
+                InternProfile profile = profileOpt.get();
+                Map<String, Object> response = new HashMap<>();
+                response.put("internId", internId);
+                response.put("universityConfirmationUrl", profile.getUniversityConfirm() != null ? profile.getUniversityConfirm() : null);
+                response.put("hasUniversityConfirm", profile.getUniversityConfirm() != null && !profile.getUniversityConfirm().isEmpty());
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Intern profile not found for internId: " + internId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
+
+    // ============================================
     // HELPER METHOD
     // ============================================
 
