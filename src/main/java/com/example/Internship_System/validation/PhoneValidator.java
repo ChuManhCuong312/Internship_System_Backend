@@ -5,7 +5,9 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class PhoneValidator implements ConstraintValidator<ValidPhone, String> {
-    private static final String PHONE_PATTERN = "^0\\d{9}$";
+
+    // Regex cho số điện thoại Việt Nam: +84 hoặc 0, sau đó là 3|5|7|8|9 và 8 chữ số
+    private static final String PHONE_PATTERN = "^(?:\\+84|0)(?:3|5|7|8|9)\\d{8}$";
     private static final Pattern pattern = Pattern.compile(PHONE_PATTERN);
 
     @Override
