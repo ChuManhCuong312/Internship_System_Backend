@@ -77,6 +77,7 @@ CREATE TABLE intern_users (
     gender ENUM('MALE', 'FEMALE'),
     address VARCHAR(255),
     intern_image_path VARCHAR(255),
+    university_confirm VARCHAR(255),
     internship_application_path VARCHAR(255),
     cv_path VARCHAR(255),
     status ENUM('PENDING','APPROVED','REJECTED','NO_FILE') DEFAULT 'NO_FILE',
@@ -93,15 +94,6 @@ CREATE TABLE contract_documents (
     note TEXT,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
--- Bổ sung bảng Quan hệ phân công Mentor ↔ Intern
-CREATE TABLE mentor_assignments (
-    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
-    mentor_id INT NOT NULL,
-    intern_id INT NOT NULL,
-    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id),
-    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
-);
 
 -- ======================================
 -- 3. PROGRAM MANAGEMENT
@@ -114,15 +106,32 @@ CREATE TABLE programs (
     end_date DATE,
     program_status ENUM('UPCOMING','ON_GOING','FINISHED') DEFAULT 'UPCOMING',
     detail TEXT,
-    max_interns INT DEFAULT 10
+    max_interns INT DEFAULT 50
 );
 
-CREATE TABLE intern_program (
-	intern_program_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE mentor_program (
+	mentor_program_id INT AUTO_INCREMENT PRIMARY KEY,
     program_id INT,
-    intern_id INT,
+    mentor_id INT,
     assigned_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (program_id) REFERENCES programs(program_id),
+    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
+);
+CREATE TABLE teams (
+	team_id INT AUTO_INCREMENT PRIMARY KEY,
+    program_id INT,
+    mentor_id INT,
+    assigned_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (program_id) REFERENCES programs(program_id),
+    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
+);
+
+CREATE TABLE team_intern(
+    intern_group_id INT AUTO_INCREMENT PRIMARY KEY,
+    team_id INT,
+    intern_id INT,
+    assigned_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (team_id) REFERENCES teams(team_id),
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
 
@@ -192,6 +201,7 @@ CREATE TABLE allowances (
 CREATE TABLE support_requests (
     request_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
+    type ENUM('TECHNICAL','ADMIN','HR','OTHER') DEFAULT 'OTHER',
     description TEXT,
     file_path VARCHAR(255),
     status ENUM('OPEN','IN_PROGRESS','RESOLVED','REJECTED') DEFAULT 'OPEN',
