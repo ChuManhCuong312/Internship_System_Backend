@@ -17,28 +17,33 @@ public class InternProfile {
     @Column(name = "user_id", nullable = false, unique = true)
     private Integer userId;
 
+    @Column(name = "school", nullable = false)
+    @NotBlank(message = "Trường học là bắt buộc")
     @Size(min = 2, max = 150, message = "Tên trường của bạn phải từ 2 đến 150 ký tự")
-    @Column(name = "school")
     private String school;
 
+    @Column(name = "major", nullable = false)
+    @NotBlank(message = "Ngành học là bắt buộc")
     @Size(min = 2, max = 150, message = "Tên ngành phải từ 2 đến 150 ký tự")
-    @Column(name = "major")
     private String major;
 
-    @Past(message = "Bạn phải trên 18 tuổi")
-    @Column(name = "dob")
+    @Column(name = "dob", nullable = false)
+    @NotNull(message = "Ngày sinh là bắt buộc")
+    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
+    @MinimumAge(value = 18, message = "Tuổi phải từ 18 trở lên")
     private LocalDate dob;
 
+    @Column(name = "address", nullable = false)
+    @NotBlank(message = "Địa chỉ là bắt buộc")
     @Size(min = 5, max = 255, message = "Địa chỉ phải từ 5 đến 255 ký tự")
-    @Column(name = "address")
     private String address;
 
-    @Size(max = 255, message = "Đuờng dẫn file phải ngắn hơn 255 kí tự")
     @Column(name = "cv_path")
+    @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 ký tự")
     private String cvPath;
 
-    @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 kí tự")
     @Column(name = "internship_application_path")
+    @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 ký tự")
     private String permissionFile;
 
     @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|NO_FILE)?$",
@@ -55,8 +60,9 @@ public class InternProfile {
     @Column(name = "intern_image_path")
     private String avatar;
 
-    @Positive(message = "GPA phải lớn hơn 0 và nhỏ hơn 4")
     @Column(name = "gpa", nullable = false)
+    @DecimalMin(value = "0.0", inclusive = false, message = "GPA phải lớn hơn 0")
+    @DecimalMax(value = "4.0", inclusive = true, message = "GPA phải nhỏ hơn hoặc bằng 4.0")
     private double gpa;
 
     @Column(name = "rejection_reason")
