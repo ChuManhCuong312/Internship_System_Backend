@@ -342,7 +342,7 @@ public class CloudinaryController {
     }
 
     // ============================================
-    // UNIVERSITY UPLOAD & RETRIEVAL
+    // UNIVERSITY CONFIRMATION UPLOAD & RETRIEVAL
     // ============================================
 
     @PostMapping(value = "/upload/university-confirm", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -364,11 +364,11 @@ public class CloudinaryController {
                 Optional<InternProfile> profileOpt = internService.findById(internId);
                 if (profileOpt.isPresent()) {
                     InternProfile profile = profileOpt.get();
-                    // Delete old avatar if exists
-                    if (profile.getAvatar() != null && !profile.getAvatar().isEmpty()) {
+                    // Delete old university confirmation file if exists
+                    if (profile.getUniversityConfirm() != null && !profile.getUniversityConfirm().isEmpty()) {
                         try {
                             // Extract publicId from URL or use the stored value
-                            String oldPublicId = extractPublicIdFromUrl(profile.getAvatar());
+                            String oldPublicId = extractPublicIdFromUrl(profile.getUniversityConfirm());
                             if (oldPublicId != null) {
                                 cloudinaryService.delete(oldPublicId);
                             }
@@ -377,7 +377,7 @@ public class CloudinaryController {
                             System.err.println("Failed to delete file: " + e.getMessage());
                         }
                     }
-                    profile.setAvatar(fileUrl);
+                    profile.setUniversityConfirm(fileUrl);
                     internService.save(profile);
                     response.put("internId", internId);
                     response.put("updated", true);
