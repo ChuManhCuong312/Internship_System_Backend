@@ -1,5 +1,6 @@
 package com.example.Internship_System.intern.entity;
 
+import com.example.Internship_System.validation.MinimumAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 

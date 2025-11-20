@@ -1,6 +1,8 @@
 package com.example.Internship_System.auth.entity;
 
+import com.example.Internship_System.validation.ValidEmail;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDateTime;
@@ -14,6 +16,8 @@ public class User {
     @Column(name = "user_id")
     private Integer userId; // Match SQL INT
 
+    @NotBlank(message = "Email là bắt buộc")
+    @ValidEmail(message = "Email không hợp lệ")
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
