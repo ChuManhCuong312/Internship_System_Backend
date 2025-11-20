@@ -1,6 +1,7 @@
 package com.example.Internship_System.cloudinary.controller;
 
 import com.example.Internship_System.cloudinary.service.CloudinaryService;
+import com.example.Internship_System.cloudinary.util.FileValidationUtil;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.service.InternService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateAvatarFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to avatars folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "avatars");
             String fileUrl = (String) uploadResult.get("url");
@@ -132,6 +141,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateCvFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to cv_files folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "cv_files");
             String fileUrl = (String) uploadResult.get("url");
@@ -208,6 +225,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateDocumentFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to permission_files folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "permission_files");
             String fileUrl = (String) uploadResult.get("url");
@@ -284,6 +309,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateDocumentFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to avatars folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "university_confirm");
             String fileUrl = (String) uploadResult.get("url");
