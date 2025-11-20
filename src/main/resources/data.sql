@@ -59,17 +59,17 @@ INSERT INTO intern_users ( intern_id, user_id, school, major, gpa, dob, gender,a
 INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
 (1, 1, 'contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 (2, 2, 'contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NULL, 'Đang chờ xác nhận'),
-(3, 3, 'contracts/quan_contract.pdf', 'NOT_UPLOAD', 'PENDING', NULL, NULL);
+(3, 3, 'contracts/quan_contract.pdf', 'NOT_UPLOAD', 'PENDING', NULL, NULL),
 (4, 5, 'contracts/binh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 (5, 6, 'contracts/dat_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 (6, 9, 'contracts/anh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(7, 10, 'contracts/ha_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(7, 10, 'contracts/ha_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký');
 
 INSERT INTO mentor_assignments (assignment_id, mentor_id, intern_id, assigned_at) VALUES
 (1, 1, 1, NOW()),
 (2, 1, 3, NOW()),
 (3, 2, 5, NOW()),
-(4, 3, 6, NOW());
+(4, 3, 6, NOW()),
 (5, 3, 9, NOW());
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, max_interns) VALUES

@@ -19,8 +19,8 @@ public class InternLogController {
     private InternLogRepository logRepository;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<InternLog>> getLogs(@PathVariable int userId) {
-        List<InternLog> logs = logRepository.findByUserIdOrderByCreatedAtDesc(userId);
+    public ResponseEntity<List<InternLog>> getLogs(@PathVariable int internId) {
+        List<InternLog> logs = logRepository.findByInternIdOrderByCreatedAtDesc(internId);
         return ResponseEntity.ok(logs);
     }
 }
