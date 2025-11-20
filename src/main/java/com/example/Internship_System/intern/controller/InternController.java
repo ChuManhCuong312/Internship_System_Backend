@@ -1,6 +1,7 @@
 package com.example.Internship_System.intern.controller;
 
 import com.example.Internship_System.intern.dto.InternProfileDTO;
+import com.example.Internship_System.intern.dto.InternProfileWithPhoneDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.service.InternService;
 import jakarta.validation.Valid;
@@ -77,9 +78,9 @@ public class InternController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<InternProfile> getInternProfileByUserId(
+    public ResponseEntity<InternProfileWithPhoneDTO> getInternProfileByUserId(
             @PathVariable("userId") int userId) {
-        Optional<InternProfile> profile = internService.findByUserId(userId);
+        Optional<InternProfileWithPhoneDTO> profile = internService.findByUserIdWithPhone(userId);
         return profile.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
