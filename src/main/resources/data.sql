@@ -65,27 +65,37 @@ INSERT INTO contract_documents (document_id, intern_id, file_path, contract_stat
 (6, 9, 'contracts/anh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
 (7, 10, 'contracts/ha_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký');
 
-INSERT INTO mentor_assignments (assignment_id, mentor_id, intern_id, assigned_at) VALUES
+INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES
+(1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 'ON_GOING', 10),
+(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-02-01', '2025-05-01', 'UPCOMING', 8),
+(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-03-01', '2025-06-01', 'UPCOMING', 6);
+
+-- Gán mentor cho program
+INSERT INTO mentor_program (mentor_program_id, program_id, mentor_id, assigned_date) VALUES
 (1, 1, 1, NOW()),
-(2, 1, 3, NOW()),
-(3, 2, 5, NOW()),
-(4, 3, 6, NOW()),
-(5, 3, 9, NOW());
+(2, 2, 2, NOW()),
+(3, 3, 3, NOW());
 
-INSERT INTO programs (program_id, name, department, start_date, end_date, max_interns) VALUES
-(1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 10),
-(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-02-01', '2025-05-01', 8),
-(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-03-01', '2025-06-01', 6);
+-- Tạo teams (thay thế intern_program)
+INSERT INTO teams (team_id, program_id, mentor_id, assigned_date) VALUES
+(1, 1, 1, NOW()), -- Team lập trình Web
+(2, 2, 2, NOW()), -- Team Marketing
+(3, 3, 3, NOW()); -- Team Data
 
+-- Gán intern vào teams
+INSERT INTO team_intern (intern_group_id, team_id, intern_id, assigned_date) VALUES
+(1, 1, 1, NOW()), -- Nam - Team Web
+(2, 1, 3, NOW()), -- Quân - Team Web
+(3, 1, 6, NOW()), -- Đạt - Team Web
+(4, 1, 9, NOW()), -- Anh - Team Web
+(5, 2, 4, NOW()), -- Hằng - Team Marketing
+(6, 2, 7, NOW()), -- Ngọc - Team Marketing
+(7, 3, 5, NOW()), -- Bình - Team Data
+(8, 3, 8, NOW()); -- Đức - Team Data
 
-INSERT INTO intern_program (program_id, intern_id, assigned_date) VALUES
-(1, 1, NOW()), (1, 3, NOW()), (1, 6, NOW()), (1, 9, NOW()),
-(2, 4, NOW()), (2, 7, NOW()),
-(3, 5, NOW()), (3, 8, NOW());
-
-INSERT INTO tasks (task_id, program_id, title, description, mentor_id, intern_id, priority, status, deadline, due_soon) VALUES
+INSERT INTO tasks (task_id, program_id, title, description, assigned_by, intern_id, priority, status, deadline, due_soon) VALUES
 (1, 1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 1, 'HIGH', 'IN_PROGRESS', '2025-03-01', 0),
-(2, 1, 'Dashboard', 'Biểu đồ thống kê', 1, 2, 'MEDIUM', 'TODO', '2025-03-10', 0),
+(2, 1, 'Dashboard', 'Biểu đồ thống kê', 1, 3, 'MEDIUM', 'TODO', '2025-03-10', 0),
 (3, 2, 'Landing Page', 'Thiết kế giao diện', 2, 4, 'HIGH', 'DONE', '2025-02-25', 0);
 
 
