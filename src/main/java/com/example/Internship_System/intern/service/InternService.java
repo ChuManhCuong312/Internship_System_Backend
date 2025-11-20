@@ -1,5 +1,6 @@
 package com.example.Internship_System.intern.service;
 import com.example.Internship_System.intern.dto.InternProfileDTO;
+import com.example.Internship_System.intern.dto.InternProfileWithPhoneDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.repository.InternRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,16 @@ public class InternService {
 
     public Optional<InternProfile> findByUserId(int userId) {
         return repository.findByUserId(userId);
+    }
+
+    public Optional<InternProfileWithPhoneDTO> findByUserIdWithPhone(int userId) {
+        Optional<InternProfile> profile = repository.findByUserId(userId);
+        if (profile.isPresent()) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            return Optional.of(new InternProfileWithPhoneDTO(profile.get(), user.getPhone()));
+        }
+        return Optional.empty();
     }
 
     public List<InternProfile> findByStatus(String status) {
