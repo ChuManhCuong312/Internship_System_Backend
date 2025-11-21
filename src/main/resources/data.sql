@@ -105,13 +105,18 @@ VALUES
 (2, 1),
 (3, 2);
 
-INSERT INTO attendance (intern_id, date, check_in, check_out, location) VALUES
-(1, '2025-02-10', '08:05:00', '17:00:00', 'CMC Tower Hà Đông'),
-(3, '2025-02-10', '08:15:00', '17:05:00', 'CMC Tower Hà Đông'),
-(5, '2025-02-10', '08:00:00', '17:10:00', 'CMC Tower Hà Đông'),
-(6, '2025-02-10', '08:10:00', '17:00:00', 'CMC Tower Hà Đông'),
-(7, '2025-02-10', '08:00:00', '16:55:00', 'CMC Tower Hà Đông'),
-(8, '2025-02-10', '08:20:00', '17:00:00', 'CMC Tower Hà Đông');
+INSERT INTO attendance (intern_id, date, check_in, check_out) VALUES
+(1, '2025-02-10', '08:05:00', '17:00:00'),
+(3, '2025-02-10', '08:15:00', '17:05:00'),
+(5, '2025-02-10', '08:00:00', '17:10:00'),
+(6, '2025-02-10', '08:10:00', '17:00:00'),
+(7, '2025-02-10', '08:00:00', '16:55:00'),
+(8, '2025-02-10', '08:20:00', '17:00:00');
+
+INSERT INTO leave_requests (intern_id, start_date, end_date, reason, status, rejection_reason, processed_by)VALUES
+(1, '2025-12-01', '2025-12-03','Nghỉ phép về quê thăm gia đình', 'APPROVED', NULL,  1),
+(1, '2025-12-05', '2025-12-07','Bị ốm, cần nghỉ ngơi', 'REJECTED', 'Không đủ giấy tờ chứng minh',  1),
+(1, '2025-12-10', '2025-12-10','Có việc cá nhân gấp', 'PENDING', NULL,  2);
 
 INSERT INTO allowances (intern_id, type, amount, date_applied) VALUES
 (1, 'MEAL', 50000, '2025-02-10'),
