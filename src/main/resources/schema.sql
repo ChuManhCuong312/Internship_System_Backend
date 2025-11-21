@@ -204,9 +204,10 @@ CREATE TABLE leave_requests (
 CREATE TABLE allowances (
     allowance_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
-    type ENUM('TRANSPORT','MEAL','BONUS') DEFAULT 'MEAL',
+    type VARCHAR(50),
     amount DECIMAL(10,2),
     date_applied DATE,
+    note TEXT,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
 
