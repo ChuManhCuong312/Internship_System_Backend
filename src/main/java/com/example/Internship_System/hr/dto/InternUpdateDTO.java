@@ -2,6 +2,7 @@ package com.example.Internship_System.hr.dto;
 
 import com.example.Internship_System.validation.MinimumAge;
 import com.example.Internship_System.validation.ValidPhone;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
@@ -30,6 +31,10 @@ public class InternUpdateDTO {
     @ValidPhone(message = "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số")
     private String phone;
 
+    @Size(max = 255, message = "Đường dẫn file phải ngắn hơn 255 kí tự, định dạng .png hoặc .jpg")
+    @Column(name = "intern_image_path")
+    private String avatar;
+
     // Getters & Setters
     public String getSchool() { return school; }
     public void setSchool(String school) { this.school = school; }
@@ -51,4 +56,7 @@ public class InternUpdateDTO {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }
