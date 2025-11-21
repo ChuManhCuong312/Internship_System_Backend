@@ -142,6 +142,10 @@ public class HRService {
         if (dto.getGender() != null) existing.setGender(dto.getGender());
         if (dto.getGpa() > 0) existing.setGpa(dto.getGpa());
 
+        if (dto.getAvatar() != null) {
+            existing.setAvatar(dto.getAvatar());
+        }
+
         if (dto.getPhone() != null) {
             User user = userRepository.findById(existing.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
