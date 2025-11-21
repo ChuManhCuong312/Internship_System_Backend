@@ -1,6 +1,7 @@
 package com.example.Internship_System.cloudinary.controller;
 
 import com.example.Internship_System.cloudinary.service.CloudinaryService;
+import com.example.Internship_System.cloudinary.util.FileValidationUtil;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.service.InternService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,47 +26,6 @@ public class CloudinaryController {
     @Autowired
     private InternService internService;
 
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Map<String, Object>> uploadImage(
-            @RequestParam("file") MultipartFile file) {
-        try {
-            Map<String, Object> uploadResult = cloudinaryService.upload(file);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("url", uploadResult.get("url"));
-            response.put("publicId", uploadResult.get("public_id"));
-            response.put("message", "Image uploaded successfully");
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(errorResponse);
-        }
-    }
-
-    @PostMapping("/upload/{folder}")
-    public ResponseEntity<Map<String, Object>> uploadImageToFolder(
-            @RequestParam("file") MultipartFile file,
-            @PathVariable String folder) {
-        try {
-            Map<String, Object> uploadResult = cloudinaryService.upload(file, folder);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("url", uploadResult.get("url"));
-            response.put("publicId", uploadResult.get("public_id"));
-            response.put("folder", folder);
-            response.put("message", "Image uploaded successfully to folder");
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(errorResponse);
-        }
-    }
 
     @DeleteMapping("/delete/{publicId}")
     public ResponseEntity<Map<String, Object>> deleteImage(
@@ -86,31 +46,6 @@ public class CloudinaryController {
         }
     }
 
-    @GetMapping("/url/{publicId}")
-    public ResponseEntity<Map<String, String>> getImageUrl(
-            @PathVariable String publicId,
-            @RequestParam(required = false) Integer width,
-            @RequestParam(required = false) Integer height) {
-        try {
-            String url;
-            if (width != null && height != null) {
-                url = cloudinaryService.getImageUrl(publicId, width, height);
-            } else {
-                url = cloudinaryService.getImageUrl(publicId);
-            }
-
-            Map<String, String> response = new HashMap<>();
-            response.put("url", url);
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(errorResponse);
-        }
-    }
-
     // ============================================
     // AVATAR UPLOAD & RETRIEVAL
     // ============================================
@@ -120,6 +55,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateAvatarFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to avatars folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "avatars");
             String fileUrl = (String) uploadResult.get("url");
@@ -198,6 +141,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateCvFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to cv_files folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "cv_files");
             String fileUrl = (String) uploadResult.get("url");
@@ -274,6 +225,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateDocumentFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to permission_files folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "permission_files");
             String fileUrl = (String) uploadResult.get("url");
@@ -342,7 +301,7 @@ public class CloudinaryController {
     }
 
     // ============================================
-    // UNIVERSITY UPLOAD & RETRIEVAL
+    // UNIVERSITY CONFIRMATION UPLOAD & RETRIEVAL
     // ============================================
 
     @PostMapping(value = "/upload/university-confirm", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -350,6 +309,14 @@ public class CloudinaryController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "internId", required = false) Integer internId) {
         try {
+            // Validate file
+            FileValidationUtil.FileValidationResult validationResult = FileValidationUtil.validateDocumentFile(file);
+            if (!validationResult.isValid()) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", validationResult.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
             // Upload to avatars folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "university_confirm");
             String fileUrl = (String) uploadResult.get("url");
@@ -364,11 +331,11 @@ public class CloudinaryController {
                 Optional<InternProfile> profileOpt = internService.findById(internId);
                 if (profileOpt.isPresent()) {
                     InternProfile profile = profileOpt.get();
-                    // Delete old avatar if exists
-                    if (profile.getAvatar() != null && !profile.getAvatar().isEmpty()) {
+                    // Delete old university confirmation file if exists
+                    if (profile.getUniversityConfirm() != null && !profile.getUniversityConfirm().isEmpty()) {
                         try {
                             // Extract publicId from URL or use the stored value
-                            String oldPublicId = extractPublicIdFromUrl(profile.getAvatar());
+                            String oldPublicId = extractPublicIdFromUrl(profile.getUniversityConfirm());
                             if (oldPublicId != null) {
                                 cloudinaryService.delete(oldPublicId);
                             }
@@ -377,7 +344,7 @@ public class CloudinaryController {
                             System.err.println("Failed to delete file: " + e.getMessage());
                         }
                     }
-                    profile.setAvatar(fileUrl);
+                    profile.setUniversityConfirm(fileUrl);
                     internService.save(profile);
                     response.put("internId", internId);
                     response.put("updated", true);
