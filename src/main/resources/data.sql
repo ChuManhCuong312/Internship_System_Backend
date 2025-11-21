@@ -38,22 +38,132 @@ INSERT INTO mentor_users (mentor_id, user_id, department, expertise) VALUES
 (2, 5, 'Kinh doanh', 'Digital Marketing, SEO, Google Ads'),
 (3, 6, 'Phân tích dữ liệu', 'Python, Power BI, SQL nâng cao');
 
-INSERT INTO intern_users ( intern_id, user_id, school, major, gpa, dob, gender,address, intern_image_path, internship_application_path, cv_path, status, rejection_reason) VALUES
-(1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', 'MALE', 'Hà Đông, Hà Nội', 'img_nam.jpg', 'app_nam.pdf', 'cv_nam.pdf', 'APPROVED', NULL),
-(2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', 'FEMALE', 'Hà Đông, Hà Nội', 'img_mai.jpg', 'app_mai.pdf', 'cv_mai.pdf', 'APPROVED', NULL),
-(3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', 'MALE', 'Hà Đông, Hà Nội', 'img_quan.jpg', 'app_quan.pdf', 'cv_quan.pdf', 'APPROVED', NULL),
-(4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', 'FEMALE', 'Hà Đông, Hà Nội', 'img_hang.jpg', 'app_hang.pdf', 'cv_hang.pdf', 'PENDING', NULL),
-(5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'MALE', 'Hà Đông, Hà Nội', 'img_binh.jpg', 'app_binh.pdf', 'cv_binh.pdf', 'APPROVED', NULL),
-(6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'FEMALE', 'Hà Đông, Hà Nội', 'img_dat.jpg', 'app_dat.pdf', 'cv_dat.pdf', 'APPROVED', NULL),
-(7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', 'MALE', 'Hà Đông, Hà Nội', 'img_ngoc.jpg', 'app_ngoc.pdf', 'cv_ngoc.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
-(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'FEMALE', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'NO_FILE', NULL),
-(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'MALE', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL),
-(10, 16, 'CMC University', 'Khoa học máy tính', 3.2, '2003-08-01', 'MALE', 'Hà Đông, Hà Nội', 'img_ha.jpg', 'app_ha.pdf', 'cv_ha.pdf', 'APPROVED', NULL),
-(11, 17, 'CMC University', 'Khoa học máy tính', 3.1, '2003-09-11', 'MALE', 'Hà Đông, Hà Nội', 'img_bao.jpg', 'app_bao.pdf', 'cv_bao.pdf', 'NO_FILE', NULL),
-(12, 18, 'CMC University', 'An toàn thông tin', 2.7, '2003-07-07', 'MALE', 'Hà Đông, Hà Nội', 'img_huy.jpg', 'app_huy.pdf', 'cv_huy.pdf', 'REJECTED', 'Thiếu hồ sơ bổ sung'),
-(13, 19, 'CMC University', 'Kỹ sư phần mềm', 3.7, '2003-02-21', 'MALE', 'Hà Đông, Hà Nội', 'img_duc.jpg', 'app_duc.pdf', 'cv_duc.pdf', 'PENDING', NULL),
-(14, 20, 'CMC University', 'Hệ thống thông tin', 3.1, '2003-11-28', 'FEMALE', 'Hà Đông, Hà Nội', 'img_anh.jpg', 'app_anh.pdf', 'cv_anh.pdf', 'APPROVED', NULL),
-(15, 21, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội', 'img_chuong.jpg', 'app_chuong.pdf', 'cv_chuong.pdf', 'APPROVED', NULL);
+INSERT INTO intern_users (
+    intern_id, user_id, school, major, gpa, dob, gender, address,
+    intern_image_path, university_confirm, internship_application_path,
+    cv_path, status, rejection_reason
+) VALUES
+
+-- 1. Nam
+(1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_nam.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Nam_uni_confirm_g72nf8.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Nam_app_zixvmm.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740806/Nguy%E1%BB%85n_H%E1%BB%AFu_Nam_CV_zvej8x.pdf',
+ 'APPROVED', NULL),
+
+-- 2. Mai
+(2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', 'FEMALE', 'Hà Đông, Hà Nội',
+ 'img_mai.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745936/Mai_uni_confirm_arnooq.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Mai_app_gwrcxp.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Tr%E1%BA%A7n_Th%E1%BB%8B_Mai_CV_vz0om9.pdf',
+ 'APPROVED', NULL),
+
+-- 3. Quân
+(3, 9, 'CMC University', 'Công nghệ thông tin', 2.8, '2003-02-10', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_quan.jpg',
+ NULL,
+ 'app_quan.pdf',
+ 'cv_quan.pdf',
+ 'APPROVED', NULL),
+
+-- 4. Hằng
+(4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', 'FEMALE', 'Hà Đông, Hà Nội',
+ 'img_hang.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745936/Hang_uni_confirm_rgoecx.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Hang_app_kxxpdc.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740805/Nguy%E1%BB%85n_Th%E1%BB%8B_H%E1%BA%B1ng_CV_yiijtb.pdf',
+ 'PENDING', NULL),
+
+-- 5. Bình
+(5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_binh.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Binh_uni_confirm_emu4xq.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Binh_app_k4rpyg.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740805/L%C3%AA_V%C4%83n_B%C3%ACnh_CV_iqdzzv.pdf',
+ 'APPROVED', NULL),
+
+-- 6. Đạt
+(6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'FEMALE', 'Hà Đông, Hà Nội',
+ 'img_dat.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Dat_uni_confirm_zdm6je.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Dat_app_vsopvd.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740804/Tr%E1%BA%A7n_V%C4%83n_%C4%90%E1%BA%A1t_CV_pct3ha.pdf',
+ 'APPROVED', NULL),
+
+-- 7. Ngọc
+(7, 13, 'CMC University', 'Thiết kế đồ họa', 2.9, '2003-07-14', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_ngoc.jpg',
+ NULL,
+ 'app_ngoc.pdf',
+ 'cv_ngoc.pdf',
+ 'REJECTED', 'Thiếu hồ sơ bổ sung'),
+
+-- 8. Đức (NO_FILE)
+(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'FEMALE', 'Hà Đông, Hà Nội',
+ 'img_duc.jpg',
+ NULL,
+ NULL,
+ NULL,
+ 'NO_FILE', NULL),
+
+-- 9. Đức Anh
+(9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_anh.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Anh_uni_confirm_ybbken.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/DucAnh_app_qdvrwv.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740804/Nguy%E1%BB%85n_%C4%90%E1%BB%A9c_Anh_CV_q9h85g.pdf',
+ 'APPROVED', NULL),
+
+-- 10. Hà
+(10, 16, 'CMC University', 'Khoa học máy tính', 3.2, '2003-08-01', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_ha.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Ha_uni_confirm_n21ari.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Ha_app_jmz8rg.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740804/Nguy%E1%BB%85n_%C4%90%E1%BB%A9c_H%C3%A0_CV_kbu7di.pdf',
+ 'APPROVED', NULL),
+
+-- 11. Bảo (NO_FILE)
+(11, 17, 'CMC University', 'Khoa học máy tính', 3.1, '2003-09-11', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_bao.jpg',
+ NULL,
+ 'app_bao.pdf',
+ 'cv_bao.pdf',
+ 'NO_FILE', NULL),
+
+-- 12. Huy
+(12, 18, 'CMC University', 'An toàn thông tin', 2.7, '2003-07-07', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_huy.jpg',
+ NULL,
+ 'app_huy.pdf',
+ 'cv_huy.pdf',
+ 'REJECTED', 'Thiếu hồ sơ bổ sung'),
+
+-- 13. Đức (pending)
+(13, 19, 'CMC University', 'Kỹ sư phần mềm', 3.7, '2003-02-21', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_duc.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745938/Duc_uni_confirm_dgfc8z.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Duc_app_pvihuj.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740808/Tr%E1%BA%A7n_Minh_%C4%90%E1%BB%A9c_CV_oktbj6.pdf',
+ 'PENDING', NULL),
+
+-- 14. Anh
+(14, 20, 'CMC University', 'Hệ thống thông tin', 3.1, '2003-11-28', 'FEMALE', 'Hà Đông, Hà Nội',
+ 'img_anh.jpg',
+ NULL,
+ 'app_anh.pdf',
+ 'cv_anh.pdf',
+ 'APPROVED', NULL),
+
+-- 15. Chương
+(15, 21, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'img_chuong.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'PENDING', NULL);
+
 
 
 INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
