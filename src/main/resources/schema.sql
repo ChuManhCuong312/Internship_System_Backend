@@ -186,10 +186,21 @@ CREATE TABLE attendance (
     date DATE NOT NULL,
     check_in TIME,
     check_out TIME,
-    location VARCHAR(150),
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
-
+CREATE TABLE leave_requests (
+    leave_id INT AUTO_INCREMENT PRIMARY KEY,
+    intern_id INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    reason VARCHAR(255),
+    status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
+    rejection_reason VARCHAR(255),
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_by INT,
+    FOREIGN KEY (processed_by) REFERENCES hr_users(hr_id),
+    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
+);
 CREATE TABLE allowances (
     allowance_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
