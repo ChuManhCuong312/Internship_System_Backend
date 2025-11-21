@@ -118,12 +118,12 @@ INSERT INTO leave_requests (intern_id, start_date, end_date, reason, status, rej
 (1, '2025-12-05', '2025-12-07','Bị ốm, cần nghỉ ngơi', 'REJECTED', 'Không đủ giấy tờ chứng minh',  1),
 (1, '2025-12-10', '2025-12-10','Có việc cá nhân gấp', 'PENDING', NULL,  2);
 
-INSERT INTO allowances (intern_id, type, amount, date_applied) VALUES
-(1, 'MEAL', 50000, '2025-02-10'),
-(3, 'TRANSPORT', 30000, '2025-02-10'),
-(5, 'BONUS', 100000, '2025-02-15'),
-(6, 'MEAL', 50000, '2025-02-11'),
-(7, 'TRANSPORT', 30000, '2025-02-11');
+INSERT INTO allowances (intern_id, type, amount, date_applied,note) VALUES
+(1, 'Phụ cấp bữa ăn', 50000, '2025-02-10','Phụ cấp bữa ăn'),
+(3, 'Phụ cấp đi lại', 30000, '2025-02-10','Phụ cấp đi lại'),
+(5, 'Thưởng', 100000, '2025-02-15','Thưởng thêm'),
+(6, 'Phụ cấp bữa ăn', 50000, '2025-02-11','Phụ cấp bữa ăn'),
+(7, 'Phụ cấp đi lại', 30000, '2025-02-11','Phụ cấp đi lại');
 
 INSERT INTO support_requests (intern_id, description, file_path, status, created_at) VALUES
 (1, 'Không truy cập được hệ thống', NULL, 'OPEN', NOW()),
