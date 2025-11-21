@@ -79,7 +79,7 @@ public class AuthService {
         }
 
         // Generate JWT token with email + role
-        String token = jwtUtils.generateToken(user.getEmail(), user.getRole().getName());
+        String token = jwtUtils.generateToken(user.getEmail(), user.getRole().getName(),user.getUserId(), user.getFullName());
 
         // Return both token and user info
         Map<String, Object> response = new HashMap<>();

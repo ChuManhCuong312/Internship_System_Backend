@@ -24,9 +24,12 @@ public class JwtUtils {
     }
 
     // 🔹 Generate token with email and role
-    public String generateToken(String email, String role) {
+    public String generateToken(String email, String role, Integer userId, String fullName) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role); // ✅ include role as claim
+        claims.put("userId", userId);
+        claims.put("fullName", fullName);
+
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -55,6 +58,24 @@ public class JwtUtils {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("role");
+    }
+
+    public String extractUserId(String token) {
+        return (String) Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId");
+    }
+
+    public String extractUserfullName(String token) {
+        return (String) Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("fullName");
     }
 
     // 🔹 Validate token
