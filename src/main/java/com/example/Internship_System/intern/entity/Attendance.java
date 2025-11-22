@@ -14,10 +14,10 @@ public class Attendance {
     @Column(name = "attendance_id")
     private int attendanceId;
 
-    @Column(name = "intern_id")
+    @Column(name = "intern_id", nullable = false)
     private int internId;
 
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private LocalDate date;
 
     @Column(name = "check_in")
@@ -26,8 +26,12 @@ public class Attendance {
     @Column(name = "check_out")
     private LocalTime checkOut;
 
-    @Column(name = "location")
-    private String location;
+    public Attendance() {}
+
+    public Attendance(int internId, LocalDate date) {
+        this.internId = internId;
+        this.date = date;
+    }
 
     public int getAttendanceId() {
         return attendanceId;
@@ -67,11 +71,27 @@ public class Attendance {
         this.checkOut = checkOut;
     }
 
-    public String getLocation() {
-        return location;
+    public String getStatus() {
+        if (checkIn == null && checkOut == null) {
+            return "ABSENT";
+        }
+        if (checkIn == null || checkOut == null) {
+            return "INCOMPLETE";
+        }
+
+        // Check if late (after 8:30 AM)
+        LocalTime lateThreshold = LocalTime.of(8, 30);
+        if (checkIn.isAfter(lateThreshold)) {
+            return "LATE";
+        }
+
+        return "ON_TIME";
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public Long getWorkingMinutes() {
+        if (checkIn != null && checkOut != null) {
+            return java.time.Duration.between(checkIn, checkOut).toMinutes();
+        }
+        return null;
     }
 }
