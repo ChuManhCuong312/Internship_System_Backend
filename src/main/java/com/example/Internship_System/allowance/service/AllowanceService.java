@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +63,11 @@ public class AllowanceService {
 
     public void deleteById(int id) {
         repository.deleteById(id);
+    }
+
+    public List<Allowance> filterAllowances(Integer internId, String type, BigDecimal minAmount, 
+                                            BigDecimal maxAmount, LocalDate startDate, LocalDate endDate) {
+        return repository.filterAllowances(internId, type, minAmount, maxAmount, startDate, endDate);
     }
 
     private int compareByField(Allowance a, Allowance b, String field) {
