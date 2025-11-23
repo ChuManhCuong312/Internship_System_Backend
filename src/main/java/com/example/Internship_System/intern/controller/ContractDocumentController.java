@@ -168,4 +168,29 @@ public class ContractDocumentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    /**
+     * PATCH - Update contract status
+     * Accepts status as string and converts to enum
+     */
+    @PatchMapping("/{id}/contract-status")
+    public ResponseEntity<Map<String, Object>> updateContractStatus(
+            @PathVariable("id") int id,
+            @RequestParam String status) {
+        try {
+            ContractStatus contractStatus = ContractStatus.valueOf(status.toUpperCase().replace(" ", "_"));
+            ContractDocument updated = contractService.updateContractStatus(id, contractStatus);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Contract status updated successfully");
+            response.put("contract", updated);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid contract status. Valid values: NOT_UPLOAD, UPLOAD");
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+    }
 }
