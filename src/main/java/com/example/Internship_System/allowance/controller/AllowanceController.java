@@ -30,9 +30,16 @@ public class AllowanceController {
 
     //READ all allowances
     @GetMapping
-    public ResponseEntity<List<Allowance>> getAllAllowances() {
+    public ResponseEntity<List<Allowance>> getAllAllowances(
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String direction) {
         try {
-            List<Allowance> allowances = allowanceService.findAll();
+            List<Allowance> allowances;
+            if (sortBy != null && !sortBy.isEmpty()) {
+                allowances = allowanceService.findAllSorted(sortBy, direction);
+            } else {
+                allowances = allowanceService.findAll();
+            }
             return new ResponseEntity<>(allowances, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,9 +56,17 @@ public class AllowanceController {
 
     //READ allowances by intern id
     @GetMapping("/intern/{internId}")
-    public ResponseEntity<List<Allowance>> getAllowancesByInternId(@PathVariable("internId") int internId) {
+    public ResponseEntity<List<Allowance>> getAllowancesByInternId(
+            @PathVariable("internId") int internId,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String direction) {
         try {
-            List<Allowance> allowances = allowanceService.findByInternId(internId);
+            List<Allowance> allowances;
+            if (sortBy != null && !sortBy.isEmpty()) {
+                allowances = allowanceService.findByInternIdSorted(internId, sortBy, direction);
+            } else {
+                allowances = allowanceService.findByInternId(internId);
+            }
             return new ResponseEntity<>(allowances, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
