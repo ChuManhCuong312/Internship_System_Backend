@@ -49,5 +49,13 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+    /**
+     * READ - Get contract by document ID
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<ContractDocument> getContractById(@PathVariable("id") int id) {
+        Optional<ContractDocument> contract = contractService.findById(id);
+        return contract.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
