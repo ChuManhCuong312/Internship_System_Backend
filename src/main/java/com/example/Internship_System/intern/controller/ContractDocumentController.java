@@ -58,4 +58,13 @@ public class ContractDocumentController {
         return contract.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    /**
+     * READ - Get contract by intern ID
+     */
+    @GetMapping("/intern/{internId}")
+    public ResponseEntity<ContractDocument> getContractByInternId(@PathVariable("internId") int internId) {
+        Optional<ContractDocument> contract = contractService.findByInternId(internId);
+        return contract.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
