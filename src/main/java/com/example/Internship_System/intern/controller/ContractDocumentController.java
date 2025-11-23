@@ -67,4 +67,25 @@ public class ContractDocumentController {
         return contract.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    /**
+     * READ - Get contracts by contract status
+     * Use query parameter instead of path variable to handle enum values
+     */
+    @GetMapping("/by-contract-status")
+    public ResponseEntity<?> getContractsByStatus(@RequestParam("status") String statusStr) {
+        try {
+            ContractStatus status = ContractStatus.valueOf(statusStr.toUpperCase().replace(" ", "_"));
+            List<ContractDocument> contracts = contractService.findByContractStatus(status);
+            if (contracts.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(contracts, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid contract status. Valid values: NOT_UPLOAD, UPLOAD");
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
