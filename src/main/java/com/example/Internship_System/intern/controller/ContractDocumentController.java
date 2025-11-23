@@ -132,4 +132,40 @@ public class ContractDocumentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    /**
+     * PATCH - Partial update of contract document
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<ContractDocument> partialUpdateContract(
+            @PathVariable("id") int id,
+            @RequestBody ContractDocument contract) {
+        Optional<ContractDocument> existingContract = contractService.findById(id);
+
+        if (existingContract.isPresent()) {
+            ContractDocument contractToUpdate = existingContract.get();
+
+            if (contract.getIntern() != null) {
+                contractToUpdate.setIntern(contract.getIntern());
+            }
+            if (contract.getFilePath() != null) {
+                contractToUpdate.setFilePath(contract.getFilePath());
+            }
+            if (contract.getContractStatus() != null) {
+                contractToUpdate.setContractStatus(contract.getContractStatus());
+            }
+            if (contract.getInternConfirmStatus() != null) {
+                contractToUpdate.setInternConfirmStatus(contract.getInternConfirmStatus());
+            }
+            if (contract.getConfirmAt() != null) {
+                contractToUpdate.setConfirmAt(contract.getConfirmAt());
+            }
+            if (contract.getNote() != null) {
+                contractToUpdate.setNote(contract.getNote());
+            }
+
+            return new ResponseEntity<>(contractService.save(contractToUpdate), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
