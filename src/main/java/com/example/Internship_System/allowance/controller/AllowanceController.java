@@ -31,32 +31,29 @@ public class AllowanceController {
 
     //READ all allowances
     @GetMapping
-    public ResponseEntity<List<Allowance>> getAllAllowances(
+    public ResponseEntity<?> getAllAllowances(
             @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false, defaultValue = "asc") String direction) {
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
         try {
-            List<Allowance> allowances;
-            if (sortBy != null && !sortBy.isEmpty()) {
-                allowances = allowanceService.findAllSorted(sortBy, direction);
+            if (page != null && size != null) {
+                Page<Allowance> allowances;
+                if (sortBy != null && !sortBy.isEmpty()) {
+                    allowances = allowanceService.findAllPaginated(page, size, sortBy, direction);
+                } else {
+                    allowances = allowanceService.findAllPaginatedNoSort(page, size);
+                }
+                return new ResponseEntity<>(allowances, HttpStatus.OK);
             } else {
-                allowances = allowanceService.findAll();
+                List<Allowance> allowances;
+                if (sortBy != null && !sortBy.isEmpty()) {
+                    allowances = allowanceService.findAllSorted(sortBy, direction);
+                } else {
+                    allowances = allowanceService.findAll();
+                }
+                return new ResponseEntity<>(allowances, HttpStatus.OK);
             }
-            return new ResponseEntity<>(allowances, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //READ all allowances with pagination
-    @GetMapping("/paginated")
-    public ResponseEntity<Page<Allowance>> getAllAllowancesPaginated(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "allowanceId") String sortBy,
-            @RequestParam(required = false, defaultValue = "asc") String direction) {
-        try {
-            Page<Allowance> allowances = allowanceService.findAllPaginated(page, size, sortBy, direction);
-            return new ResponseEntity<>(allowances, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -72,34 +69,33 @@ public class AllowanceController {
 
     //READ allowances by intern id
     @GetMapping("/intern/{internId}")
-    public ResponseEntity<List<Allowance>> getAllowancesByInternId(
+    public ResponseEntity<?> getAllowancesByInternId(
             @PathVariable("internId") int internId,
             @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false, defaultValue = "asc") String direction) {
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
         try {
-            List<Allowance> allowances;
-            if (sortBy != null && !sortBy.isEmpty()) {
-                allowances = allowanceService.findByInternIdSorted(internId, sortBy, direction);
+            if (page != null && size != null) {
+                List<Allowance> allAllowances;
+                if (sortBy != null && !sortBy.isEmpty()) {
+                    allAllowances = allowanceService.findByInternIdSorted(internId, sortBy, direction);
+                } else {
+                    allAllowances = allowanceService.findByInternId(internId);
+                }
+                int start = page * size;
+                int end = Math.min(start + size, allAllowances.size());
+                List<Allowance> paginatedAllowances = allAllowances.subList(start, end);
+                return new ResponseEntity<>(paginatedAllowances, HttpStatus.OK);
             } else {
-                allowances = allowanceService.findByInternId(internId);
+                List<Allowance> allowances;
+                if (sortBy != null && !sortBy.isEmpty()) {
+                    allowances = allowanceService.findByInternIdSorted(internId, sortBy, direction);
+                } else {
+                    allowances = allowanceService.findByInternId(internId);
+                }
+                return new ResponseEntity<>(allowances, HttpStatus.OK);
             }
-            return new ResponseEntity<>(allowances, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //READ allowances by intern id with pagination
-    @GetMapping("/intern/{internId}/paginated")
-    public ResponseEntity<Page<Allowance>> getAllowancesByInternIdPaginated(
-            @PathVariable("internId") int internId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "allowanceId") String sortBy,
-            @RequestParam(required = false, defaultValue = "asc") String direction) {
-        try {
-            Page<Allowance> allowances = allowanceService.findByInternIdPaginated(internId, page, size, sortBy, direction);
-            return new ResponseEntity<>(allowances, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
