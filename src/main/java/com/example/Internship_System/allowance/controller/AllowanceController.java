@@ -2,6 +2,7 @@ package com.example.Internship_System.allowance.controller;
 
 import com.example.Internship_System.allowance.entity.Allowance;
 import com.example.Internship_System.allowance.service.AllowanceService;
+import com.example.Internship_System.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,20 @@ public class AllowanceController {
     @Autowired
     private AllowanceService allowanceService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     //CREATE - Add new allowance
     @PostMapping
     public ResponseEntity<Allowance> createAllowance(@RequestBody Allowance allowance) {
         try {
             Allowance savedAllowance = allowanceService.save(allowance);
+            // Send notification to intern
+            notificationService.createAllowanceNotification(
+                    savedAllowance.getInternId(),
+                    savedAllowance.getType(),
+                    savedAllowance.getAmount().toString()
+            );
             return new ResponseEntity<>(savedAllowance, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
