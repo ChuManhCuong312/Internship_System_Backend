@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:33023/internship_system?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/internship_system?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -45,7 +45,6 @@ spring:
             user-info-uri: https://api.github.com/user
 server:
   port: 8080
-
 # --- JWT config (replace jwt.secret with secure string) ---
 jwt:
   secret: "S${JWT_SECRET}"
