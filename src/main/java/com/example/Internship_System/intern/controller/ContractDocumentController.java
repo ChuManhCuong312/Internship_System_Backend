@@ -193,4 +193,30 @@ public class ContractDocumentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
+    /**
+     * PATCH - Update intern confirm status
+     * Accepts status as string and converts to enum
+     */
+    @PatchMapping("/{id}/confirm-status")
+    public ResponseEntity<Map<String, Object>> updateInternConfirmStatus(
+            @PathVariable("id") int id,
+            @RequestParam String status,
+            @RequestParam(required = false) String note) {
+        try {
+            InternConfirmStatus confirmStatus = InternConfirmStatus.valueOf(status.toUpperCase().replace(" ", "_"));
+            ContractDocument updated = contractService.updateInternConfirmStatus(id, confirmStatus, note);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Intern confirm status updated successfully");
+            response.put("contract", updated);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid confirm status. Valid values: APPROVED, PENDING");
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+    }
 }
