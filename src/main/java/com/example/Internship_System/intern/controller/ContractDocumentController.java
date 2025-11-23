@@ -34,6 +34,20 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    /**
+     * READ - Get all contract documents
+     */
+    @GetMapping
+    public ResponseEntity<List<ContractDocument>> getAllContracts() {
+        try {
+            List<ContractDocument> contracts = contractService.findAll();
+            if (contracts.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(contracts, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     
 }
