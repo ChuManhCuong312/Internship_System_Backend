@@ -88,4 +88,25 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /**
+     * READ - Get contracts by intern confirm status
+     * Use query parameter instead of path variable to handle enum values
+     */
+    @GetMapping("/by-confirm-status")
+    public ResponseEntity<?> getContractsByInternConfirmStatus(@RequestParam("status") String statusStr) {
+        try {
+            InternConfirmStatus status = InternConfirmStatus.valueOf(statusStr.toUpperCase().replace(" ", "_"));
+            List<ContractDocument> contracts = contractService.findByInternConfirmStatus(status);
+            if (contracts.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(contracts, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid confirm status. Valid values: APPROVED, PENDING");
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
