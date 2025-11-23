@@ -219,4 +219,21 @@ public class ContractDocumentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
+    /**
+     * DELETE - Delete contract by ID
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteContract(@PathVariable("id") int id) {
+        try {
+            Optional<ContractDocument> contract = contractService.findById(id);
+            if (contract.isPresent()) {
+                contractService.deleteById(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
