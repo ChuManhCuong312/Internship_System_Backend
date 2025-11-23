@@ -45,6 +45,7 @@ spring:
             user-info-uri: https://api.github.com/user
 server:
   port: 8080
+
 # --- JWT config (replace jwt.secret with secure string) ---
 jwt:
   secret: "S${JWT_SECRET}"
