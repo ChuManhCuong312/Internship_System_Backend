@@ -109,4 +109,27 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /**
+     * UPDATE - Full update of contract document
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<ContractDocument> updateContract(
+            @PathVariable("id") int id,
+            @RequestBody ContractDocument contract) {
+        Optional<ContractDocument> existingContract = contractService.findById(id);
+
+        if (existingContract.isPresent()) {
+            ContractDocument contractToUpdate = existingContract.get();
+            contractToUpdate.setIntern(contract.getIntern());
+            contractToUpdate.setFilePath(contract.getFilePath());
+            contractToUpdate.setContractStatus(contract.getContractStatus());
+            contractToUpdate.setInternConfirmStatus(contract.getInternConfirmStatus());
+            contractToUpdate.setConfirmAt(contract.getConfirmAt());
+            contractToUpdate.setNote(contract.getNote());
+
+            return new ResponseEntity<>(contractService.save(contractToUpdate), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
