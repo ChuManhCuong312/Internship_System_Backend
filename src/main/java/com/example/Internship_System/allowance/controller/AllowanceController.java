@@ -3,6 +3,7 @@ package com.example.Internship_System.allowance.controller;
 import com.example.Internship_System.allowance.entity.Allowance;
 import com.example.Internship_System.allowance.service.AllowanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,21 @@ public class AllowanceController {
         }
     }
 
+    //READ all allowances with pagination
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Allowance>> getAllAllowancesPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "allowanceId") String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String direction) {
+        try {
+            Page<Allowance> allowances = allowanceService.findAllPaginated(page, size, sortBy, direction);
+            return new ResponseEntity<>(allowances, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     //READ allowance by id
     @GetMapping("/{id}")
     public ResponseEntity<Allowance> getAllowanceById(@PathVariable("id") int id) {
@@ -67,6 +83,22 @@ public class AllowanceController {
             } else {
                 allowances = allowanceService.findByInternId(internId);
             }
+            return new ResponseEntity<>(allowances, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //READ allowances by intern id with pagination
+    @GetMapping("/intern/{internId}/paginated")
+    public ResponseEntity<Page<Allowance>> getAllowancesByInternIdPaginated(
+            @PathVariable("internId") int internId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "allowanceId") String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String direction) {
+        try {
+            Page<Allowance> allowances = allowanceService.findByInternIdPaginated(internId, page, size, sortBy, direction);
             return new ResponseEntity<>(allowances, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
