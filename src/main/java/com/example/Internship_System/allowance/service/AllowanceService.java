@@ -4,8 +4,8 @@ import com.example.Internship_System.allowance.entity.Allowance;
 import com.example.Internship_System.repository.AllowanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -31,25 +31,13 @@ public class AllowanceService {
 
     public Page<Allowance> findAllPaginated(int page, int size, String sortBy, String direction) {
         Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
-        return repository.findAll(pageRequest);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+        return repository.findAll(pageable);
     }
 
-    public Page<Allowance> findByInternIdPaginated(int internId, int page, int size, String sortBy, String direction) {
-        Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        List<Allowance> allowances = repository.findByInternId(internId);
-        List<Allowance> sortedAllowances = allowances.stream()
-                .sorted((a, b) -> {
-                    int comparison = compareByField(a, b, sortBy);
-                    return sortDirection == Sort.Direction.DESC ? -comparison : comparison;
-                })
-                .toList();
-        
-        int start = page * size;
-        int end = Math.min(start + size, sortedAllowances.size());
-        List<Allowance> pageContent = sortedAllowances.subList(start, end);
-        
-        return new PageImpl<>(pageContent, PageRequest.of(page, size), sortedAllowances.size());
+    public Page<Allowance> findAllPaginatedNoSort(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findAll(pageable);
     }
 
     public Optional<Allowance> findById(int id) {
