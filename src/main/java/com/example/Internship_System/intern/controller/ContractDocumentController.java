@@ -236,4 +236,21 @@ public class ContractDocumentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /**
+     * Statistics - Get contract statistics
+     */
+    @GetMapping("/statistics")
+    public ResponseEntity<Map<String, Object>> getContractStatistics() {
+        try {
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("total", contractService.countAll());
+            stats.put("uploaded", contractService.countByContractStatus(ContractStatus.UPLOAD));
+            stats.put("notUploaded", contractService.countByContractStatus(ContractStatus.NOT_UPLOAD));
+            stats.put("approved", contractService.countByInternConfirmStatus(InternConfirmStatus.APPROVED));
+            stats.put("pending", contractService.countByInternConfirmStatus(InternConfirmStatus.PENDING));
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
