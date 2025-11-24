@@ -1,6 +1,7 @@
 package com.example.Internship_System.program.controller;
 
 import com.example.Internship_System.program.dto.MentorProgramDTO;
+import com.example.Internship_System.program.dto.ProgramCloneDTO;
 import com.example.Internship_System.program.dto.ProgramCreateRequest;
 import com.example.Internship_System.program.dto.ProgramUpdateRequest;
 import com.example.Internship_System.program.entity.Program;
@@ -45,10 +46,10 @@ public class ProgramController {
     }
 
     // Delete program by ID
-    @DeleteMapping("/{id}")
-    public String deleteProgram(@PathVariable Integer id) {
-        programService.deleteProgram(id);
-        return "Program deleted successfully.";
+    @DeleteMapping("/{programId}")
+    public ResponseEntity<?> deleteProgram(@PathVariable Integer programId) {
+        programService.deleteProgram(programId);
+        return ResponseEntity.ok("Program deleted successfully");
     }
 
     @PostMapping("/create")
@@ -74,6 +75,14 @@ public class ProgramController {
         }
     }
 
+    @GetMapping("/{programId}/clone-template")
+    public ProgramCloneDTO getCloneTemplate(@PathVariable Integer programId) {
+        return programService.getCloneTemplate(programId);
+    }
 
+    @PostMapping("/clone")
+    public Program cloneProgram(@RequestBody ProgramCreateRequest request) {
+        return programService.cloneProgram(request);
+    }
 
 }
