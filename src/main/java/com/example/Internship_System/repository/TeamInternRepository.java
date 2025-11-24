@@ -15,4 +15,8 @@ public interface TeamInternRepository extends JpaRepository<TeamIntern, Integer>
     int countInterns(@Param("programId") Integer programId);
 
     List<TeamIntern> findByTeamTeamId(Integer teamId);
+
+    void deleteByTeam_TeamIdAndIntern_InternId(Integer teamId, Integer internId);
+
+    void deleteAllByTeam_TeamId(Integer teamId);
 }
