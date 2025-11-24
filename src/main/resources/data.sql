@@ -46,7 +46,7 @@ INSERT INTO intern_users (
 
 -- 1. Nam
 (1, 7, 'CMC University', 'Công nghệ thông tin', 3.2, '2003-01-15', 'MALE', 'Hà Đông, Hà Nội',
- 'img_nam.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763990715/Screenshot_2025-11-24_202449_m8yxc7.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Nam_uni_confirm_g72nf8.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Nam_app_zixvmm.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740806/Nguy%E1%BB%85n_H%E1%BB%AFu_Nam_CV_zvej8x.pdf',
@@ -54,7 +54,7 @@ INSERT INTO intern_users (
 
 -- 2. Mai
 (2, 8, 'CMC University', 'Thiết kế đồ họa', 3.0, '2003-03-22', 'FEMALE', 'Hà Đông, Hà Nội',
- 'img_mai.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991165/Screenshot_2025-11-24_202719_zqivt7.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745936/Mai_uni_confirm_arnooq.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Mai_app_gwrcxp.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Tr%E1%BA%A7n_Th%E1%BB%8B_Mai_CV_vz0om9.pdf',
@@ -70,7 +70,7 @@ INSERT INTO intern_users (
 
 -- 4. Hằng
 (4, 10, 'CMC University', 'Kinh tế số', 3.1, '2002-12-05', 'FEMALE', 'Hà Đông, Hà Nội',
- 'img_hang.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991165/Screenshot_2025-11-24_202821_sgsic8.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745936/Hang_uni_confirm_rgoecx.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Hang_app_kxxpdc.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740805/Nguy%E1%BB%85n_Th%E1%BB%8B_H%E1%BA%B1ng_CV_yiijtb.pdf',
@@ -78,7 +78,7 @@ INSERT INTO intern_users (
 
 -- 5. Bình
 (5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'MALE', 'Hà Đông, Hà Nội',
- 'img_binh.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991165/Screenshot_2025-11-24_202904_gzuvua.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Binh_uni_confirm_emu4xq.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Binh_app_k4rpyg.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740805/L%C3%AA_V%C4%83n_B%C3%ACnh_CV_iqdzzv.pdf',
@@ -86,7 +86,7 @@ INSERT INTO intern_users (
 
 -- 6. Đạt
 (6, 12, 'CMC University', 'Công nghệ thông tin', 3.4, '2003-04-08', 'FEMALE', 'Hà Đông, Hà Nội',
- 'img_dat.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991165/Screenshot_2025-11-24_202942_qpzoma.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Dat_uni_confirm_zdm6je.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Dat_app_vsopvd.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740804/Tr%E1%BA%A7n_V%C4%83n_%C4%90%E1%BA%A1t_CV_pct3ha.pdf',
@@ -110,7 +110,7 @@ INSERT INTO intern_users (
 
 -- 9. Đức Anh
 (9, 15, 'CMC University', 'Công nghệ thông tin', 3.6, '2003-06-01', 'MALE', 'Hà Đông, Hà Nội',
- 'img_anh.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991165/Screenshot_2025-11-24_203027_nzl39r.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Anh_uni_confirm_ybbken.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/DucAnh_app_qdvrwv.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740804/Nguy%E1%BB%85n_%C4%90%E1%BB%A9c_Anh_CV_q9h85g.pdf',
@@ -118,7 +118,7 @@ INSERT INTO intern_users (
 
 -- 10. Hà
 (10, 16, 'CMC University', 'Khoa học máy tính', 3.2, '2003-08-01', 'MALE', 'Hà Đông, Hà Nội',
- 'img_ha.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991165/Screenshot_2025-11-24_203053_e9fnnw.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745937/Ha_uni_confirm_n21ari.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Ha_app_jmz8rg.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740804/Nguy%E1%BB%85n_%C4%90%E1%BB%A9c_H%C3%A0_CV_kbu7di.pdf',
@@ -158,7 +158,7 @@ INSERT INTO intern_users (
 
 -- 15. Chương
 (15, 21, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
- 'img_chuong.jpg',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
