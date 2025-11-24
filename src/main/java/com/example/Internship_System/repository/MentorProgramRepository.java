@@ -10,4 +10,9 @@ public interface MentorProgramRepository extends JpaRepository<MentorProgram, In
 
     // Sort by mentor full name
     List<MentorProgram> findByMentor_MentorId(Integer mentorId);
+
+    boolean existsByProgram_ProgramIdAndMentor_MentorId(Integer programId, Integer mentorId);
+
+    void deleteByProgram_ProgramIdAndMentor_MentorId(Integer programId, Integer mentorId);
+    void deleteByProgram_ProgramId(Integer programId);
 }
