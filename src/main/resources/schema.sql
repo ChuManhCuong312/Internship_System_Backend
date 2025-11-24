@@ -147,6 +147,7 @@ CREATE TABLE tasks (
     assigned_by INT,
     priority ENUM('LOW','MEDIUM','HIGH') DEFAULT 'MEDIUM',
     status ENUM('TODO','IN_PROGRESS','DONE','REVIEWED') DEFAULT 'TODO',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deadline DATE,
     due_soon BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (assigned_by) REFERENCES mentor_users(mentor_id),
