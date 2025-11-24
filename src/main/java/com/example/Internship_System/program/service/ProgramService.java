@@ -1,6 +1,7 @@
 package com.example.Internship_System.program.service;
 
 import com.example.Internship_System.program.dto.MentorProgramDTO;
+import com.example.Internship_System.program.dto.ProgramCloneDTO;
 import com.example.Internship_System.program.dto.ProgramCreateRequest;
 import com.example.Internship_System.program.dto.ProgramUpdateRequest;
 import com.example.Internship_System.program.entity.MentorProgram;
@@ -8,8 +9,13 @@ import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.entity.ProgramStatus;
 import com.example.Internship_System.repository.MentorProgramRepository;
 import com.example.Internship_System.repository.ProgramRepository;
+import com.example.Internship_System.repository.TeamInternRepository;
+import com.example.Internship_System.repository.TeamRepository;
+import com.example.Internship_System.team.entity.Team;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,10 +25,17 @@ public class ProgramService {
 
     private final ProgramRepository programRepository;
     private final MentorProgramRepository mentorProgramRepository;
+    private final TeamRepository teamRepository;
+    private final TeamInternRepository teamInternRepository;
 
-    public ProgramService(ProgramRepository programRepository, MentorProgramRepository mentorProgramRepository) {
+    public ProgramService(ProgramRepository programRepository,
+                          MentorProgramRepository mentorProgramRepository,
+                          TeamRepository teamRepository,
+                          TeamInternRepository teamInternRepository) {
         this.programRepository = programRepository;
         this.mentorProgramRepository = mentorProgramRepository;
+        this.teamRepository = teamRepository;
+        this.teamInternRepository = teamInternRepository;
     }
 
     // Search program by name
@@ -54,8 +67,32 @@ public class ProgramService {
     }
 
     // Delete program by ID
-    public void deleteProgram(Integer id) {
-        programRepository.deleteById(id);
+    @Transactional
+    public void deleteProgram(Integer programId) {
+
+        Program program = programRepository.findById(programId)
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+
+        // ❌ Cannot delete ongoing or finished program
+        if (!program.getProgramStatus().equals(ProgramStatus.UPCOMING)) {
+            throw new RuntimeException("Cannot delete program because it is ON_GOING or FINISHED");
+        }
+
+        // 1️⃣ Delete team_intern mappings for all teams
+        List<Team> teams = teamRepository.findByProgramProgramId(programId);
+
+        for (Team team : teams) {
+            teamInternRepository.deleteAllByTeam_TeamId(team.getTeamId());
+        }
+
+        // 2️⃣ Delete all teams
+        teamRepository.deleteAll(teams);
+
+        // 3️⃣ Delete mentor-program associations
+        mentorProgramRepository.deleteByProgram_ProgramId(programId);
+
+        // 4️⃣ Delete program itself
+        programRepository.delete(program);
     }
 
     // Create new program
@@ -118,4 +155,44 @@ public class ProgramService {
 
         return programRepository.save(program);
     }
+
+    public ProgramCloneDTO getCloneTemplate(Integer programId) {
+        Program p = programRepository.findById(programId)
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+
+        ProgramCloneDTO dto = new ProgramCloneDTO();
+        dto.setName(p.getName() + " (copy)");
+        dto.setDepartment(p.getDepartment());
+        dto.setDetails(p.getDetail());
+        dto.setMaxInterns(p.getMaxInterns());
+
+        return dto;
+    }
+
+    @Transactional
+    public Program cloneProgram(ProgramCreateRequest request) {
+
+        LocalDateTime start = request.getStartDate();
+        LocalDateTime end = request.getEndDate();
+
+        if (start.isBefore(LocalDateTime.now().plusWeeks(2))) {
+            throw new RuntimeException("Start date must be at least 2 weeks from now");
+        }
+
+        if (end.isBefore(start.plusMonths(1))) {
+            throw new RuntimeException("End date must be at least 1 month after start date");
+        }
+
+        Program newProgram = new Program();
+        newProgram.setName(request.getName());
+        newProgram.setDepartment(request.getDepartment());
+        newProgram.setDetail(request.getDetail());
+        newProgram.setMaxInterns(request.getMaxInterns());
+        newProgram.setStartDate(start);
+        newProgram.setEndDate(end);
+        newProgram.setProgramStatus(ProgramStatus.UPCOMING);
+
+        return programRepository.save(newProgram);
+    }
+
 }
