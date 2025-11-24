@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.Collections;
 @RestController
 @RequestMapping("/api/contracts")
 @CrossOrigin(origins = "*")
@@ -62,10 +62,17 @@ public class ContractDocumentController {
      * READ - Get contract by intern ID
      */
     @GetMapping("/intern/{internId}")
-    public ResponseEntity<ContractDocument> getContractByInternId(@PathVariable("internId") int internId) {
-        Optional<ContractDocument> contract = contractService.findByInternId(internId);
-        return contract.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<List<ContractDocument>> getContractByInternId(@PathVariable("internId") int internId) {
+        try {
+            List<ContractDocument> contracts = contractService.findAllByInternId(internId);
+            
+            if (contracts.isEmpty()) {
+                return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(contracts, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     /**
      * READ - Get contracts by contract status
