@@ -26,6 +26,8 @@ public class Attendance {
     @Column(name = "check_out")
     private LocalTime checkOut;
 
+    public static final long REQUIRED_WORKING_MINUTES = 480;
+
     public Attendance() {}
 
     public Attendance(int internId, LocalDate date) {
@@ -81,11 +83,15 @@ public class Attendance {
 
         // Check if late (after 8:30 AM)
         LocalTime lateThreshold = LocalTime.of(8, 30);
-        if (checkIn.isAfter(lateThreshold)) {
-            return "LATE";
+        boolean isLate = checkIn.isAfter(lateThreshold);
+
+        // Check working minutes
+        Long workingMinutes = getWorkingMinutes();
+        if (workingMinutes == null || workingMinutes < REQUIRED_WORKING_MINUTES) {
+            return isLate ? "LATE_INSUFFICIENT" : "INSUFFICIENT";
         }
 
-        return "ON_TIME";
+        return isLate ? "LATE" : "ON_TIME";
     }
 
     public Long getWorkingMinutes() {

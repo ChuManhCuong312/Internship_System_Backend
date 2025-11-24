@@ -140,6 +140,12 @@ public class AttendanceService {
                         a.getCheckIn().isAfter(LocalTime.of(8, 30)))
                 .count();
 
+        long insufficientDays = monthlyAttendances.stream()
+                .filter(a -> a.getWorkingMinutes() == null || a.getWorkingMinutes() < Attendance.REQUIRED_WORKING_MINUTES)
+                .count();
+
+        stats.put("insufficientDays", insufficientDays);
+        stats.put("sufficientDays", monthlyAttendances.size() - insufficientDays);
         stats.put("lateDays", lateDays);
         stats.put("onTimeDays", monthlyAttendances.size() - lateDays);
         stats.put("attendances", monthlyAttendances);
