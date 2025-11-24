@@ -265,18 +265,3 @@ CREATE TABLE intern_logs (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
-
--- ======================================
--- 8. NOTIFICATIONS
--- ======================================
-
-CREATE TABLE notifications (
-    notification_id INT AUTO_INCREMENT PRIMARY KEY,
-    intern_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    message TEXT,
-    type VARCHAR(50), -- 'ALLOWANCE', 'TASK', 'LEAVE', 'EVALUATION', etc.
-    is_read BOOLEAN DEFAULT FALSE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
-);

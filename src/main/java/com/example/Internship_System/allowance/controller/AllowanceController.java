@@ -2,15 +2,12 @@ package com.example.Internship_System.allowance.controller;
 
 import com.example.Internship_System.allowance.entity.Allowance;
 import com.example.Internship_System.allowance.service.AllowanceService;
-import com.example.Internship_System.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,20 +18,11 @@ public class AllowanceController {
     @Autowired
     private AllowanceService allowanceService;
 
-    @Autowired
-    private NotificationService notificationService;
-
     //CREATE - Add new allowance
     @PostMapping
     public ResponseEntity<Allowance> createAllowance(@RequestBody Allowance allowance) {
         try {
             Allowance savedAllowance = allowanceService.save(allowance);
-            // Send notification to intern
-            notificationService.createAllowanceNotification(
-                    savedAllowance.getInternId(),
-                    savedAllowance.getType(),
-                    savedAllowance.getAmount().toString()
-            );
             return new ResponseEntity<>(savedAllowance, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -144,36 +132,6 @@ public class AllowanceController {
             }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //FILTER allowances
-    @GetMapping("/filter/search")
-    public ResponseEntity<?> filterAllowances(
-            @RequestParam(required = false) Integer internId,
-            @RequestParam(required = false) String type,
-            @RequestParam(required = false) BigDecimal minAmount,
-            @RequestParam(required = false) BigDecimal maxAmount,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size) {
-        try {
-            LocalDate start = startDate != null && !startDate.isEmpty() ? LocalDate.parse(startDate) : null;
-            LocalDate end = endDate != null && !endDate.isEmpty() ? LocalDate.parse(endDate) : null;
-            
-            List<Allowance> allAllowances = allowanceService.filterAllowances(internId, type, minAmount, maxAmount, start, end);
-            
-            if (page != null && size != null) {
-                int start_idx = page * size;
-                int end_idx = Math.min(start_idx + size, allAllowances.size());
-                List<Allowance> paginatedAllowances = allAllowances.subList(start_idx, end_idx);
-                return new ResponseEntity<>(paginatedAllowances, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(allAllowances, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
