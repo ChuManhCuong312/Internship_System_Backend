@@ -20,7 +20,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20),
+    phone VARCHAR(20) UNIQUE,
     status ENUM('ACTIVE','INACTIVE','REJECTED','PENDING_APPROVAL') DEFAULT 'ACTIVE',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     role_id INT,
@@ -147,6 +147,7 @@ CREATE TABLE tasks (
     assigned_by INT,
     priority ENUM('LOW','MEDIUM','HIGH') DEFAULT 'MEDIUM',
     status ENUM('TODO','IN_PROGRESS','DONE','REVIEWED') DEFAULT 'TODO',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deadline DATE,
     due_soon BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (assigned_by) REFERENCES mentor_users(mentor_id),
@@ -262,6 +263,21 @@ CREATE TABLE intern_logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT NOT NULL,
     details TEXT, -- 'CONFIRM_CONTRACT','UPLOAD_DOCUMENT','UPDATE_PROFILE','SEND_SUPPORT_REQUEST'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
+);
+
+-- ======================================
+-- 8. NOTIFICATIONS
+-- ======================================
+
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    intern_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT,
+    type VARCHAR(50), -- 'ALLOWANCE', 'TASK', 'LEAVE', 'EVALUATION', etc.
+    is_read BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
