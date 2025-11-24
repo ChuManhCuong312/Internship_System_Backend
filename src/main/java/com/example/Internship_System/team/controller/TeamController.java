@@ -91,4 +91,36 @@ public class TeamController {
         return ResponseEntity.ok(teamService.createTeam(dto));
     }
 
+    @DeleteMapping("/{programId}/mentors/{mentorId}")
+    public ResponseEntity<?> removeMentorFromProgram(
+            @PathVariable Integer programId,
+            @PathVariable Integer mentorId) {
+
+        teamService.removeMentorFromProgram(programId, mentorId);
+        return ResponseEntity.ok("Mentor removed from program successfully");
+    }
+
+    @DeleteMapping("/teams/{teamId}/interns/{internId}")
+    public ResponseEntity<?> removeInternFromTeam(
+            @PathVariable Integer teamId,
+            @PathVariable Integer internId) {
+
+        teamService.removeInternFromTeam(teamId, internId);
+        return ResponseEntity.ok("Intern removed from team");
+    }
+
+    @DeleteMapping("/teams/{teamId}")
+    public ResponseEntity<?> deleteTeam(@PathVariable Integer teamId) {
+        teamService.deleteTeam(teamId);
+        return ResponseEntity.ok("Team deleted successfully");
+    }
+
+    @PutMapping("/teams/{teamId}")
+    public ResponseEntity<?> updateTeam(
+            @PathVariable Integer teamId,
+            @RequestBody UpdateTeamRequestDTO request) {
+
+        teamService.updateTeam(teamId, request);
+        return ResponseEntity.ok("Team updated successfully");
+    }
 }
