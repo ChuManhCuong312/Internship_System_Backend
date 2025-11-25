@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TeamInternRepository extends JpaRepository<TeamIntern, Integer> {
@@ -19,4 +20,9 @@ public interface TeamInternRepository extends JpaRepository<TeamIntern, Integer>
     void deleteByTeam_TeamIdAndIntern_InternId(Integer teamId, Integer internId);
 
     void deleteAllByTeam_TeamId(Integer teamId);
+    Optional<TeamIntern> findByIntern_InternId(Integer internId);
+    @Query("SELECT ti.team.teamId FROM TeamIntern ti WHERE ti.intern.internId = :internId")
+    Integer findTeamIdByInternId(@Param("internId") Integer internId);
+    @Query("SELECT ti FROM TeamIntern ti WHERE ti.intern.internId = :internId")
+    TeamIntern findByInternId(@Param("internId") Integer internId);
 }
