@@ -183,9 +183,9 @@ INSERT INTO contract_documents (document_id, intern_id, file_path, contract_stat
 -- intern_id: 3 (Quân), 4 (Hằng), 7 (Ngọc), 8 (Đức), 11 (Bảo), 12 (Huy), 14 (Anh)
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES
-(1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 'ON_GOING', 10),
-(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-02-01', '2025-05-01', 'UPCOMING', 8),
-(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-03-01', '2025-06-01', 'UPCOMING', 6);
+(1, 'Thực tập lập trình Web', 'CNTT', '2025-09-25', '2025-12-25', 'ON_GOING', 10),
+(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-12-25', '2026-01-25', 'UPCOMING', 8),
+(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-12-25', '2026-01-25', 'UPCOMING', 6);
 
 -- Gán mentor cho program
 INSERT INTO mentor_program (mentor_program_id, program_id, mentor_id, assigned_date) VALUES
@@ -212,15 +212,35 @@ INSERT INTO team_intern (team_intern_id, team_id, intern_id, assigned_date) VALU
 
 INSERT INTO tasks (program_id, title, description, assigned_by, priority, status, deadline, due_soon)
 VALUES
-(1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 'HIGH', 'IN_PROGRESS', '2025-03-01', FALSE),
-(1, 'Dashboard', 'Biểu đồ thống kê', 1, 'MEDIUM', 'TODO', '2025-03-10', FALSE),
-(2, 'Landing Page', 'Thiết kế giao diện', 2, 'HIGH', 'DONE', '2025-02-25', FALSE);
+(1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 'HIGH', 'IN_PROGRESS', '2025-11-27', FALSE),
+(1, 'Dashboard', 'Biểu đồ thống kê', 1, 'MEDIUM', 'TODO', '2025-11-28', FALSE),
+(1, 'Landing Page', 'Thiết kế giao diện', 2, 'HIGH', 'DONE', '2025-11-29', FALSE),
+(1, 'Quản lý người dùng', 'CRUD người dùng và phân quyền', 1, 'HIGH', 'TODO', '2025-12-01', FALSE),
+(1, 'Quản lý phòng', 'CRUD phòng khách sạn', 1, 'MEDIUM', 'TODO', '2025-12-02', FALSE),
+(1, 'Form đăng ký', 'Form đăng ký người dùng', 2, 'HIGH', 'IN_PROGRESS', '2025-12-03', FALSE),
+(1, 'Thanh toán trực tuyến', 'Tích hợp cổng thanh toán', 2, 'MEDIUM', 'TODO', '2025-12-04', FALSE),
+(1, 'Báo cáo thống kê', 'Xuất báo cáo PDF', 3, 'HIGH', 'TODO', '2025-12-05', FALSE),
+(1, 'Kiểm thử chức năng đăng nhập', 'Viết test unit và integration', 1, 'MEDIUM', 'TODO', '2025-12-06', FALSE),
+(1, 'Thiết kế biểu đồ Dashboard', 'Chọn thư viện chart và layout', 2, 'MEDIUM', 'IN_PROGRESS', '2025-12-07', FALSE),
+(1, 'Tối ưu Landing Page', 'Cải thiện tốc độ load', 2, 'HIGH', 'TODO', '2025-12-08', FALSE),
+(1, 'Cập nhật quyền truy cập', 'Phân quyền nâng cao', 1, 'HIGH', 'TODO', '2025-12-09', FALSE),
+(1, 'Bảo mật thanh toán', 'Thêm validation và mã hóa dữ liệu', 2, 'HIGH', 'IN_PROGRESS', '2025-12-10', FALSE);
 
 INSERT INTO task_team_assignments (task_id, team_id)
 VALUES
 (1, 1),
 (2, 1),
-(3, 2);
+(3, 2),
+(4, 1),
+(5, 1),
+(6, 2),
+(7, 2),
+(8, 3),
+(9, 1),
+(10, 2),
+(11, 2),
+(12, 1),
+(13, 2);
 
 INSERT INTO attendance (intern_id, date, check_in, check_out) VALUES
 (1, '2025-02-10', '08:05:00', '17:00:00'),
