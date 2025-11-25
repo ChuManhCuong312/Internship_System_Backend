@@ -3,7 +3,7 @@ package com.example.Internship_System.program.entity;
 import com.example.Internship_System.auth.entity.UserStatus;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "programs")
@@ -20,10 +20,10 @@ public class Program {
     private String department;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "program_status", columnDefinition = "ENUM('UPCOMING','ON_GOING','FINISHED') DEFAULT 'UPCOMING'")
@@ -37,8 +37,8 @@ public class Program {
 
     public Program(){}
 
-    public Program(String name, String department, LocalDateTime startDate,
-                   LocalDateTime endDate, String detail, Integer maxInterns){
+    public Program(String name, String department, LocalDate startDate,
+                   LocalDate endDate, String detail, Integer maxInterns){
         this.name = name;
         this.department = department;
         this.startDate = startDate;
@@ -56,11 +56,11 @@ public class Program {
     public String getDepartment() {return department;}
     public void setDepartment(String department) {this.department = department;}
 
-    public LocalDateTime getStartDate() {return startDate;}
-    public void setStartDate(LocalDateTime startDate) {this.startDate = startDate;}
+    public LocalDate getStartDate() {return startDate;}
+    public void setStartDate(LocalDate startDate) {this.startDate = startDate;}
 
-    public LocalDateTime getEndDate() {return endDate;}
-    public void setEndDate(LocalDateTime endDate) {this.endDate = endDate;}
+    public LocalDate getEndDate() {return endDate;}
+    public void setEndDate(LocalDate endDate) {this.endDate = endDate;}
 
     public ProgramStatus getProgramStatus() {return programStatus;}
     public void setProgramStatus(ProgramStatus programStatus) {this.programStatus = programStatus;}
