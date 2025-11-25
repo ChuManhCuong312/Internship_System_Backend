@@ -1,5 +1,7 @@
 package com.example.Internship_System.allowance.controller;
 
+import com.example.Internship_System.allowance.dto.AllowanceDTO;
+import com.example.Internship_System.allowance.dto.InternSearchDTO;
 import com.example.Internship_System.allowance.entity.Allowance;
 import com.example.Internship_System.allowance.service.AllowanceService;
 import com.example.Internship_System.notification.service.NotificationService;
@@ -41,7 +43,7 @@ public class AllowanceController {
         }
     }
 
-    //READ all allowances
+    //READ all allowances with intern names
     @GetMapping
     public ResponseEntity<?> getAllAllowances(
             @RequestParam(required = false) String sortBy,
@@ -49,21 +51,14 @@ public class AllowanceController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         try {
+            List<AllowanceDTO> allowances = allowanceService.findAllWithInternNames();
+            
             if (page != null && size != null) {
-                Page<Allowance> allowances;
-                if (sortBy != null && !sortBy.isEmpty()) {
-                    allowances = allowanceService.findAllPaginated(page, size, sortBy, direction);
-                } else {
-                    allowances = allowanceService.findAllPaginatedNoSort(page, size);
-                }
-                return new ResponseEntity<>(allowances, HttpStatus.OK);
+                int start = page * size;
+                int end = Math.min(start + size, allowances.size());
+                List<AllowanceDTO> paginatedAllowances = allowances.subList(start, end);
+                return new ResponseEntity<>(paginatedAllowances, HttpStatus.OK);
             } else {
-                List<Allowance> allowances;
-                if (sortBy != null && !sortBy.isEmpty()) {
-                    allowances = allowanceService.findAllSorted(sortBy, direction);
-                } else {
-                    allowances = allowanceService.findAll();
-                }
                 return new ResponseEntity<>(allowances, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -79,7 +74,7 @@ public class AllowanceController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    //READ allowances by intern id
+    //READ allowances by intern id with intern name
     @GetMapping("/intern/{internId}")
     public ResponseEntity<?> getAllowancesByInternId(
             @PathVariable("internId") int internId,
@@ -88,24 +83,14 @@ public class AllowanceController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         try {
+            List<AllowanceDTO> allowances = allowanceService.findByInternIdWithInternName(internId);
+            
             if (page != null && size != null) {
-                List<Allowance> allAllowances;
-                if (sortBy != null && !sortBy.isEmpty()) {
-                    allAllowances = allowanceService.findByInternIdSorted(internId, sortBy, direction);
-                } else {
-                    allAllowances = allowanceService.findByInternId(internId);
-                }
                 int start = page * size;
-                int end = Math.min(start + size, allAllowances.size());
-                List<Allowance> paginatedAllowances = allAllowances.subList(start, end);
+                int end = Math.min(start + size, allowances.size());
+                List<AllowanceDTO> paginatedAllowances = allowances.subList(start, end);
                 return new ResponseEntity<>(paginatedAllowances, HttpStatus.OK);
             } else {
-                List<Allowance> allowances;
-                if (sortBy != null && !sortBy.isEmpty()) {
-                    allowances = allowanceService.findByInternIdSorted(internId, sortBy, direction);
-                } else {
-                    allowances = allowanceService.findByInternId(internId);
-                }
                 return new ResponseEntity<>(allowances, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -147,7 +132,7 @@ public class AllowanceController {
         }
     }
 
-    //FILTER allowances
+    //FILTER allowances with intern names
     @GetMapping("/filter/search")
     public ResponseEntity<?> filterAllowances(
             @RequestParam(required = false) Integer internId,
@@ -162,16 +147,27 @@ public class AllowanceController {
             LocalDate start = startDate != null && !startDate.isEmpty() ? LocalDate.parse(startDate) : null;
             LocalDate end = endDate != null && !endDate.isEmpty() ? LocalDate.parse(endDate) : null;
             
-            List<Allowance> allAllowances = allowanceService.filterAllowances(internId, type, minAmount, maxAmount, start, end);
+            List<AllowanceDTO> allAllowances = allowanceService.filterAllowancesWithInternNames(internId, type, minAmount, maxAmount, start, end);
             
             if (page != null && size != null) {
                 int start_idx = page * size;
                 int end_idx = Math.min(start_idx + size, allAllowances.size());
-                List<Allowance> paginatedAllowances = allAllowances.subList(start_idx, end_idx);
+                List<AllowanceDTO> paginatedAllowances = allAllowances.subList(start_idx, end_idx);
                 return new ResponseEntity<>(paginatedAllowances, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(allAllowances, HttpStatus.OK);
             }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //SEARCH interns by name for allowance (returns only internId and fullName)
+    @GetMapping("/search/interns")
+    public ResponseEntity<?> searchInternsForAllowance(@RequestParam String name) {
+        try {
+            List<InternSearchDTO> interns = allowanceService.searchInternsForAllowance(name);
+            return new ResponseEntity<>(interns, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
