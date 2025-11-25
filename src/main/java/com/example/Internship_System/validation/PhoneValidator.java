@@ -15,6 +15,31 @@ public class PhoneValidator implements ConstraintValidator<ValidPhone, String> {
         if (phone == null || phone.trim().isEmpty()) {
             return true;
         }
-        return pattern.matcher(phone.trim()).matches();
+
+        String normalized = phone.trim();
+
+        // Kiểm tra trường hợp bắt đầu bằng 0 nhưng không đủ 10 số
+        if (normalized.startsWith("0") && !normalized.startsWith("+")) {
+            if (normalized.length() != 10) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(
+                        "SĐT phải bắt đầu từ 0 và có đủ 10 số"
+                ).addConstraintViolation();
+                return false;
+            }
+        }
+
+        // Nếu đã đủ số, kiểm tra đầu số có hợp lệ không
+        if (!pattern.matcher(normalized).matches()) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(
+                    "Số điện thoại Việt Nam không hợp lệ. " +
+                            "Đầu số phải là 03/05/07/08/09. " +
+                            "Ví dụ: 0901234567 hoặc +84901234567"
+            ).addConstraintViolation();
+            return false;
+        }
+
+        return true;
     }
 }
