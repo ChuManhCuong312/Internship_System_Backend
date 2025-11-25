@@ -46,5 +46,5 @@ public class SupportRequest {
     private LocalDateTime processedDate;
 
     @Column(columnDefinition = "TEXT")
-    private String rejectionReason;
+    private String response;
 }
