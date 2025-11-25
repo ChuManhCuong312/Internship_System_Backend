@@ -54,4 +54,10 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
                                                              @Param("filter") String filter,
                                                              Pageable pageable);
 
+    @Query("""
+       SELECT i FROM InternProfile i 
+       JOIN User u ON u.userId = i.userId
+       WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%'))
+       """)
+    List<InternProfile> searchInternsByName(@Param("name") String name);
 }
