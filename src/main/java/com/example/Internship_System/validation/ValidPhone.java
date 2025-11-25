@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPhone {
-    String message() default "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số";
+    String message() default "Số điện thoại không hợp lệ";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
