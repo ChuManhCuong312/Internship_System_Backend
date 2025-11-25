@@ -1,22 +1,21 @@
 package com.example.Internship_System.program.service;
 
-import com.example.Internship_System.program.dto.MentorProgramDTO;
-import com.example.Internship_System.program.dto.ProgramCloneDTO;
-import com.example.Internship_System.program.dto.ProgramCreateRequest;
-import com.example.Internship_System.program.dto.ProgramUpdateRequest;
+import com.example.Internship_System.program.dto.*;
 import com.example.Internship_System.program.entity.MentorProgram;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.entity.ProgramStatus;
-import com.example.Internship_System.repository.MentorProgramRepository;
-import com.example.Internship_System.repository.ProgramRepository;
-import com.example.Internship_System.repository.TeamInternRepository;
-import com.example.Internship_System.repository.TeamRepository;
+import com.example.Internship_System.repository.*;
+import com.example.Internship_System.task.entity.Task;
+import com.example.Internship_System.repository.TaskRepository;
+import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
 import com.example.Internship_System.team.entity.Team;
+import com.example.Internship_System.team.entity.TeamIntern;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +26,21 @@ public class ProgramService {
     private final MentorProgramRepository mentorProgramRepository;
     private final TeamRepository teamRepository;
     private final TeamInternRepository teamInternRepository;
+    private final TaskTeamAssignmentRepository taskTeamAssignmentRepository;
+    private final TaskRepository taskRepository;
 
     public ProgramService(ProgramRepository programRepository,
                           MentorProgramRepository mentorProgramRepository,
                           TeamRepository teamRepository,
-                          TeamInternRepository teamInternRepository) {
+                          TeamInternRepository teamInternRepository,
+                          TaskTeamAssignmentRepository taskTeamAssignmentRepository,
+                          TaskRepository taskRepository) {
         this.programRepository = programRepository;
         this.mentorProgramRepository = mentorProgramRepository;
         this.teamRepository = teamRepository;
         this.teamInternRepository = teamInternRepository;
+        this.taskTeamAssignmentRepository = taskTeamAssignmentRepository;
+        this.taskRepository = taskRepository;
     }
 
     // Search program by name
@@ -194,5 +199,72 @@ public class ProgramService {
 
         return programRepository.save(newProgram);
     }
+    public List<ScheduleEventDTO> getProgramByInternId(Integer internId) {
+
+        List<ScheduleEventDTO> events = new ArrayList<>();
+
+        // =============================
+        // 1. PROGRAM START + END
+        // =============================
+        Program program = programRepository.findProgramByInternId(internId)
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+
+        // START
+        events.add(new ScheduleEventDTO(
+                program.getProgramId() + "-start",
+                program.getName(),
+                "Bắt đầu " + program.getName(),
+                "program",
+                program.getStartDate(),
+                program.getDetail()
+        ));
+
+        // END
+        events.add(new ScheduleEventDTO(
+                program.getProgramId() + "-end",
+                program.getName(),
+                "Kết thúc " + program.getName(),
+                "program",
+                program.getEndDate(),
+                program.getDetail()
+        ));
+
+        // =============================
+// 2. TASK CỦA TEAM INTERN
+// =============================
+
+// (1) Lấy team intern đang thuộc về
+        TeamIntern teamIntern = teamInternRepository.findByInternId(internId);
+        Integer teamId = teamIntern.getTeam().getTeamId();
+
+
+        if (teamId != null) {
+
+            // (2) Lấy taskId thuộc team (dùng instance, không phải class)
+            List<Integer> teamTaskIds = taskTeamAssignmentRepository.findTaskIdsByTeamId(teamId);
+
+            if (!teamTaskIds.isEmpty()) {
+
+                // (3) Lấy danh sách task (dùng instance)
+                List<Task> teamTasks = taskRepository.findByTaskIdIn(teamTaskIds);
+
+                // (4) Format thành event schedule
+                for (Task t : teamTasks) {
+                    events.add(new ScheduleEventDTO(
+                            "task-" + t.getTaskId(),
+                            "Deadline: "+t.getTitle(),
+                            "Deadline cho task: "+t.getTitle(),
+                            "deadline",              // type = deadline
+                            t.getDeadline(),
+                            t.getDescription()
+                    ));
+                }
+            }
+        }
+
+        return events;
+    }
+
+
 
 }

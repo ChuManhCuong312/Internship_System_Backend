@@ -3,7 +3,7 @@ package com.example.Internship_System.repository;
 import com.example.Internship_System.program.entity.Program;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
+import java.util.Optional;
 import java.util.List;
 
 public interface ProgramRepository extends JpaRepository<Program, Integer> {
@@ -13,4 +13,13 @@ public interface ProgramRepository extends JpaRepository<Program, Integer> {
     List<Program> searchByName(String name);
 
     List<Program> findByDepartmentIgnoreCase(String department);
+
+    @Query("""
+    SELECT p FROM Program p
+    JOIN Team t ON t.program = p
+    JOIN TeamIntern ti ON ti.team = t
+    WHERE ti.intern.internId = :internId
+""")
+    Optional<Program> findProgramByInternId(Integer internId);
+
 }
