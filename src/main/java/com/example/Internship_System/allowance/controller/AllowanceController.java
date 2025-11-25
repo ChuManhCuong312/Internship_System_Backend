@@ -53,6 +53,24 @@ public class AllowanceController {
         try {
             List<AllowanceDTO> allowances = allowanceService.findAllWithInternNames();
             
+            // Apply sorting if sortBy is specified
+            if (sortBy != null && !sortBy.isEmpty()) {
+                allowances = allowances.stream()
+                        .sorted((a, b) -> {
+                            int comparison = 0;
+                            switch (sortBy.toLowerCase()) {
+                                case "allowanceid" -> comparison = Integer.compare(a.getAllowanceId(), b.getAllowanceId());
+                                case "internid" -> comparison = Integer.compare(a.getInternId(), b.getInternId());
+                                case "type" -> comparison = a.getType().compareTo(b.getType());
+                                case "amount" -> comparison = a.getAmount().compareTo(b.getAmount());
+                                case "dateapplied" -> comparison = a.getDateApplied().compareTo(b.getDateApplied());
+                                default -> comparison = 0;
+                            }
+                            return "desc".equalsIgnoreCase(direction) ? -comparison : comparison;
+                        })
+                        .toList();
+            }
+            
             if (page != null && size != null) {
                 int start = page * size;
                 int end = Math.min(start + size, allowances.size());
