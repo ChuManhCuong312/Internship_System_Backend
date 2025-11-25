@@ -101,16 +101,17 @@ public class SupportController {
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> approveSupportRequest(
             @PathVariable Integer id,
-            @RequestParam Integer hrId) {
+            @RequestParam Integer hrId,
+            @RequestParam(required = false) String response) {
         try {
-            SupportRequest approved = supportService.approveSupportRequest(id, hrId);
+            SupportRequest approved = supportService.approveSupportRequest(id, hrId, response);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Đã duyệt yêu cầu hỗ trợ");
-            response.put("data", approved);
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            result.put("message", "Đã duyệt yêu cầu hỗ trợ");
+            result.put("data", approved);
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
@@ -125,16 +126,16 @@ public class SupportController {
     public ResponseEntity<?> rejectSupportRequest(
             @PathVariable Integer id,
             @RequestParam Integer hrId,
-            @RequestParam String rejectionReason) {
+            @RequestParam String response) {
         try {
-            SupportRequest rejected = supportService.rejectSupportRequest(id, hrId, rejectionReason);
+            SupportRequest rejected = supportService.rejectSupportRequest(id, hrId, response);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Đã từ chối yêu cầu hỗ trợ");
-            response.put("data", rejected);
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            result.put("message", "Đã từ chối yêu cầu hỗ trợ");
+            result.put("data", rejected);
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
