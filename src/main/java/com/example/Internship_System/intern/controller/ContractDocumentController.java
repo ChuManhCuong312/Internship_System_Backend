@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Collections;
+
 @RestController
 @RequestMapping("/api/contracts")
 @CrossOrigin(origins = "*")
@@ -34,6 +34,7 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * READ - Get all contract documents
      */
@@ -49,6 +50,7 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * READ - Get contract by document ID
      */
@@ -58,22 +60,17 @@ public class ContractDocumentController {
         return contract.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
     /**
      * READ - Get contract by intern ID
      */
     @GetMapping("/intern/{internId}")
-    public ResponseEntity<List<ContractDocument>> getContractByInternId(@PathVariable("internId") int internId) {
-        try {
-            List<ContractDocument> contracts = contractService.findAllByInternId(internId);
-            
-            if (contracts.isEmpty()) {
-                return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
-            }
-            return new ResponseEntity<>(contracts, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<ContractDocument> getContractByInternId(@PathVariable("internId") int internId) {
+        Optional<ContractDocument> contract = contractService.findByInternId(internId);
+        return contract.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
     /**
      * READ - Get contracts by contract status
      * Use query parameter instead of path variable to handle enum values
@@ -95,6 +92,7 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * READ - Get contracts by intern confirm status
      * Use query parameter instead of path variable to handle enum values
@@ -116,6 +114,7 @@ public class ContractDocumentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * UPDATE - Full update of contract document
      */
@@ -139,6 +138,7 @@ public class ContractDocumentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     /**
      * PATCH - Partial update of contract document
      */
@@ -175,6 +175,7 @@ public class ContractDocumentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     /**
      * PATCH - Update contract status
      * Accepts status as string and converts to enum
@@ -200,6 +201,7 @@ public class ContractDocumentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
+
     /**
      * PATCH - Update intern confirm status
      * Accepts status as string and converts to enum
@@ -226,6 +228,7 @@ public class ContractDocumentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
+
     /**
      * DELETE - Delete contract by ID
      */
@@ -243,6 +246,7 @@ public class ContractDocumentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     /**
      * Statistics - Get contract statistics
      */
