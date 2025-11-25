@@ -212,7 +212,7 @@ public class ProgramService {
         // START
         events.add(new ScheduleEventDTO(
                 program.getProgramId() + "-start",
-                "Bắt đầu " +program.getName(),
+                "Bắt đầu chương trình: " +program.getName(),
                 "Bắt đầu " + program.getName(),
                 "program",
                 program.getStartDate(),
@@ -222,7 +222,7 @@ public class ProgramService {
         // END
         events.add(new ScheduleEventDTO(
                 program.getProgramId() + "-end",
-                "Kết thúc " +program.getName(),
+                "Kết thúc chương trình: " +program.getName(),
                 "Kết thúc " + program.getName(),
                 "program",
                 program.getEndDate(),
