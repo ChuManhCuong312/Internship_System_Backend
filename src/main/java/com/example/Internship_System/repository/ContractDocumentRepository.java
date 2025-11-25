@@ -16,10 +16,9 @@ import java.util.Optional;
 public interface ContractDocumentRepository extends JpaRepository<ContractDocument, Integer> {
     
     /**
-     * Find contracts by intern profile
-     * UPDATED: Changed from Optional to List to support multiple contracts per intern
+     * Find contract by intern profile
      */
-    List<ContractDocument> findByIntern(InternProfile intern);
+    Optional<ContractDocument> findByIntern(InternProfile intern);
     
     /**
      * Find contracts by contract status
