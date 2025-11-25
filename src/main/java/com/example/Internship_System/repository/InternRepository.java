@@ -1,5 +1,6 @@
 package com.example.Internship_System.repository;
 
+import com.example.Internship_System.allowance.dto.InternSearchDTO;
 import com.example.Internship_System.hr.dto.InternAssignmentViewDTO;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.intern.dto.InternProfileDTO;
@@ -60,4 +61,10 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
        WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%'))
        """)
     List<InternProfile> searchInternsByName(@Param("name") String name);
+
+    @Query("SELECT new com.example.Internship_System.allowance.dto.InternSearchDTO(" +
+            "i.internId, u.fullName) " +
+            "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
+            "WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<InternSearchDTO> searchInternsByNameForAllowance(@Param("name") String name);
 }
