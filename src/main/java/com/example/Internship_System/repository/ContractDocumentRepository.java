@@ -89,7 +89,7 @@ public interface ContractDocumentRepository extends JpaRepository<ContractDocume
      */
     @Query("SELECT c, i, u FROM ContractDocument c " +
            "JOIN c.intern i " +
-           "JOIN User u ON i.userId = u.userId " +
+           "JOIN com.example.Internship_System.auth.entity.User u ON i.userId = u.userId " +
            "WHERE (:searchTerm IS NULL OR :searchTerm = '' OR " +
            "       LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "       u.phone LIKE CONCAT('%', :searchTerm, '%')) " +
@@ -105,7 +105,7 @@ public interface ContractDocumentRepository extends JpaRepository<ContractDocume
      * Find interns without contracts with user info for HR view
      */
     @Query("SELECT i, u FROM InternProfile i " +
-           "JOIN User u ON i.userId = u.userId " +
+           "JOIN com.example.Internship_System.auth.entity.User u ON i.userId = u.userId " +
            "WHERE NOT EXISTS (SELECT 1 FROM ContractDocument c WHERE c.intern = i) " +
            "AND (:searchTerm IS NULL OR :searchTerm = '' OR " +
            "     LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +

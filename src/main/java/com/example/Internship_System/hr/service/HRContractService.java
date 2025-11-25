@@ -47,19 +47,26 @@ public class HRContractService {
     public Page<HRContractDTO> getContractsForHR(String searchTerm, String status, Pageable pageable) {
         List<HRContractDTO> allContracts = new ArrayList<>();
         
+        // Normalize search term and status
+        String normalizedSearchTerm = (searchTerm != null && !searchTerm.trim().isEmpty()) ? searchTerm.trim() : null;
+        String normalizedStatus = (status != null && !status.trim().isEmpty()) ? status.trim() : null;
+        
         // Handle NOT_UPLOAD status - get interns without contracts
-        if (status != null && status.equals("NOT_UPLOAD")) {
-            List<Object[]> internsWithoutContracts = contractRepository.findInternsWithoutContracts(
-                searchTerm != null && !searchTerm.trim().isEmpty() ? searchTerm : null);
+        if (normalizedStatus != null && normalizedStatus.equals("NOT_UPLOAD")) {
+            List<Object[]> internsWithoutContracts = contractRepository.findInternsWithoutContracts(normalizedSearchTerm);
             
             for (Object[] result : internsWithoutContracts) {
+                if (result.length < 2) continue;
+                
                 InternProfile intern = (InternProfile) result[0];
                 User user = (User) result[1];
                 
+                if (intern == null) continue;
+                
                 HRContractDTO dto = new HRContractDTO();
                 dto.setInternId(intern.getInternId());
-                dto.setFullName(user.getFullName());
-                dto.setPhone(user.getPhone());
+                dto.setFullName(user != null ? user.getFullName() : null);
+                dto.setPhone(user != null ? user.getPhone() : null);
                 dto.setContractStatus(ContractStatus.NOT_UPLOAD);
                 dto.setFilePath(null);
                 dto.setDocumentId(null);
@@ -72,20 +79,22 @@ public class HRContractService {
             }
         } else {
             // Get contracts with status filter
-            List<Object[]> contracts = contractRepository.findContractsForHR(
-                searchTerm != null && !searchTerm.trim().isEmpty() ? searchTerm : null,
-                status != null && !status.isEmpty() ? status : null);
+            List<Object[]> contracts = contractRepository.findContractsForHR(normalizedSearchTerm, normalizedStatus);
             
             for (Object[] result : contracts) {
+                if (result.length < 3) continue; // Skip invalid results
+                
                 ContractDocument contract = (ContractDocument) result[0];
                 InternProfile intern = (InternProfile) result[1];
                 User user = (User) result[2];
                 
+                if (contract == null || intern == null) continue; // Skip invalid data
+                
                 HRContractDTO dto = new HRContractDTO();
                 dto.setDocumentId(contract.getDocumentId());
                 dto.setInternId(intern.getInternId());
-                dto.setFullName(user.getFullName());
-                dto.setPhone(user.getPhone());
+                dto.setFullName(user != null ? user.getFullName() : null);
+                dto.setPhone(user != null ? user.getPhone() : null);
                 dto.setFilePath(contract.getFilePath());
                 dto.setContractStatus(contract.getContractStatus());
                 dto.setInternConfirmStatus(contract.getInternConfirmStatus());
@@ -95,6 +104,34 @@ public class HRContractService {
                 dto.setCreatedAt(contract.getConfirmAt());
                 
                 allContracts.add(dto);
+            }
+            
+            // If no status filter, also include interns without contracts
+            if (normalizedStatus == null) {
+                List<Object[]> internsWithoutContracts = contractRepository.findInternsWithoutContracts(normalizedSearchTerm);
+                
+                for (Object[] result : internsWithoutContracts) {
+                    if (result.length < 2) continue;
+                    
+                    InternProfile intern = (InternProfile) result[0];
+                    User user = (User) result[1];
+                    
+                    if (intern == null) continue;
+                    
+                    HRContractDTO dto = new HRContractDTO();
+                    dto.setInternId(intern.getInternId());
+                    dto.setFullName(user != null ? user.getFullName() : null);
+                    dto.setPhone(user != null ? user.getPhone() : null);
+                    dto.setContractStatus(ContractStatus.NOT_UPLOAD);
+                    dto.setFilePath(null);
+                    dto.setDocumentId(null);
+                    dto.setInternConfirmStatus(null);
+                    dto.setConfirmAt(null);
+                    dto.setCreatedAt(null);
+                    dto.setNote(null);
+                    
+                    allContracts.add(dto);
+                }
             }
         }
         

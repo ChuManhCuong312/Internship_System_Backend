@@ -167,13 +167,20 @@ INSERT INTO intern_users (
 
 
 INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
-(1, 1, 'contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(2, 2, 'contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NULL, 'Đang chờ xác nhận'),
-(3, 3, 'contracts/quan_contract.pdf', 'NOT_UPLOAD', 'PENDING', NULL, NULL),
-(4, 5, 'contracts/binh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(5, 6, 'contracts/dat_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(6, 9, 'contracts/anh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(7, 10, 'contracts/ha_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký');
+-- Contracts đã upload và được intern xác nhận (APPROVED)
+(1, 1, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+(4, 5, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/binh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(5, 6, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/dat_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(6, 9, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/anh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+(7, 10, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/ha_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+
+-- Contracts đã upload nhưng chờ intern xác nhận (PENDING)
+(2, 2, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NOW(), 'Đang chờ thực tập sinh xác nhận'),
+(8, 13, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/duc_contract.pdf', 'UPLOAD', 'PENDING', NOW(), 'Hợp đồng mới upload, chờ xác nhận'),
+(9, 15, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/chuong_contract.pdf', 'UPLOAD', 'PENDING', NOW(), 'Chờ xác nhận từ thực tập sinh');
+
+-- Lưu ý: Các interns chưa có contract (NOT_UPLOAD) sẽ được query tự động:
+-- intern_id: 3 (Quân), 4 (Hằng), 7 (Ngọc), 8 (Đức), 11 (Bảo), 12 (Huy), 14 (Anh)
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES
 (1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 'ON_GOING', 10),
