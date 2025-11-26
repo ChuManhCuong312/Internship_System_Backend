@@ -100,7 +100,7 @@ public class ProgramService {
 
     // Create new program
     public Program createProgram(ProgramCreateRequest request) {
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
 
         // RULE 1: startDate must be at least 2 weeks from now
         if (request.getStartDate().isBefore(now.plusWeeks(2))) {
@@ -175,10 +175,10 @@ public class ProgramService {
     @Transactional
     public Program cloneProgram(ProgramCreateRequest request) {
 
-        LocalDate start = request.getStartDate();
-        LocalDate end = request.getEndDate();
+        LocalDateTime start = request.getStartDate();
+        LocalDateTime end = request.getEndDate();
 
-        if (start.isBefore(LocalDate.now().plusWeeks(2))) {
+        if (start.isBefore(LocalDateTime.now().plusWeeks(2))) {
             throw new RuntimeException("Start date must be at least 2 weeks from now");
         }
 
@@ -216,7 +216,7 @@ public class ProgramService {
      * Calculates the status of a program based on the current date
      */
     private ProgramStatus calculateStatus(Program p) {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         if (today.isBefore(p.getStartDate())) {
             return ProgramStatus.UPCOMING;
         } else if (!today.isAfter(p.getEndDate())) {
