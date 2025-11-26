@@ -22,4 +22,7 @@ public interface ProgramRepository extends JpaRepository<Program, Integer> {
 """)
     Optional<Program> findProgramByInternId(Integer internId);
 
+    @Query("SELECT DISTINCT p.department FROM Program p")
+    List<String> findDistinctDepartments();
+
 }
