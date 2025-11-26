@@ -1,9 +1,6 @@
 package com.example.Internship_System.program.controller;
 
-import com.example.Internship_System.program.dto.MentorProgramDTO;
-import com.example.Internship_System.program.dto.ProgramCloneDTO;
-import com.example.Internship_System.program.dto.ProgramCreateRequest;
-import com.example.Internship_System.program.dto.ProgramUpdateRequest;
+import com.example.Internship_System.program.dto.*;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.service.ProgramService;
 import org.springframework.data.domain.Page;
@@ -109,5 +106,10 @@ public class ProgramController {
     public Program cloneProgram(@RequestBody ProgramCreateRequest request) {
         return programService.cloneProgram(request);
     }
+    @GetMapping("/intern/{internId}")
+    public ResponseEntity<List<ScheduleEventDTO>> getProgramAndTaskByIntern(@PathVariable Integer internId) {
+        return ResponseEntity.ok(programService.getProgramByInternId(internId));
+    }
+
 
 }
