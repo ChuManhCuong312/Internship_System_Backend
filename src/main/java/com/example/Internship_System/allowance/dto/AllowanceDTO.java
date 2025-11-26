@@ -6,6 +6,7 @@ import java.time.LocalDate;
 public class AllowanceDTO {
     private int allowanceId;
     private int internId;
+    private String internName;
     private String type;
     private BigDecimal amount;
     private LocalDate dateApplied;
@@ -14,8 +15,9 @@ public class AllowanceDTO {
     public AllowanceDTO() {
     }
 
-    public AllowanceDTO(int internId, String type, BigDecimal amount, LocalDate dateApplied, String note) {
+    public AllowanceDTO(int internId, String internName, String type, BigDecimal amount, LocalDate dateApplied, String note) {
         this.internId = internId;
+        this.internName = internName;
         this.type = type;
         this.amount = amount;
         this.dateApplied = dateApplied;
@@ -36,6 +38,14 @@ public class AllowanceDTO {
 
     public void setInternId(int internId) {
         this.internId = internId;
+    }
+
+    public String getInternName() {
+        return internName;
+    }
+
+    public void setInternName(String internName) {
+        this.internName = internName;
     }
 
     public String getType() {

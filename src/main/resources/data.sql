@@ -13,12 +13,12 @@ INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role
 (6, 'mentor03@intern.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Tuấn Anh', '0912456789', 'ACTIVE', 3),
 (7, 'tts01@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Hữu Nam', '0356789123', 'ACTIVE', 4),
 (8, 'tts02@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Thị Mai', '0389988776', 'ACTIVE', 4),
-(9, 'tts03@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Minh Quân', '0366999888', 'REJECTED', 4),
-(10, 'tts04@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Thị Hằng', '0345678912', 'PENDING_APPROVAL', 4),
-(11, 'tts05@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Văn Bình', '0329988777', 'PENDING_APPROVAL', 4),
-(12, 'tts06@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Văn Đạt', '0377111222', 'PENDING_APPROVAL', 4),
-(13, 'tts07@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo Ngọc', '0399222111', 'REJECTED', 4),
-(14, 'tts08@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Hoàng Minh Đức', '0334455667', 'INACTIVE', 4),
+(9, 'tts03@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Minh Quân', '0366999888', 'ACTIVE', 4),
+(10, 'tts04@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Thị Hằng', '0345678912', 'ACTIVE', 4),
+(11, 'tts05@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Văn Bình', '0329988777', 'ACTIVE', 4),
+(12, 'tts06@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Văn Đạt', '0377111222', 'ACTIVE', 4),
+(13, 'tts07@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo Ngọc', '0399222111', 'ACTIVE', 4),
+(14, 'tts08@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Hoàng Minh Đức', '0334455667', 'ACTIVE', 4),
 (15, 'tts09@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4),
 (16, 'tts10@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Hà', '0377123488', 'ACTIVE', 4),
 (17, 'tts11@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Tuấn Bảo', '0357356787', 'INACTIVE', 4),
@@ -74,7 +74,7 @@ INSERT INTO intern_users (
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745936/Hang_uni_confirm_rgoecx.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745145/Hang_app_kxxpdc.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740805/Nguy%E1%BB%85n_Th%E1%BB%8B_H%E1%BA%B1ng_CV_yiijtb.pdf',
- 'PENDING', NULL),
+ 'APPROVED', NULL),
 
 -- 5. Bình
 (5, 11, 'CMC University', 'Phân tích dữ liệu', 3.5, '2003-05-19', 'MALE', 'Hà Đông, Hà Nội',
@@ -101,7 +101,7 @@ INSERT INTO intern_users (
  'REJECTED', 'Thiếu hồ sơ bổ sung'),
 
 -- 8. Đức (NO_FILE)
-(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'FEMALE', 'Hà Đông, Hà Nội',
+(8, 14, 'CMC University', 'Phân tích dữ liệu', 3.3, '2003-09-23', 'MALE', 'Hà Đông, Hà Nội',
  'img_duc.jpg',
  NULL,
  NULL,
@@ -124,40 +124,16 @@ INSERT INTO intern_users (
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740804/Nguy%E1%BB%85n_%C4%90%E1%BB%A9c_H%C3%A0_CV_kbu7di.pdf',
  'APPROVED', NULL),
 
--- 11. Bảo (NO_FILE)
-(11, 17, 'CMC University', 'Khoa học máy tính', 3.1, '2003-09-11', 'MALE', 'Hà Đông, Hà Nội',
- 'img_bao.jpg',
- NULL,
- 'app_bao.pdf',
- 'cv_bao.pdf',
- 'NO_FILE', NULL),
-
--- 12. Huy
-(12, 18, 'CMC University', 'An toàn thông tin', 2.7, '2003-07-07', 'MALE', 'Hà Đông, Hà Nội',
- 'img_huy.jpg',
- NULL,
- 'app_huy.pdf',
- 'cv_huy.pdf',
- 'REJECTED', 'Thiếu hồ sơ bổ sung'),
-
--- 13. Đức (pending)
-(13, 19, 'CMC University', 'Kỹ sư phần mềm', 3.7, '2003-02-21', 'MALE', 'Hà Đông, Hà Nội',
+-- 11. Đức (pending)
+(11, 19, 'CMC University', 'Kỹ sư phần mềm', 3.7, '2003-02-21', 'MALE', 'Hà Đông, Hà Nội',
  'img_duc.jpg',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745938/Duc_uni_confirm_dgfc8z.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Duc_app_pvihuj.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740808/Tr%E1%BA%A7n_Minh_%C4%90%E1%BB%A9c_CV_oktbj6.pdf',
  'PENDING', NULL),
 
--- 14. Anh
-(14, 20, 'CMC University', 'Hệ thống thông tin', 3.1, '2003-11-28', 'FEMALE', 'Hà Đông, Hà Nội',
- 'img_anh.jpg',
- NULL,
- 'app_anh.pdf',
- 'cv_anh.pdf',
- 'APPROVED', NULL),
-
--- 15. Chương
-(15, 21, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+-- 12. Chương PENDING
+(12, 21, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
@@ -166,26 +142,45 @@ INSERT INTO intern_users (
 
 
 
-INSERT INTO contract_documents (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note) VALUES
--- Contracts đã upload và được intern xác nhận (APPROVED)
-(1, 1, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/nam_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
-(4, 5, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/binh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(5, 6, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/dat_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(6, 9, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/anh_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
-(7, 10, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/ha_contract.pdf', 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký'),
+INSERT INTO contract_documents
+(document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note)
+VALUES
+-- 1) tts01 - APPROVED
+(1, 1, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts01_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 2) tts02 - APPROVED
+(2, 2, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts02_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 3) tts03 - APPROVED
+(3, 3, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts03_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 4) tts04 - APPROVED
+(4, 4, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts04_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 5) tts05 - APPROVED
+(5, 5, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts05_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 6) tts06 - APPROVED
+(6, 6, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts06_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 7) tts07 - APPROVED
+(7, 7, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts07_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 8) tts08 - APPROVED
+(8, 8, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts08_contract.pdf',
+ 'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 9) tts09 - APPROVED
+(9, 9, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts09_contract.pdf',
+ 'UPLOAD', 'PENDING', NOW(), 'Hợp đồng đã ký và xác nhận'),
+-- 10) tts10 - PENDING
+(10, 10, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts10_contract.pdf',
+ 'NOT_UPLOAD', 'APPROVED',NOW(), 'Hợp đồng đã ký và xác nhận');
 
--- Contracts đã upload nhưng chờ intern xác nhận (PENDING)
-(2, 2, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/mai_contract.pdf', 'UPLOAD', 'PENDING', NOW(), 'Đang chờ thực tập sinh xác nhận'),
-(8, 13, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/duc_contract.pdf', 'UPLOAD', 'PENDING', NOW(), 'Hợp đồng mới upload, chờ xác nhận'),
-(9, 15, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/chuong_contract.pdf', 'UPLOAD', 'PENDING', NOW(), 'Chờ xác nhận từ thực tập sinh');
-
--- Lưu ý: Các interns chưa có contract (NOT_UPLOAD) sẽ được query tự động:
--- intern_id: 3 (Quân), 4 (Hằng), 7 (Ngọc), 8 (Đức), 11 (Bảo), 12 (Huy), 14 (Anh)
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES
-(1, 'Thực tập lập trình Web', 'CNTT', '2025-01-10', '2025-04-10', 'ON_GOING', 10),
-(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-02-01', '2025-05-01', 'UPCOMING', 8),
-(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-03-01', '2025-06-01', 'UPCOMING', 6);
+(1, 'Thực tập lập trình Web', 'CNTT', '2025-09-25', '2025-12-25', 'ON_GOING', 10),
+(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-12-25', '2026-01-25', 'UPCOMING', 8),
+(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-12-25', '2026-01-25', 'UPCOMING', 6);
 
 -- Gán mentor cho program
 INSERT INTO mentor_program (mentor_program_id, program_id, mentor_id, assigned_date) VALUES
@@ -204,17 +199,17 @@ INSERT INTO team_intern (team_intern_id, team_id, intern_id, assigned_date) VALU
 (1, 1, 1, NOW()), -- Nam - Team Web
 (2, 1, 3, NOW()), -- Quân - Team Web
 (3, 1, 6, NOW()), -- Đạt - Team Web
-(4, 1, 9, NOW()), -- Anh - Team Web
-(5, 2, 4, NOW()), -- Hằng - Team Marketing
+(4, 1, 4, NOW()), -- Hằng - Team Web
+(5, 2, 2, NOW()), -- Mai - Team Marketing
 (6, 2, 7, NOW()), -- Ngọc - Team Marketing
 (7, 3, 5, NOW()), -- Bình - Team Data
 (8, 3, 8, NOW()); -- Đức - Team Data
 
 INSERT INTO tasks (program_id, title, description, assigned_by, priority, status, deadline, due_soon)
 VALUES
-(1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 'HIGH', 'IN_PROGRESS', '2025-03-01', FALSE),
-(1, 'Dashboard', 'Biểu đồ thống kê', 1, 'MEDIUM', 'TODO', '2025-03-10', FALSE),
-(2, 'Landing Page', 'Thiết kế giao diện', 2, 'HIGH', 'DONE', '2025-02-25', FALSE);
+(1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 'HIGH', 'IN_PROGRESS', '2025-11-27', FALSE),
+(1, 'Dashboard', 'Biểu đồ thống kê', 1, 'MEDIUM', 'TODO', '2025-11-28', FALSE),
+(1, 'Landing Page', 'Thiết kế giao diện', 2, 'HIGH', 'DONE', '2025-11-29', FALSE);
 
 INSERT INTO task_team_assignments (task_id, team_id)
 VALUES
@@ -224,7 +219,9 @@ VALUES
 
 INSERT INTO attendance (intern_id, date, check_in, check_out) VALUES
 (1, '2025-02-10', '08:05:00', '17:00:00'),
+(2, '2025-02-10', '08:05:00', '17:00:00'),
 (3, '2025-02-10', '08:15:00', '17:05:00'),
+(4, '2025-02-10', '08:05:00', '17:00:00'),
 (5, '2025-02-10', '08:00:00', '17:10:00'),
 (6, '2025-02-10', '08:10:00', '17:00:00'),
 (7, '2025-02-10', '08:00:00', '16:55:00'),
