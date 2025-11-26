@@ -1,5 +1,6 @@
 package com.example.Internship_System.program.service;
 
+import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.program.dto.*;
 import com.example.Internship_System.program.entity.MentorProgram;
 import com.example.Internship_System.program.entity.Program;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,19 +58,37 @@ public class ProgramService {
         return programRepository.findByDepartmentIgnoreCase(department);
     }
 
-    // Filter by mentor
-    public List<MentorProgramDTO> filterByMentor(Integer mentorId) {
-        List<MentorProgram> list = mentorProgramRepository.findByMentor_MentorId(mentorId);
+    public List<String> getAllDepartments() {
+        List<String> departments = programRepository.findDistinctDepartments();
 
-        return list.stream()
-                .map(mp -> new MentorProgramDTO(
-                        mp.getProgram().getProgramId(),
-                        mp.getProgram().getName(),
-                        mp.getMentor().getUser().getFullName()
-                ))
+        return departments.stream()
+                .sorted(String::compareToIgnoreCase)
                 .collect(Collectors.toList());
     }
 
+    // Filter by mentor
+    // Filter programs by mentor (returns full Program objects)
+    public List<Program> filterProgramsByMentor(Integer mentorId) {
+        List<MentorProgram> list = mentorProgramRepository.findByMentor_MentorId(mentorId);
+
+        // Extract Programs and remove duplicates if the same mentor is assigned multiple times
+        return list.stream()
+                .map(MentorProgram::getProgram)
+                .distinct()
+                .toList();
+    }
+
+    public List<MentorDropdownDTO> getAssignedMentorsForDropdown() {
+        List<MentorUser> mentors = mentorProgramRepository.findDistinctAssignedMentors();
+
+        return mentors.stream()
+                .map(m -> new MentorDropdownDTO(
+                        m.getMentorId(),
+                        m.getUser().getFullName()
+                ))
+                .sorted(Comparator.comparing(MentorDropdownDTO::getFullName))
+                .collect(Collectors.toList());
+    }
     // Get all programs
     public Page<Program> getAllPrograms(Pageable pageable) {
         return programRepository.findAll(pageable);
