@@ -35,11 +35,20 @@ public class ProgramController {
     public List<Program> filterByDepartment(@RequestParam String department) {
         return programService.filterByDepartment(department);
     }
+    @GetMapping("/department")
+    public ResponseEntity<List<String>> getDepartments() {
+        return ResponseEntity.ok(programService.getAllDepartments());
+    }
 
     // FILTER BY MENTOR
     @GetMapping("/filter/mentor")
-    public List<MentorProgramDTO> filterByMentor(@RequestParam Integer mentorId) {
-        return programService.filterByMentor(mentorId);
+    public List<Program> filterByMentor(@RequestParam Integer mentorId) {
+        return programService.filterProgramsByMentor(mentorId);
+    }
+
+    @GetMapping("/mentor-assigned")
+    public ResponseEntity<List<MentorDropdownDTO>> getAssignedMentorsDropdown() {
+        return ResponseEntity.ok(programService.getAssignedMentorsForDropdown());
     }
 
     @GetMapping
