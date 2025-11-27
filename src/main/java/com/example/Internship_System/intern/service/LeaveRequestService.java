@@ -5,7 +5,6 @@ import com.example.Internship_System.intern.dto.LeaveRequestDTO;
 import com.example.Internship_System.intern.entity.LeaveRequest;
 import com.example.Internship_System.intern.entity.LeaveStatus;
 import com.example.Internship_System.repository.LeaveRequestRepository;
-import com.example.Internship_System.notification.entity.Notification;
 import com.example.Internship_System.notification.service.NotificationService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -71,11 +70,11 @@ public class LeaveRequestService {
         LeaveRequest saved = leaveRequestRepository.save(request);
 
 
-        String title = "Đơn nghỉ phép đã được duyệt";
-        String message = "Đơn nghỉ phép từ " + saved.getStartDate() + " đến " + saved.getEndDate()
-                + " đã được HR duyệt.";
-        Notification notification = new Notification(saved.getInternId(), title, message, "LEAVE_REQUEST");
-        notificationService.save(notification);
+        notificationService.createLeaveApprovedNotification(
+                saved.getInternId(),
+                saved.getStartDate(),
+                saved.getEndDate()
+        );
 
 
         return saved;
@@ -105,11 +104,12 @@ public class LeaveRequestService {
         LeaveRequest saved = leaveRequestRepository.save(request);
 
 
-        String title = "Đơn nghỉ phép đã bị từ chối";
-        String message = "Đơn nghỉ phép từ " + saved.getStartDate() + " đến " + saved.getEndDate()
-                + " đã bị HR từ chối. Lý do: " + saved.getRejectionReason();
-        Notification notification = new Notification(saved.getInternId(), title, message, "LEAVE_REQUEST");
-        notificationService.save(notification);
+        notificationService.createLeaveRejectedNotification(
+                saved.getInternId(),
+                saved.getStartDate(),
+                saved.getEndDate(),
+                saved.getRejectionReason()
+        );
 
 
         return saved;
