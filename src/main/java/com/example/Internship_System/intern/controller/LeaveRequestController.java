@@ -6,6 +6,7 @@ import com.example.Internship_System.intern.entity.LeaveRequest;
 import com.example.Internship_System.intern.entity.LeaveStatus;
 import com.example.Internship_System.intern.service.LeaveRequestService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -120,12 +121,7 @@ public class LeaveRequestController {
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> getAllLeaveRequests(@RequestParam(required = false) LeaveStatus status) {
         try {
-            List<LeaveRequest> requests;
-            if (status != null) {
-                requests = leaveRequestService.getLeaveRequestsByStatus(status);
-            } else {
-                requests = leaveRequestService.getLeaveRequestsByStatus(LeaveStatus.PENDING);
-            }
+            List<Map<String, Object>> requests = leaveRequestService.getAllLeaveRequestsForHR(status);
             return ResponseEntity.ok(requests);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
@@ -196,6 +192,41 @@ public class LeaveRequestController {
         try {
             List<LeaveRequest> requests = leaveRequestService.getLeaveRequestsByIntern(internId);
             return ResponseEntity.ok(requests);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+
+
+    @GetMapping("/hr/daily")
+    @PreAuthorize("hasRole('HR')")
+    public ResponseEntity<?> getDailyLeaveForHR(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate date,
+            @RequestParam(required = false) LeaveStatus status) {
+        try {
+            java.util.List<java.util.Map<String, Object>> result = leaveRequestService.getDailyLeaveForHR(date, status);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+
+
+    @GetMapping("/hr/monthly")
+    @PreAuthorize("hasRole('HR')")
+    public ResponseEntity<?> getMonthlyLeaveForHR(
+            @RequestParam int year,
+            @RequestParam int month,
+            @RequestParam(required = false) LeaveStatus status) {
+        try {
+            java.util.List<java.util.Map<String, Object>> result = leaveRequestService.getMonthlyLeaveForHR(year, month, status);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
