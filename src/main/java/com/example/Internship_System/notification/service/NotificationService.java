@@ -71,7 +71,7 @@ public class NotificationService {
         }
 
 
-        Notification notification = new Notification(internId, title, message, "PROFILE_STATUS");
+        Notification notification = new Notification(internId, title, message, "SYSTEM");
         save(notification);
     }
 
@@ -79,7 +79,7 @@ public class NotificationService {
     public void createProfileUpdatedNotification(int internId) {
         String title = "Hồ sơ thực tập đã được cập nhật";
         String message = "Hồ sơ của bạn đã được HR cập nhật. Vui lòng kiểm tra lại thông tin.";
-        Notification notification = new Notification(internId, title, message, "PROFILE_UPDATE");
+        Notification notification = new Notification(internId, title, message, "SYSTEM");
         save(notification);
     }
 
@@ -87,7 +87,7 @@ public class NotificationService {
     public void createLeaveApprovedNotification(int internId, LocalDate startDate, LocalDate endDate) {
         String title = "Đơn nghỉ phép đã được duyệt";
         String message = "Đơn nghỉ phép từ " + startDate + " đến " + endDate + " đã được HR duyệt.";
-        Notification notification = new Notification(internId, title, message, "LEAVE_REQUEST");
+        Notification notification = new Notification(internId, title, message, "LEAVE");
         save(notification);
     }
 
@@ -95,7 +95,7 @@ public class NotificationService {
     public void createLeaveRejectedNotification(int internId, LocalDate startDate, LocalDate endDate, String rejectionReason) {
         String title = "Đơn nghỉ phép đã bị từ chối";
         String message = "Đơn nghỉ phép từ " + startDate + " đến " + endDate + " đã bị HR từ chối. Lý do: " + rejectionReason;
-        Notification notification = new Notification(internId, title, message, "LEAVE_REQUEST");
+        Notification notification = new Notification(internId, title, message, "LEAVE");
         save(notification);
     }
 }
