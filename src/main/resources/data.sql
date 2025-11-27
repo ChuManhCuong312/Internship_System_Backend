@@ -146,34 +146,34 @@ INSERT INTO contract_documents
 (document_id, intern_id, file_path, contract_status, intern_confirm_status, confirm_at, note)
 VALUES
 -- 1) tts01 - APPROVED
-(1, 1, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts01_contract.pdf',
+(1, 1, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Nam_si6y5e.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 2) tts02 - APPROVED
-(2, 2, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts02_contract.pdf',
+(2, 2, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Mai_tujgx1.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 3) tts03 - APPROVED
-(3, 3, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts03_contract.pdf',
+(3, 3, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Qu%C3%A2n_omzuki.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 4) tts04 - APPROVED
-(4, 4, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts04_contract.pdf',
+(4, 4, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_H%E1%BA%B1ng_erlcsy.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 5) tts05 - APPROVED
-(5, 5, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts05_contract.pdf',
+(5, 5, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_B%C3%ACnh_yk5vxg.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 6) tts06 - APPROVED
-(6, 6, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts06_contract.pdf',
+(6, 6, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_%C4%90%E1%BA%A1t_ka5avg.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 7) tts07 - APPROVED
-(7, 7, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts07_contract.pdf',
+(7, 7, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Ng%E1%BB%8Dc_ybmljg.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 8) tts08 - APPROVED
-(8, 8, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts08_contract.pdf',
+(8, 8, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_%C4%90%E1%BB%A9c_tscjgi.pdf',
  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 9) tts09 - APPROVED
-(9, 9, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts09_contract.pdf',
+(9, 9, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_%C4%90%E1%BB%A9c_Anh_kkha5g.pdf',
  'UPLOAD', 'PENDING', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 10) tts10 - PENDING
-(10, 10, 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/contracts/tts10_contract.pdf',
+(10, 10, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_H%C3%A0_oqpxmo.pdf',
  'NOT_UPLOAD', 'APPROVED',NOW(), 'Hợp đồng đã ký và xác nhận');
 
 
