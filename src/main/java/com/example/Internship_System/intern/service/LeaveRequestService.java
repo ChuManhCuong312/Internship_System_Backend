@@ -5,6 +5,8 @@ import com.example.Internship_System.intern.dto.LeaveRequestDTO;
 import com.example.Internship_System.intern.entity.LeaveRequest;
 import com.example.Internship_System.intern.entity.LeaveStatus;
 import com.example.Internship_System.repository.LeaveRequestRepository;
+import com.example.Internship_System.notification.entity.Notification;
+import com.example.Internship_System.notification.service.NotificationService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +24,12 @@ public class LeaveRequestService {
     private final LeaveRequestRepository leaveRequestRepository;
 
 
-    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository) {
+    private final NotificationService notificationService;
+
+
+    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository, NotificationService notificationService) {
         this.leaveRequestRepository = leaveRequestRepository;
+        this.notificationService = notificationService;
     }
 
 
@@ -62,7 +68,17 @@ public class LeaveRequestService {
 
         request.setStatus(LeaveStatus.APPROVED);
         request.setProcessedBy(hrId);
-        return leaveRequestRepository.save(request);
+        LeaveRequest saved = leaveRequestRepository.save(request);
+
+
+        String title = "Đơn nghỉ phép đã được duyệt";
+        String message = "Đơn nghỉ phép từ " + saved.getStartDate() + " đến " + saved.getEndDate()
+                + " đã được HR duyệt.";
+        Notification notification = new Notification(saved.getInternId(), title, message, "LEAVE_REQUEST");
+        notificationService.save(notification);
+
+
+        return saved;
     }
 
 
@@ -86,7 +102,17 @@ public class LeaveRequestService {
         request.setStatus(LeaveStatus.REJECTED);
         request.setProcessedBy(hrId);
         request.setRejectionReason(reason);
-        return leaveRequestRepository.save(request);
+        LeaveRequest saved = leaveRequestRepository.save(request);
+
+
+        String title = "Đơn nghỉ phép đã bị từ chối";
+        String message = "Đơn nghỉ phép từ " + saved.getStartDate() + " đến " + saved.getEndDate()
+                + " đã bị HR từ chối. Lý do: " + saved.getRejectionReason();
+        Notification notification = new Notification(saved.getInternId(), title, message, "LEAVE_REQUEST");
+        notificationService.save(notification);
+
+
+        return saved;
     }
 
 
