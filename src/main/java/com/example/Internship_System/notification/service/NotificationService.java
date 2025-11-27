@@ -48,4 +48,37 @@ public class NotificationService {
         Notification notification = new Notification(internId, title, message, "ALLOWANCE");
         save(notification);
     }
+
+
+    public void createProfileStatusNotification(int internId, String status, String rejectionReason) {
+        String upperStatus = status != null ? status.toUpperCase() : "";
+
+
+        String title;
+        String message;
+
+
+        if ("APPROVED".equals(upperStatus)) {
+            title = "Hồ sơ thực tập đã được duyệt";
+            message = "Hồ sơ của bạn đã được duyệt thành công.";
+        } else if ("REJECTED".equals(upperStatus)) {
+            title = "Hồ sơ thực tập đã bị từ chối";
+            message = "Hồ sơ của ban đã bị từ chối. Lý do: " + rejectionReason;
+        } else {
+            title = "Trạng thái hồ sơ thực tập được cập nhật";
+            message = "Trạng thái hồ sơ của bạn đã được cập nhật thành: " + status + ".";
+        }
+
+
+        Notification notification = new Notification(internId, title, message, "PROFILE_STATUS");
+        save(notification);
+    }
+
+
+    public void createProfileUpdatedNotification(int internId) {
+        String title = "Hồ sơ thực tập đã được cập nhật";
+        String message = "Hồ sơ của bạn đã được HR cập nhật. Vui lòng kiểm tra lại thông tin.";
+        Notification notification = new Notification(internId, title, message, "PROFILE_UPDATE");
+        save(notification);
+    }
 }
