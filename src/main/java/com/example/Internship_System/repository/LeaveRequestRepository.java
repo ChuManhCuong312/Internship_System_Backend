@@ -33,5 +33,24 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Inte
             @Param("endDate") LocalDate endDate,
             @Param("status") LeaveStatus status
     );
+
+
+    @Query("SELECT lr FROM LeaveRequest lr " +
+            "WHERE lr.startDate <= :date AND lr.endDate >= :date " +
+            "AND (:status IS NULL OR lr.status = :status)")
+    List<LeaveRequest> findByDateAndStatus(
+            @Param("date") LocalDate date,
+            @Param("status") LeaveStatus status
+    );
+
+
+    @Query("SELECT lr FROM LeaveRequest lr " +
+            "WHERE lr.startDate <= :endDate AND lr.endDate >= :startDate " +
+            "AND (:status IS NULL OR lr.status = :status)")
+    List<LeaveRequest> findByDateRangeAndStatus(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("status") LeaveStatus status
+    );
 }
 
