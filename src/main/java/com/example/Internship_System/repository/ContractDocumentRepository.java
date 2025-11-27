@@ -16,10 +16,9 @@ import java.util.Optional;
 public interface ContractDocumentRepository extends JpaRepository<ContractDocument, Integer> {
     
     /**
-     * Find contracts by intern profile
-     * UPDATED: Changed from Optional to List to support multiple contracts per intern
+     * Find contract by intern profile
      */
-    List<ContractDocument> findByIntern(InternProfile intern);
+    Optional<ContractDocument> findByIntern(InternProfile intern);
     
     /**
      * Find contracts by contract status
@@ -84,4 +83,32 @@ public interface ContractDocumentRepository extends JpaRepository<ContractDocume
      * Delete contract by intern
      */
     void deleteByIntern(InternProfile intern);
+    
+    /**
+     * Find contracts with intern and user info for HR view with search and status filter
+     */
+    @Query("SELECT c, i, u FROM ContractDocument c " +
+           "JOIN c.intern i " +
+           "JOIN com.example.Internship_System.auth.entity.User u ON i.userId = u.userId " +
+           "WHERE (:searchTerm IS NULL OR :searchTerm = '' OR " +
+           "       LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "       u.phone LIKE CONCAT('%', :searchTerm, '%')) " +
+           "AND (:status IS NULL OR :status = '' OR " +
+           "     (:status = 'UPLOAD' AND c.contractStatus = 'UPLOAD') OR " +
+           "     (:status = 'PENDING' AND c.internConfirmStatus = 'PENDING') OR " +
+           "     (:status = 'APPROVED' AND c.internConfirmStatus = 'APPROVED')) " +
+           "ORDER BY c.confirmAt DESC NULLS LAST")
+    List<Object[]> findContractsForHR(@Param("searchTerm") String searchTerm, 
+                                      @Param("status") String status);
+    
+    /**
+     * Find interns without contracts with user info for HR view
+     */
+    @Query("SELECT i, u FROM InternProfile i " +
+           "JOIN com.example.Internship_System.auth.entity.User u ON i.userId = u.userId " +
+           "WHERE NOT EXISTS (SELECT 1 FROM ContractDocument c WHERE c.intern = i) " +
+           "AND (:searchTerm IS NULL OR :searchTerm = '' OR " +
+           "     LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "     u.phone LIKE CONCAT('%', :searchTerm, '%'))")
+    List<Object[]> findInternsWithoutContracts(@Param("searchTerm") String searchTerm);
 }
