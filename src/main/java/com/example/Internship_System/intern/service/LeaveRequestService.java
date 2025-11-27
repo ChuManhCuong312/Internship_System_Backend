@@ -4,7 +4,15 @@ package com.example.Internship_System.intern.service;
 import com.example.Internship_System.intern.dto.LeaveRequestDTO;
 import com.example.Internship_System.intern.entity.LeaveRequest;
 import com.example.Internship_System.intern.entity.LeaveStatus;
+import com.example.Internship_System.program.entity.Program;
+import com.example.Internship_System.program.entity.ProgramStatus;
+import com.example.Internship_System.repository.ProgramRepository;
 import com.example.Internship_System.repository.LeaveRequestRepository;
+import com.example.Internship_System.repository.TeamInternRepository;
+import com.example.Internship_System.repository.UserRepository;
+import com.example.Internship_System.team.entity.TeamIntern;
+import com.example.Internship_System.intern.entity.InternProfile;
+import com.example.Internship_System.auth.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +20,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -20,16 +32,33 @@ public class LeaveRequestService {
 
 
     private final LeaveRequestRepository leaveRequestRepository;
+    private final ProgramRepository programRepository;
+    private final TeamInternRepository teamInternRepository;
+    private final UserRepository userRepository;
 
 
-    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository) {
+    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository,
+                               ProgramRepository programRepository,
+                               TeamInternRepository teamInternRepository,
+                               UserRepository userRepository) {
         this.leaveRequestRepository = leaveRequestRepository;
+        this.programRepository = programRepository;
+        this.teamInternRepository = teamInternRepository;
+        this.userRepository = userRepository;
     }
 
 
     // Tạo đơn nghỉ phép
     @Transactional
     public LeaveRequest createLeaveRequest(LeaveRequestDTO dto, Integer internId) {
+        Program program = programRepository.findProgramByInternId(internId)
+                .orElseThrow(() -> new RuntimeException("Bạn chưa được phân vào chương trình thực tập nào"));
+
+
+        if (program.getProgramStatus() != ProgramStatus.ON_GOING) {
+            throw new RuntimeException("Chương trình thực tập của bạn chưa bắt đầu hoặc đã kết thúc");
+        }
+
         validateDates(dto.getStartDate(), dto.getEndDate());
         checkOverlappingRequests(internId, dto.getStartDate(), dto.getEndDate());
 
@@ -141,6 +170,317 @@ public class LeaveRequestService {
     // Lấy tất cả đơn theo status (cho HR)
     public List<LeaveRequest> getLeaveRequestsByStatus(LeaveStatus status) {
         return leaveRequestRepository.findByStatusOrderByRequestDateAsc(status);
+    }
+
+
+    public List<Map<String, Object>> getAllLeaveRequestsForHR(LeaveStatus status) {
+        List<TeamIntern> teamInterns = teamInternRepository.findAll();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+
+        if (teamInterns.isEmpty()) {
+            return result;
+        }
+
+        List<LeaveRequest> leaves;
+
+        if (status != null) {
+            leaves = leaveRequestRepository.findByStatus(status);
+        } else {
+            leaves = leaveRequestRepository.findAll();
+        }
+
+        Map<Integer, List<LeaveRequest>> leavesByIntern = leaves.stream()
+                .collect(Collectors.groupingBy(LeaveRequest::getInternId));
+
+
+        for (TeamIntern teamIntern : teamInterns) {
+            if (teamIntern.getTeam() == null || teamIntern.getTeam().getProgram() == null) {
+                continue;
+            }
+
+
+            Program program = teamIntern.getTeam().getProgram();
+
+
+            InternProfile intern = teamIntern.getIntern();
+            if (intern == null) {
+                continue;
+            }
+
+
+            int internId = intern.getInternId();
+            List<LeaveRequest> internLeaves = leavesByIntern.get(internId);
+            if (internLeaves == null || internLeaves.isEmpty()) {
+                continue;
+            }
+
+
+            User user = null;
+            if (intern.getUserId() != null) {
+                user = userRepository.findById(intern.getUserId()).orElse(null);
+            }
+
+
+            for (LeaveRequest leave : internLeaves) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("leaveId", leave.getLeaveId());
+                item.put("internId", internId);
+                item.put("fullName", user != null ? user.getFullName() : null);
+                item.put("programId", program.getProgramId());
+                item.put("programName", program.getName());
+                item.put("startDate", leave.getStartDate());
+                item.put("endDate", leave.getEndDate());
+                item.put("status", leave.getStatus());
+                item.put("reason", leave.getReason());
+                item.put("requestDate", leave.getRequestDate());
+
+
+                Integer processedBy = leave.getProcessedBy();
+                String hrName = null;
+                if (processedBy != null) {
+                    User hrUser = userRepository.findById(processedBy).orElse(null);
+                    if (hrUser != null) {
+                        hrName = hrUser.getFullName();
+                    }
+                }
+
+
+                item.put("processedBy", processedBy);
+                item.put("hrName", hrName);
+                item.put("rejectionReason", leave.getRejectionReason());
+
+
+                result.add(item);
+            }
+        }
+
+
+        return result;
+    }
+
+
+    public List<Map<String, Object>> getDailyLeaveForHR(LocalDate date, LeaveStatus status) {
+        List<TeamIntern> teamInterns = teamInternRepository.findAll();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+
+        if (teamInterns.isEmpty()) {
+            return result;
+        }
+
+        List<LeaveRequest> leaves;
+
+        if (status != null) {
+            leaves = leaveRequestRepository.findByStatus(status);
+        } else {
+            leaves = leaveRequestRepository.findAll();
+        }
+
+        leaves = leaves.stream()
+                .filter(lr -> lr.getRequestDate() != null)
+                .filter(lr -> lr.getRequestDate().toLocalDate().equals(date))
+                .collect(Collectors.toList());
+
+        Map<Integer, List<LeaveRequest>> leavesByIntern = new HashMap<>();
+        for (LeaveRequest leave : leaves) {
+            leavesByIntern
+                    .computeIfAbsent(leave.getInternId(), k -> new ArrayList<>())
+                    .add(leave);
+        }
+
+
+        for (TeamIntern teamIntern : teamInterns) {
+            if (teamIntern.getTeam() == null || teamIntern.getTeam().getProgram() == null) {
+                continue;
+            }
+
+
+            Program program = teamIntern.getTeam().getProgram();
+
+
+            LocalDate programStart = program.getStartDate() != null
+                    ? program.getStartDate().toLocalDate()
+                    : LocalDate.MIN;
+            LocalDate programEnd = program.getEndDate() != null
+                    ? program.getEndDate().toLocalDate()
+                    : LocalDate.MAX;
+
+
+            if (date.isBefore(programStart) || date.isAfter(programEnd)) {
+                continue;
+            }
+
+
+            InternProfile intern = teamIntern.getIntern();
+            if (intern == null) {
+                continue;
+            }
+
+
+            int internId = intern.getInternId();
+            List<LeaveRequest> internLeaves = leavesByIntern.get(internId);
+            if (internLeaves == null || internLeaves.isEmpty()) {
+                continue;
+            }
+
+
+            User user = null;
+            if (intern.getUserId() != null) {
+                user = userRepository.findById(intern.getUserId()).orElse(null);
+            }
+
+
+            for (LeaveRequest leave : internLeaves) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("leaveId", leave.getLeaveId());
+                item.put("internId", internId);
+                item.put("fullName", user != null ? user.getFullName() : null);
+                item.put("programId", program.getProgramId());
+                item.put("programName", program.getName());
+                item.put("startDate", leave.getStartDate());
+                item.put("endDate", leave.getEndDate());
+                item.put("status", leave.getStatus());
+                item.put("reason", leave.getReason());
+                item.put("requestDate", leave.getRequestDate());
+
+
+                Integer processedBy = leave.getProcessedBy();
+                String hrName = null;
+                if (processedBy != null) {
+                    User hrUser = userRepository.findById(processedBy).orElse(null);
+                    if (hrUser != null) {
+                        hrName = hrUser.getFullName();
+                    }
+                }
+
+
+                item.put("processedBy", processedBy);
+                item.put("hrName", hrName);
+                item.put("rejectionReason", leave.getRejectionReason());
+
+
+                result.add(item);
+            }
+        }
+
+
+        return result;
+    }
+
+
+    public List<Map<String, Object>> getMonthlyLeaveForHR(int year, int month, LeaveStatus status) {
+        List<TeamIntern> teamInterns = teamInternRepository.findAll();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+
+        LocalDate monthStart = LocalDate.of(year, month, 1);
+        LocalDate monthEnd = monthStart.plusMonths(1).minusDays(1);
+
+
+        if (teamInterns.isEmpty()) {
+            return result;
+        }
+
+        List<LeaveRequest> leaves;
+
+        if (status != null) {
+            leaves = leaveRequestRepository.findByStatus(status);
+        } else {
+            leaves = leaveRequestRepository.findAll();
+        }
+
+        LocalDate finalMonthStart = monthStart;
+        LocalDate finalMonthEnd = monthEnd;
+
+        leaves = leaves.stream()
+                .filter(lr -> lr.getRequestDate() != null)
+                .filter(lr -> {
+                    LocalDate rDate = lr.getRequestDate().toLocalDate();
+                    return !rDate.isBefore(finalMonthStart) && !rDate.isAfter(finalMonthEnd);
+                })
+                .collect(Collectors.toList());
+
+        Map<Integer, List<LeaveRequest>> leavesByIntern = leaves.stream()
+                .collect(Collectors.groupingBy(LeaveRequest::getInternId));
+
+
+        for (TeamIntern teamIntern : teamInterns) {
+            if (teamIntern.getTeam() == null || teamIntern.getTeam().getProgram() == null) {
+                continue;
+            }
+
+
+            Program program = teamIntern.getTeam().getProgram();
+
+
+            LocalDate programStart = program.getStartDate() != null
+                    ? program.getStartDate().toLocalDate()
+                    : LocalDate.MIN;
+            LocalDate programEnd = program.getEndDate() != null
+                    ? program.getEndDate().toLocalDate()
+                    : LocalDate.MAX;
+
+
+            if (programEnd.isBefore(monthStart) || programStart.isAfter(monthEnd)) {
+                continue;
+            }
+
+
+            InternProfile intern = teamIntern.getIntern();
+            if (intern == null) {
+                continue;
+            }
+
+
+            int internId = intern.getInternId();
+            List<LeaveRequest> internLeaves = leavesByIntern.get(internId);
+            if (internLeaves == null || internLeaves.isEmpty()) {
+                continue;
+            }
+
+
+            User user = null;
+            if (intern.getUserId() != null) {
+                user = userRepository.findById(intern.getUserId()).orElse(null);
+            }
+
+
+            for (LeaveRequest leave : internLeaves) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("leaveId", leave.getLeaveId());
+                item.put("internId", internId);
+                item.put("fullName", user != null ? user.getFullName() : null);
+                item.put("programId", program.getProgramId());
+                item.put("programName", program.getName());
+                item.put("startDate", leave.getStartDate());
+                item.put("endDate", leave.getEndDate());
+                item.put("status", leave.getStatus());
+                item.put("reason", leave.getReason());
+                item.put("requestDate", leave.getRequestDate());
+
+
+                Integer processedBy = leave.getProcessedBy();
+                String hrName = null;
+                if (processedBy != null) {
+                    User hrUser = userRepository.findById(processedBy).orElse(null);
+                    if (hrUser != null) {
+                        hrName = hrUser.getFullName();
+                    }
+                }
+
+
+                item.put("processedBy", processedBy);
+                item.put("hrName", hrName);
+                item.put("rejectionReason", leave.getRejectionReason());
+
+
+                result.add(item);
+            }
+        }
+
+
+        return result;
     }
 
 
