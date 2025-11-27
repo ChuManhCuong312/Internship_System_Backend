@@ -3,10 +3,16 @@ package com.example.Internship_System.program.controller;
 import com.example.Internship_System.program.dto.*;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.service.ProgramService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/programs")
@@ -29,17 +35,45 @@ public class ProgramController {
     public List<Program> filterByDepartment(@RequestParam String department) {
         return programService.filterByDepartment(department);
     }
+    @GetMapping("/department")
+    public ResponseEntity<List<String>> getDepartments() {
+        return ResponseEntity.ok(programService.getAllDepartments());
+    }
 
     // FILTER BY MENTOR
     @GetMapping("/filter/mentor")
-    public List<MentorProgramDTO> filterByMentor(@RequestParam Integer mentorId) {
-        return programService.filterByMentor(mentorId);
+    public List<Program> filterByMentor(@RequestParam Integer mentorId) {
+        return programService.filterProgramsByMentor(mentorId);
     }
 
-    // Get all programs
+    @GetMapping("/mentor-assigned")
+    public ResponseEntity<List<MentorDropdownDTO>> getAssignedMentorsDropdown() {
+        return ResponseEntity.ok(programService.getAssignedMentorsForDropdown());
+    }
+
     @GetMapping
-    public List<Program> getAllPrograms() {
-        return programService.getAllPrograms();
+    public ResponseEntity<Map<String, Object>> getAllPrograms(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy, // optional sorting field
+            @RequestParam(defaultValue = "asc") String sortDir  // "asc" or "desc"
+    ) {
+        int pageIndex = page - 1; // Spring pages are 0-based
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(pageIndex, size, sort);
+
+        Page<Program> programPage = programService.getAllPrograms(pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", programPage.getContent());
+        response.put("currentPage", programPage.getNumber() + 1);
+        response.put("totalItems", programPage.getTotalElements());
+        response.put("totalPages", programPage.getTotalPages());
+
+        return ResponseEntity.ok(response);
     }
 
     // Delete program by ID
@@ -59,7 +93,7 @@ public class ProgramController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateProgram(
             @PathVariable Integer id,
             @RequestBody ProgramUpdateRequest request
