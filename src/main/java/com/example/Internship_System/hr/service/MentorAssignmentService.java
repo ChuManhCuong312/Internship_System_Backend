@@ -1,5 +1,5 @@
 package com.example.Internship_System.hr.service;
-import com.example.Internship_System.auth.entity.User;
+
 import com.example.Internship_System.hr.dto.InternAssignmentViewDTO;
 import com.example.Internship_System.hr.dto.MentorViewDTO;
 import com.example.Internship_System.hr.entity.MentorAssignment;
@@ -9,7 +9,6 @@ import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.repository.*;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ public class MentorAssignmentService {
     private final MentorAssignmentRepository mentorAssignmentRepository;
     private final InternRepository internRepository;
     private final MentorRepository mentorRepository;
-    private final UserRepository userRepository;
     private final ContractDocumentRepository contractDocumentRepository;
 
     public MentorAssignmentService(
@@ -33,7 +31,6 @@ public class MentorAssignmentService {
         this.mentorAssignmentRepository = mentorAssignmentRepository;
         this.internRepository = internRepository;
         this.mentorRepository = mentorRepository;
-        this.userRepository = userRepository;
         this.contractDocumentRepository = contractDocumentRepository;
     }
 
@@ -61,16 +58,21 @@ public class MentorAssignmentService {
             throw new RuntimeException("This intern already has a mentor assigned");
         }
 
-        Optional<ContractDocument> contractOpt = contractDocumentRepository.findByIntern(intern);
-        if (contractOpt.isEmpty()) {
+        // --- SỬA LỖI TẠI ĐÂY: Xử lý List thay vì Optional ---
+        List<ContractDocument> contracts = contractDocumentRepository.findByIntern(intern);
+        
+        if (contracts.isEmpty()) {
             throw new RuntimeException("Intern does not have a contract document");
         }
 
-        ContractDocument contract = contractOpt.get();
+        // Kiểm tra xem có bất kỳ hợp đồng nào đã được APPROVED không
+        boolean hasApprovedContract = contracts.stream()
+                .anyMatch(c -> c.getInternConfirmStatus() == InternConfirmStatus.APPROVED);
 
-        if (contract.getInternConfirmStatus() != InternConfirmStatus.APPROVED) {
+        if (!hasApprovedContract) {
             throw new RuntimeException("Intern contract is NOT approved yet");
         }
+        // ----------------------------------------------------
 
         MentorAssignment assignment = new MentorAssignment(mentor, intern);
 
@@ -81,8 +83,6 @@ public class MentorAssignmentService {
     public Page<InternAssignmentViewDTO> listInternsWithAssignments(String searchTerm, String filter, Pageable pageable) {
         return internRepository.findInternsWithAssignments(searchTerm, filter, pageable);
     }
-
-
 
     public MentorAssignment reassignMentor(Integer internId, Integer mentorId) {
 
@@ -96,11 +96,17 @@ public class MentorAssignmentService {
         MentorAssignment existingAssignment = mentorAssignmentRepository.findByIntern(intern)
                 .orElseThrow(() -> new RuntimeException("No existing mentor assignment to reassign"));
 
-        // Check contract approval
-        Optional<ContractDocument> contractOpt = contractDocumentRepository.findByIntern(intern);
-        if (contractOpt.isEmpty() || contractOpt.get().getInternConfirmStatus() != InternConfirmStatus.APPROVED) {
+        // --- SỬA LỖI TẠI ĐÂY: Xử lý List thay vì Optional ---
+        List<ContractDocument> contracts = contractDocumentRepository.findByIntern(intern);
+        
+        // Kiểm tra có hợp đồng nào Approved không
+        boolean hasApprovedContract = contracts.stream()
+                .anyMatch(c -> c.getInternConfirmStatus() == InternConfirmStatus.APPROVED);
+
+        if (contracts.isEmpty() || !hasApprovedContract) {
             throw new RuntimeException("Intern contract is not approved");
         }
+        // ----------------------------------------------------
 
         // Update mentor
         existingAssignment.setMentor(mentor);

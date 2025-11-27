@@ -3,6 +3,7 @@ package com.example.Internship_System.program.entity;
 import com.example.Internship_System.auth.entity.UserStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
