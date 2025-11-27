@@ -209,6 +209,31 @@ public class AttendanceController {
                     .body(Map.of("error", "Không thể lấy danh sách"));
         }
     }
+
+    @GetMapping("/hr/daily")
+    public ResponseEntity<?> getDailyAttendanceForHR(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        try {
+            List<Map<String, Object>> result = attendanceService.getDailyAttendanceForHR(date);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Không thể lấy danh sách chấm công cho HR"));
+        }
+    }
+
+    @GetMapping("/hr/monthly")
+    public ResponseEntity<?> getMonthlyAttendanceForHR(
+            @RequestParam int year,
+            @RequestParam int month) {
+        try {
+            List<Map<String, Object>> result = attendanceService.getMonthlyStatisticsForHR(year, month);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Không thể lấy thống kê chấm công tháng cho HR"));
+        }
+    }
     @PostMapping("/check-in/{internId}")
     public ResponseEntity<?> checkIn(@PathVariable int internId) {
         try {
