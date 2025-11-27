@@ -1,5 +1,6 @@
 package com.example.Internship_System.program.service;
 
+import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.program.dto.*;
 import com.example.Internship_System.program.entity.MentorProgram;
 import com.example.Internship_System.program.entity.Program;
@@ -9,6 +10,9 @@ import com.example.Internship_System.task.entity.Task;
 import com.example.Internship_System.repository.TaskRepository;
 import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
 import com.example.Internship_System.team.entity.Team;
+import jakarta.annotation.PostConstruct;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.example.Internship_System.team.entity.TeamIntern;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,22 +58,40 @@ public class ProgramService {
         return programRepository.findByDepartmentIgnoreCase(department);
     }
 
-    // Filter by mentor
-    public List<MentorProgramDTO> filterByMentor(Integer mentorId) {
-        List<MentorProgram> list = mentorProgramRepository.findByMentor_MentorId(mentorId);
+    public List<String> getAllDepartments() {
+        List<String> departments = programRepository.findDistinctDepartments();
 
-        return list.stream()
-                .map(mp -> new MentorProgramDTO(
-                        mp.getProgram().getProgramId(),
-                        mp.getProgram().getName(),
-                        mp.getMentor().getUser().getFullName()
-                ))
+        return departments.stream()
+                .sorted(String::compareToIgnoreCase)
                 .collect(Collectors.toList());
     }
 
+    // Filter by mentor
+    // Filter programs by mentor (returns full Program objects)
+    public List<Program> filterProgramsByMentor(Integer mentorId) {
+        List<MentorProgram> list = mentorProgramRepository.findByMentor_MentorId(mentorId);
+
+        // Extract Programs and remove duplicates if the same mentor is assigned multiple times
+        return list.stream()
+                .map(MentorProgram::getProgram)
+                .distinct()
+                .toList();
+    }
+
+    public List<MentorDropdownDTO> getAssignedMentorsForDropdown() {
+        List<MentorUser> mentors = mentorProgramRepository.findDistinctAssignedMentors();
+
+        return mentors.stream()
+                .map(m -> new MentorDropdownDTO(
+                        m.getMentorId(),
+                        m.getUser().getFullName()
+                ))
+                .sorted(Comparator.comparing(MentorDropdownDTO::getFullName))
+                .collect(Collectors.toList());
+    }
     // Get all programs
-    public List<Program> getAllPrograms() {
-        return programRepository.findAll();
+    public Page<Program> getAllPrograms(Pageable pageable) {
+        return programRepository.findAll(pageable);
     }
 
     // Delete program by ID
@@ -78,9 +101,9 @@ public class ProgramService {
         Program program = programRepository.findById(programId)
                 .orElseThrow(() -> new RuntimeException("Program not found"));
 
-        // ❌ Cannot delete ongoing or finished program
-        if (!program.getProgramStatus().equals(ProgramStatus.UPCOMING)) {
-            throw new RuntimeException("Cannot delete program because it is ON_GOING or FINISHED");
+        // ❌ Cannot delete ongoing program
+        if (program.getProgramStatus().equals(ProgramStatus.ON_GOING)) {
+            throw new RuntimeException("Cannot delete program because it is ON_GOING");
         }
 
         // 1️⃣ Delete team_intern mappings for all teams
@@ -141,9 +164,9 @@ public class ProgramService {
             throw new RuntimeException("Cannot edit this program because it is ON_GOING or FINISHED.");
         }
 
-        // RULE 1: New start date must be at least 1 day after old start date
-        if (request.getStartDate().isBefore(program.getStartDate().plusDays(1))) {
-            throw new IllegalArgumentException("New start date must be at least 1 day after the previous start date.");
+        // RULE 1: New start date CANNOT be BEFORE old start date
+        if (request.getStartDate().isBefore(program.getStartDate())) {
+            throw new IllegalArgumentException("New start date cannot be earlier than the previous start date.");
         }
 
         // RULE 2: End date must be at least 1 month after new start date
@@ -267,4 +290,31 @@ public class ProgramService {
 
 
 
+    @PostConstruct
+    @Transactional
+    public void updateStatusesOnStartup() {
+        List<Program> programs = programRepository.findAll();
+
+        for (Program p : programs) {
+            ProgramStatus newStatus = calculateStatus(p);
+            if (p.getProgramStatus() != newStatus) {
+                p.setProgramStatus(newStatus);
+                programRepository.save(p);
+            }
+        }
+    }
+
+    /**
+     * Calculates the status of a program based on the current date
+     */
+    private ProgramStatus calculateStatus(Program p) {
+        LocalDateTime today = LocalDateTime.now();
+        if (today.isBefore(p.getStartDate())) {
+            return ProgramStatus.UPCOMING;
+        } else if (!today.isAfter(p.getEndDate())) {
+            return ProgramStatus.ON_GOING;
+        } else {
+            return ProgramStatus.FINISHED;
+        }
+    }
 }
