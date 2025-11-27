@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,15 +46,14 @@ public class ContractDocumentService {
     }
 
     /**
-     * Find contract documents by intern ID
-     * UPDATED: Returns List instead of Optional
+     * Find contract document by intern ID
      */
-    public List<ContractDocument> findAllByInternId(int internId) {
+    public Optional<ContractDocument> findByInternId(int internId) {
         Optional<InternProfile> internOpt = internRepository.findById(internId);
         if (internOpt.isPresent()) {
             return contractRepository.findByIntern(internOpt.get());
         }
-        return Collections.emptyList();
+        return Optional.empty();
     }
 
     /**
@@ -111,11 +109,8 @@ public class ContractDocumentService {
                 .orElseThrow(() -> new RuntimeException("Intern not found with id: " + internId));
         
         // Check if contract already exists
-        // UPDATED: Handle List return type. 
-        // NOTE: If you want to ALLOW multiple contracts, remove this check block.
-        List<ContractDocument> existingContracts = contractRepository.findByIntern(intern);
-        if (!existingContracts.isEmpty()) {
-            // Tùy chọn: Ném lỗi hoặc cho phép tạo thêm. Hiện tại đang giữ logic cũ là báo lỗi.
+        Optional<ContractDocument> existingContract = contractRepository.findByIntern(intern);
+        if (existingContract.isPresent()) {
             throw new RuntimeException("Contract already exists for this intern");
         }
         
@@ -196,8 +191,7 @@ public class ContractDocumentService {
     public boolean hasContract(int internId) {
         Optional<InternProfile> internOpt = internRepository.findById(internId);
         if (internOpt.isPresent()) {
-            // UPDATED: Check if list is empty
-            return !contractRepository.findByIntern(internOpt.get()).isEmpty();
+            return contractRepository.findByIntern(internOpt.get()).isPresent();
         }
         return false;
     }
