@@ -1,22 +1,44 @@
 package com.example.Internship_System.task.entity;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.*;
 @Entity
 @Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "task_id")
+    @Column(name = "task_id", nullable = false)
     private int taskId;
+    @Column(name = "program_id",nullable = false)
+    private int programId;
+    @Column(name = "title", nullable = false)
+    @NotBlank(message = "Tiêu đề là bắt buộc")
     private String title;
+    @Column(name = "description")
     private String description;
+    @Column(name = "assigned_by", nullable = false)
     private String assignedBy;
-    private int mentorId;
-    private int internId;
-    private String priority;
+    @Pattern(regexp = "^(TODO|IN_PROGRESS|DONE|REVIEWED)?$",
+            message = "Trạng thái phải hợp lệ")
+    @Column(name = "status")
     private String status;
+    @Column(name = "create_at")
+    private LocalDateTime created_at;
+    @Column(name = "deadline")
+    @NotNull(message ="Deadline là bắt buộc")
     private LocalDateTime deadline;
+    @Column(name ="due_soon")
+    private boolean due_soon;
+
+    @Pattern(regexp = "^(LOW|MEDIUM|HIGH)?$",
+            message = "Độ ưu tiên phải hợp lệ")
+    @Column(name ="priority")
+    private String priority;
+    @Column(name = "mentorId", nullable = false)
+
+    private int mentorId;
+    @Column(name = "internId", nullable = false)
+    private int internId;
 
     public int getTaskId() {
         return taskId;
@@ -88,5 +110,29 @@ public class Task {
 
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
+    }
+
+    public int getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(int programId) {
+        this.programId = programId;
+    }
+
+    public boolean isDue_soon() {
+        return due_soon;
+    }
+
+    public void setDue_soon(boolean due_soon) {
+        this.due_soon = due_soon;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 }
