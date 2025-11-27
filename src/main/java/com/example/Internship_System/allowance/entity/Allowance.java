@@ -3,6 +3,7 @@ package com.example.Internship_System.allowance.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "allowances")
@@ -10,16 +11,19 @@ public class Allowance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "allowance_id")
+    @Column(name = "allowance_id", nullable = false)
     private int allowanceId;
 
-    @Column(name = "intern_id")
+    @Column(name = "intern_id",nullable = false)
+    @NotNull(message = "InternID không thể null")
     private int internId;
 
-    @Column(name = "type")
+    @Column(name = "type",nullable = false)
+    @NotNull(message = "Type không thể null")
     private String type;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false )
+    @DecimalMin(value = "0.0", inclusive = false, message = "Trợ cấp phải lớn hơn 0")
     private BigDecimal amount;
 
     @Column(name = "date_applied")
