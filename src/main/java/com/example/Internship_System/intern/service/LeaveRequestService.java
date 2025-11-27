@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Service class for handling leave requests
- */
 @Service
 public class LeaveRequestService {
 
