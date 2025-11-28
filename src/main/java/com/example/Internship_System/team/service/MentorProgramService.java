@@ -25,6 +25,7 @@ public class MentorProgramService {
             User user = mentor.getUser();
 
             return new MentorInfoDTO(
+                    mentor.getMentorId(),
                     user.getFullName(),
                     user.getEmail(),
                     user.getPhone(),
