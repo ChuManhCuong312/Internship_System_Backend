@@ -270,7 +270,7 @@ CREATE TABLE intern_logs (
 -- ======================================
 -- 8. NOTIFICATIONS
 -- ======================================
-
+-- Bảng thông báo cho Intern
 CREATE TABLE notifications (
     notification_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT NOT NULL,
@@ -281,3 +281,25 @@ CREATE TABLE notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
+-- Bảng thông báo cho HR
+CREATE TABLE HRNotifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    hr_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT,
+    type VARCHAR(50), -- 'ALLOWANCE', 'TASK', 'LEAVE', 'EVALUATION', etc.
+    is_read BOOLEAN DEFAULT FALSE, -- trong MySQL là TINYINT(1)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (hr_id) REFERENCES hr_users(hr_id)
+)
+-- Bảng thông báo cho Mentor
+CREATE TABLE MentorNotifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    mentor_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT,
+    type VARCHAR(50), -- 'ALLOWANCE', 'TASK', 'LEAVE', 'EVALUATION', etc.
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
+)

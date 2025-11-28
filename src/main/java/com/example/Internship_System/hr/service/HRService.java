@@ -5,6 +5,7 @@ import com.example.Internship_System.hr.dto.HRInternDTO;
 import com.example.Internship_System.repository.HRRepository;
 import com.example.Internship_System.repository.UserRepository;
 import com.example.Internship_System.utils.EmailService;
+import com.example.Internship_System.notification.service.NotificationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class HRService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public Page<HRInternDTO> getAllInternsForHR(Pageable pageable) {
         return repository.findAllInternProfilesForHR(null, null, null,null, pageable);
@@ -101,6 +105,9 @@ public class HRService {
         log.setDetails("Trạng thái hồ sơ đã được cập nhật: " + status);
         log.setCreatedAt(LocalDateTime.now());
         logRepository.save(log);
+
+
+        notificationService.createProfileStatusNotification(intern.getInternId(), status, rejectionReason);
     }
 
     @Transactional
@@ -168,6 +175,9 @@ public class HRService {
         log.setDetails("Hồ sơ đã được cập nhật bởi HR");
         log.setCreatedAt(LocalDateTime.now());
         logRepository.save(log);
+
+
+        notificationService.createProfileUpdatedNotification(existing.getInternId());
     }
 }
 
