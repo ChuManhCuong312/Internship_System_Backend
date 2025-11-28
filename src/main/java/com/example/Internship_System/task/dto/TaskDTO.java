@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class TaskDTO {
     private int taskId;
     private int programId;
+    private String programName;
     private String title;
     private String description;
     private String assignedBy;
@@ -14,14 +15,16 @@ public class TaskDTO {
     private boolean dueSoon;
     private String priority;
     private int mentorId;
+    private String mentorName;
 
     public TaskDTO() {}
 
-    public TaskDTO(int taskId, int programId, String title, String description, 
+    public TaskDTO(int taskId, int programId, String programName, String title, String description, 
                    String assignedBy, String status, LocalDateTime createdAt, 
-                   LocalDateTime deadline, boolean dueSoon, String priority, int mentorId) {
+                   LocalDateTime deadline, boolean dueSoon, String priority, int mentorId, String mentorName) {
         this.taskId = taskId;
         this.programId = programId;
+        this.programName = programName;
         this.title = title;
         this.description = description;
         this.assignedBy = assignedBy;
@@ -31,6 +34,23 @@ public class TaskDTO {
         this.dueSoon = dueSoon;
         this.priority = priority;
         this.mentorId = mentorId;
+        this.mentorName = mentorName;
+    }
+
+    public String getProgramName() {
+        return programName;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
+    public String getMentorName() {
+        return mentorName;
+    }
+
+    public void setMentorName(String mentorName) {
+        this.mentorName = mentorName;
     }
 
     public int getTaskId() {
