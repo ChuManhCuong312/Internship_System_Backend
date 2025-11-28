@@ -5,8 +5,7 @@ import com.example.Internship_System.task.entity.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskService {
@@ -21,12 +20,16 @@ public class TaskService {
         return repository.findAll();
     }
 
-    public Optional<Task> findTaskByMentorId(int mentorId) {
-        return repository.findTaskByMentorId(mentorId);
+    public Optional<Task> findById(int id) {
+        return repository.findById(id);
     }
 
-    public Optional<Task> findTaskByInternId(int mentorId) {
-        return repository.findTaskByInternId(mentorId);
+    public List<Task> findByMentorId(int mentorId) {
+        return repository.findByMentorId(mentorId);
+    }
+
+    public List<Task> findByProgramId(int programId) {
+        return repository.findByProgramId(programId);
     }
 
     public void deleteById(int id) {
