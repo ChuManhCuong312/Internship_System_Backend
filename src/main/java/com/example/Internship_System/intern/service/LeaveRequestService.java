@@ -8,6 +8,7 @@ import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.entity.ProgramStatus;
 import com.example.Internship_System.repository.ProgramRepository;
 import com.example.Internship_System.repository.LeaveRequestRepository;
+import com.example.Internship_System.notification.service.NotificationService;
 import com.example.Internship_System.repository.TeamInternRepository;
 import com.example.Internship_System.repository.UserRepository;
 import com.example.Internship_System.team.entity.TeamIntern;
@@ -15,7 +16,6 @@ import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.auth.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,25 +26,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 @Service
 public class LeaveRequestService {
-
 
     private final LeaveRequestRepository leaveRequestRepository;
     private final ProgramRepository programRepository;
     private final TeamInternRepository teamInternRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
 
     public LeaveRequestService(LeaveRequestRepository leaveRequestRepository,
                                ProgramRepository programRepository,
                                TeamInternRepository teamInternRepository,
-                               UserRepository userRepository) {
+                               UserRepository userRepository,
+                               NotificationService notificationService) {
         this.leaveRequestRepository = leaveRequestRepository;
         this.programRepository = programRepository;
         this.teamInternRepository = teamInternRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
 
@@ -91,7 +92,17 @@ public class LeaveRequestService {
 
         request.setStatus(LeaveStatus.APPROVED);
         request.setProcessedBy(hrId);
-        return leaveRequestRepository.save(request);
+        LeaveRequest saved = leaveRequestRepository.save(request);
+
+
+        notificationService.createLeaveApprovedNotification(
+                saved.getInternId(),
+                saved.getStartDate(),
+                saved.getEndDate()
+        );
+
+
+        return saved;
     }
 
 
@@ -115,7 +126,18 @@ public class LeaveRequestService {
         request.setStatus(LeaveStatus.REJECTED);
         request.setProcessedBy(hrId);
         request.setRejectionReason(reason);
-        return leaveRequestRepository.save(request);
+        LeaveRequest saved = leaveRequestRepository.save(request);
+
+
+        notificationService.createLeaveRejectedNotification(
+                saved.getInternId(),
+                saved.getStartDate(),
+                saved.getEndDate(),
+                saved.getRejectionReason()
+        );
+
+
+        return saved;
     }
 
 
