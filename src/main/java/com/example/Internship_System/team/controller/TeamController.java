@@ -60,7 +60,8 @@ public class TeamController {
         return mentorRepository.searchMentorByName(name)
                 .stream()
                 .map(m -> new MentorInfoDTO(
-                        m.getUser().getFullName(),
+                        m.getMentorId(),                      // include ID
+                        m.getUser().getFullName(),            // full name
                         m.getUser().getEmail(),
                         m.getUser().getPhone(),
                         m.getDepartment(),
