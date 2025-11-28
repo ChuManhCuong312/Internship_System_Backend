@@ -4,6 +4,7 @@ import com.example.Internship_System.notification.entity.Notification;
 import com.example.Internship_System.notification.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,55 @@ public class NotificationService {
         String title = "Bạn có trợ cấp mới";
         String message = "Bạn vừa nhận được trợ cấp " + allowanceType + " với số tiền: " + amount + " VND";
         Notification notification = new Notification(internId, title, message, "ALLOWANCE");
+        save(notification);
+    }
+
+
+    public void createProfileStatusNotification(int internId, String status, String rejectionReason) {
+        String upperStatus = status != null ? status.toUpperCase() : "";
+
+
+        String title;
+        String message;
+
+
+        if ("APPROVED".equals(upperStatus)) {
+            title = "Hồ sơ thực tập đã được duyệt";
+            message = "Hồ sơ của bạn đã được duyệt thành công.";
+        } else if ("REJECTED".equals(upperStatus)) {
+            title = "Hồ sơ thực tập đã bị từ chối";
+            message = "Hồ sơ của ban đã bị từ chối. Lý do: " + rejectionReason;
+        } else {
+            title = "Trạng thái hồ sơ thực tập được cập nhật";
+            message = "Trạng thái hồ sơ của bạn đã được cập nhật thành: " + status + ".";
+        }
+
+
+        Notification notification = new Notification(internId, title, message, "SYSTEM");
+        save(notification);
+    }
+
+
+    public void createProfileUpdatedNotification(int internId) {
+        String title = "Hồ sơ thực tập đã được cập nhật";
+        String message = "Hồ sơ của bạn đã được HR cập nhật. Vui lòng kiểm tra lại thông tin.";
+        Notification notification = new Notification(internId, title, message, "SYSTEM");
+        save(notification);
+    }
+
+
+    public void createLeaveApprovedNotification(int internId, LocalDate startDate, LocalDate endDate) {
+        String title = "Đơn nghỉ phép đã được duyệt";
+        String message = "Đơn nghỉ phép từ " + startDate + " đến " + endDate + " đã được HR duyệt.";
+        Notification notification = new Notification(internId, title, message, "LEAVE");
+        save(notification);
+    }
+
+
+    public void createLeaveRejectedNotification(int internId, LocalDate startDate, LocalDate endDate, String rejectionReason) {
+        String title = "Đơn nghỉ phép đã bị từ chối";
+        String message = "Đơn nghỉ phép từ " + startDate + " đến " + endDate + " đã bị HR từ chối. Lý do: " + rejectionReason;
+        Notification notification = new Notification(internId, title, message, "LEAVE");
         save(notification);
     }
 }
