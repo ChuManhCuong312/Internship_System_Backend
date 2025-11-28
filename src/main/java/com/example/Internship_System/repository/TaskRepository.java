@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     Optional<Task> findTaskByMentorId(int mentorId);
     Optional<Task> findTaskByInternId(int internId);
+    List<Task> findByInternId(int internId);
     List<Task> findByTaskIdIn(List<Integer> ids); // task của team
 
 }
