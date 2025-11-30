@@ -10,5 +10,9 @@ public interface TaskTeamAssignmentRepository extends JpaRepository<TaskTeamAssi
 
     @Query("SELECT t.taskId FROM TaskTeamAssignment t WHERE t.teamId = :teamId")
     List<Integer> findTaskIdsByTeamId(Integer teamId);
+
+    List<TaskTeamAssignment> findByTaskId(int taskId);
+
+    List<TaskTeamAssignment> findByTeamId(int teamId);
 }
 
