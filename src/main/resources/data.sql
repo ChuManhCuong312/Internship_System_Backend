@@ -245,11 +245,13 @@ INSERT INTO support_requests (intern_id, description, file_path, status, created
 (5, 'Thắc mắc về phụ cấp tháng 2',NULL, 'RESOLVED', NOW()),
 (7, 'Xin nghỉ phép 1 ngày',NULL, 'OPEN', NOW());
 
-INSERT INTO evaluations (intern_id, mentor_id, technical, communication, discipline, attitude, note) VALUES
-(1, 1, 9, 8, 9, 9, 'Thực tập sinh chăm chỉ, hoàn thành tốt công việc'),
-(3, 1, 8, 8, 9, 8, 'Tốt, cần cải thiện tốc độ xử lý'),
-(5, 3, 9, 9, 8, 9, 'Hiểu dữ liệu tốt, cần luyện kỹ năng trình bày'),
-(7, 2, 8, 8, 8, 9, 'Thực hiện đầy đủ yêu cầu của mentor');
+INSERT INTO evaluations
+(intern_id, mentor_evaluate_id, title, technical, communication, discipline, attitude, weight, note)
+VALUES
+(1, 1, 'Đánh giá cuối kì', 9, 8, 9, 9, 50, 'Thực tập sinh chăm chỉ, hoàn thành tốt công việc'),
+(3, 1, 'Đánh giá cuối kì', 8, 8, 9, 8, 50, 'Tốt, cần cải thiện tốc độ xử lý'),
+(5, 3, 'Đánh giá cuối kì', 9, 9, 8, 9, 50, 'Hiểu dữ liệu tốt, cần luyện kỹ năng trình bày'),
+(7, 2, 'Đánh giá cuối kì', 8, 8, 8, 9, 50, 'Thực hiện đầy đủ yêu cầu của mentor');
 
 INSERT INTO admin_logs (details) VALUES
 (' Admin tạo HR01 với role HR'),

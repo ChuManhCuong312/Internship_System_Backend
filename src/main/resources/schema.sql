@@ -249,15 +249,17 @@ CREATE TABLE support_requests (
 CREATE TABLE evaluations (
     evaluation_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
-    mentor_id INT,
+    mentor_evaluate_id INT,
+    title VARCHAR(255) NOT NULL,
     technical INT CHECK (technical BETWEEN 0 AND 10),
     communication INT CHECK (communication BETWEEN 0 AND 10),
     discipline INT CHECK (discipline BETWEEN 0 AND 10),
     attitude INT CHECK (attitude BETWEEN 0 AND 10),
+    weight INT CHECK (weight BETWEEN 0 AND 100),
     note TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id),
-    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
+    FOREIGN KEY (mentor_evaluate_id) REFERENCES mentor_users(mentor_id)
 );
 
 -- ======================================
@@ -309,7 +311,7 @@ CREATE TABLE HRNotifications (
     is_read BOOLEAN DEFAULT FALSE, -- trong MySQL là TINYINT(1)
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (hr_id) REFERENCES hr_users(hr_id)
-)
+);
 -- Bảng thông báo cho Mentor
 CREATE TABLE MentorNotifications (
     notification_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -320,4 +322,4 @@ CREATE TABLE MentorNotifications (
     is_read BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
-)
+);
