@@ -139,6 +139,13 @@ public class ProgramController {
     public ResponseEntity<List<ScheduleEventDTO>> getProgramAndTaskByIntern(@PathVariable Integer internId) {
         return ResponseEntity.ok(programService.getProgramByInternId(internId));
     }
+    @GetMapping("/mentor/{mentorId}/ongoing")
+    public ResponseEntity<List<ProgramSimpleDTO>> getOngoingProgramsByMentor(
+            @PathVariable Integer mentorId
+    ) {
+        List<ProgramSimpleDTO> programs = programService.getSimpleProgramListByMentor(mentorId);
+        return ResponseEntity.ok(programs);
+    }
 
 
 }

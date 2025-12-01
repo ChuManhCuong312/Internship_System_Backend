@@ -24,5 +24,12 @@ public interface ProgramRepository extends JpaRepository<Program, Integer> {
 
     @Query("SELECT DISTINCT p.department FROM Program p")
     List<String> findDistinctDepartments();
+    @Query("""
+        SELECT p FROM Program p
+        JOIN MentorProgram mp ON mp.program = p
+        WHERE mp.mentor.mentorId = :mentorId
+          AND p.programStatus = 'ON_GOING'
+    """)
+    List<Program> findOngoingProgramsByMentorId(Integer mentorId);
 
 }

@@ -354,4 +354,22 @@ public class ProgramService {
             return ProgramStatus.FINISHED;
         }
     }
+    public List<Program> getOngoingProgramsByMentor(Integer mentorId) {
+        return programRepository.findOngoingProgramsByMentorId(mentorId);
+    }
+    public List<ProgramSimpleDTO> getSimpleProgramListByMentor(Integer mentorId) {
+        List<Program> programs = getOngoingProgramsByMentor(mentorId);
+
+        return programs.stream().map(p -> {
+            ProgramSimpleDTO dto = new ProgramSimpleDTO();
+            dto.setProgram_id(p.getProgramId());
+            dto.setProgram_name(p.getName());
+            dto.setDescription(p.getDetail());
+            dto.setStart_date(p.getStartDate().toString());
+            dto.setEnd_date(p.getEndDate().toString());
+            return dto;
+        }).toList();
+    }
+
+
 }
