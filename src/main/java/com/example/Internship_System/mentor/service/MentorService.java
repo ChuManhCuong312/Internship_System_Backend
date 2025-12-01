@@ -28,5 +28,16 @@ public class MentorService {
             );
         }).toList();
     }
+
+    public MentorDTO getMentorByUserId(Integer userId) {
+        MentorUser mentor = mentorRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Mentor not found for userId: " + userId));
+        User u = mentor.getUser();
+        return new MentorDTO(
+                mentor.getMentorId(),
+                u != null ? u.getFullName() : null,
+                u != null ? u.getEmail() : null
+        );
+    }
 }
 

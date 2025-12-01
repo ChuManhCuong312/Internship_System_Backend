@@ -4,9 +4,7 @@ import com.example.Internship_System.mentor.dto.MentorDTO;
 import com.example.Internship_System.mentor.service.MentorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +18,10 @@ public class MentorController {
     @GetMapping
     public ResponseEntity<List<MentorDTO>> getAllMentors() {
         return ResponseEntity.ok(mentorService.getAllMentors());
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<MentorDTO> getMentorByUserId(@PathVariable Integer userId) {
+        return ResponseEntity.ok(mentorService.getMentorByUserId(userId));
     }
 }
