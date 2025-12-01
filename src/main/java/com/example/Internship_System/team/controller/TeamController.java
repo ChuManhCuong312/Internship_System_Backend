@@ -60,7 +60,8 @@ public class TeamController {
         return mentorRepository.searchMentorByName(name)
                 .stream()
                 .map(m -> new MentorInfoDTO(
-                        m.getUser().getFullName(),
+                        m.getMentorId(),                      // include ID
+                        m.getUser().getFullName(),            // full name
                         m.getUser().getEmail(),
                         m.getUser().getPhone(),
                         m.getDepartment(),
@@ -122,5 +123,13 @@ public class TeamController {
 
         teamService.updateTeam(teamId, request);
         return ResponseEntity.ok("Team updated successfully");
+    }
+
+    @GetMapping("/{programId}/mentors/search")
+    public List<MentorInfoDTO> searchMentors(
+            @PathVariable Integer programId,
+            @RequestParam("q") String query
+    ) {
+        return teamService.searchMentorsInProgram(programId, query);
     }
 }

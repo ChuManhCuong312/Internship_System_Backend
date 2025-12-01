@@ -35,10 +35,8 @@ public class Task {
     @Column(name ="priority")
     private String priority;
     @Column(name = "mentorId", nullable = false)
-
     private int mentorId;
-    @Column(name = "internId", nullable = false)
-    private int internId;
+
 
     public int getTaskId() {
         return taskId;
@@ -78,14 +76,6 @@ public class Task {
 
     public void setMentorId(int mentorId) {
         this.mentorId = mentorId;
-    }
-
-    public int getInternId() {
-        return internId;
-    }
-
-    public void setInternId(int internId) {
-        this.internId = internId;
     }
 
     public String getPriority() {

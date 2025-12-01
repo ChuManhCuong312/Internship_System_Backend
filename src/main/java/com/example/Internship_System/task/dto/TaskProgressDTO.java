@@ -1,39 +1,22 @@
-package com.example.Internship_System.task.entity;
+package com.example.Internship_System.task.dto;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "task_progress")
-public class TaskProgress {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "progress_id")
+public class TaskProgressDTO {
     private int progressId;
-
-    @Column(name = "task_id", nullable = false)
     private int taskId;
-
-    @Column(name = "percent_complete")
-    @Min(value = 0, message = "Phần trăm hoàn thành phải từ 0 đến 100")
-    @Max(value = 100, message = "Phần trăm hoàn thành phải từ 0 đến 100")
     private int percentComplete;
-
-    @Column(name = "note", columnDefinition = "TEXT")
     private String note;
-
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public TaskProgress() {}
+    public TaskProgressDTO() {}
 
-    public TaskProgress(int taskId, int percentComplete, String note) {
+    public TaskProgressDTO(int progressId, int taskId, int percentComplete, String note, LocalDateTime updatedAt) {
+        this.progressId = progressId;
         this.taskId = taskId;
         this.percentComplete = percentComplete;
         this.note = note;
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = updatedAt;
     }
 
     public int getProgressId() {
