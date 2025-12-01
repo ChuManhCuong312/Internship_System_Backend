@@ -33,19 +33,22 @@ public class ProgramService {
     private final TeamInternRepository teamInternRepository;
     private final TaskTeamAssignmentRepository taskTeamAssignmentRepository;
     private final TaskRepository taskRepository;
+    private final MentorRepository mentorRepository;
 
     public ProgramService(ProgramRepository programRepository,
                           MentorProgramRepository mentorProgramRepository,
                           TeamRepository teamRepository,
                           TeamInternRepository teamInternRepository,
                           TaskTeamAssignmentRepository taskTeamAssignmentRepository,
-                          TaskRepository taskRepository) {
+                          TaskRepository taskRepository,
+                          MentorRepository mentorRepository) {
         this.programRepository = programRepository;
         this.mentorProgramRepository = mentorProgramRepository;
         this.teamRepository = teamRepository;
         this.teamInternRepository = teamInternRepository;
         this.taskTeamAssignmentRepository = taskTeamAssignmentRepository;
         this.taskRepository = taskRepository;
+        this.mentorRepository = mentorRepository;
     }
 
     // Search program by name
@@ -222,6 +225,40 @@ public class ProgramService {
 
         return programRepository.save(newProgram);
     }
+
+    @Transactional
+    public MentorProgram assignMentorToProgram(Integer programId, Integer mentorId) {
+
+        Program program = programRepository.findById(programId)
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+
+        // ❌ Block assignment if program is ongoing or finished
+        if (program.getProgramStatus() == ProgramStatus.ON_GOING ||
+                program.getProgramStatus() == ProgramStatus.FINISHED) {
+            throw new RuntimeException("Cannot assign mentor because the program is ON_GOING or FINISHED.");
+        }
+
+        MentorUser mentor = mentorRepository.findById(mentorId)
+                .orElseThrow(() -> new RuntimeException("Mentor not found"));
+
+        // ❌ Prevent duplicate assignment
+        boolean exists = mentorProgramRepository
+                .existsByProgram_ProgramIdAndMentor_MentorId(programId, mentorId);
+
+        if (exists) {
+            throw new RuntimeException("This mentor is already assigned to this program.");
+        }
+
+        // Create new mentor-program link
+        MentorProgram mp = new MentorProgram();
+        mp.setProgram(program);
+        mp.setMentor(mentor);
+        mp.setAssignedDate(LocalDateTime.now());
+
+        return mentorProgramRepository.save(mp);
+    }
+
+
     public List<ScheduleEventDTO> getProgramByInternId(Integer internId) {
 
         List<ScheduleEventDTO> events = new ArrayList<>();
