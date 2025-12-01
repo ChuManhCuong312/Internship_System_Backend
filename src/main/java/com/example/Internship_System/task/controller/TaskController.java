@@ -135,6 +135,18 @@ public class TaskController {
         }
     }
 
+    //READ tasks by intern id with details
+    @GetMapping("/intern/{internId}")
+    public ResponseEntity<?> getTasksByInternId(
+            @PathVariable("internId") int internId) {
+        try {
+            List<TaskDTO> tasks = taskService.findTasksByIntern(internId);
+            return new ResponseEntity<>(tasks, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     //UPDATE - Update task
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable int id, @RequestBody Task task){
