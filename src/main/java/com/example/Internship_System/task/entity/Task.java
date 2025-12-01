@@ -22,7 +22,7 @@ public class Task {
     @Column(name = "description")
     private String description;
     @Column(name = "assigned_by", nullable = false)
-    private String assignedBy;
+    private Integer assignedBy;
     @Pattern(regexp = "^(TODO|IN_PROGRESS|DONE|REVIEWED)?$",
             message = "Trạng thái phải hợp lệ")
     @Column(name = "status")
