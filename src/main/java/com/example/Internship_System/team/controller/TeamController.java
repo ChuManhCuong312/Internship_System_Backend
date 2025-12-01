@@ -124,4 +124,12 @@ public class TeamController {
         teamService.updateTeam(teamId, request);
         return ResponseEntity.ok("Team updated successfully");
     }
+
+    @GetMapping("/{programId}/mentors/search")
+    public List<MentorInfoDTO> searchMentors(
+            @PathVariable Integer programId,
+            @RequestParam("q") String query
+    ) {
+        return teamService.searchMentorsInProgram(programId, query);
+    }
 }
