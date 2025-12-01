@@ -5,8 +5,11 @@ import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.repository.MentorRepository;
 import com.example.Internship_System.repository.ProgramRepository;
 import com.example.Internship_System.repository.TaskRepository;
+import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
+import com.example.Internship_System.repository.TeamInternRepository;
 import com.example.Internship_System.task.dto.TaskDTO;
 import com.example.Internship_System.task.entity.Task;
+import com.example.Internship_System.team.entity.TeamIntern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,12 @@ public class TaskService {
 
     @Autowired
     private ProgramRepository programRepository;
+
+    @Autowired
+    private TeamInternRepository teamInternRepository;
+
+    @Autowired
+    private TaskTeamAssignmentRepository taskTeamAssignmentRepository;
 
     public Task save(Task task) {
         return repository.save(task);
@@ -121,6 +130,30 @@ public class TaskService {
     public List<TaskDTO> filterTasksWithDetails(Integer mentorId, Integer programId, String status,
                                                 String priority, LocalDateTime startDate, LocalDateTime endDate) {
         return repository.filterTasks(mentorId, programId, status, priority, startDate, endDate).stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public List<TaskDTO> findTasksByIntern(Integer internId) {
+        // 1) Get team of intern
+        TeamIntern teamIntern = teamInternRepository.findByInternId(internId);
+        if (teamIntern == null || teamIntern.getTeam() == null) {
+            return new ArrayList<>();
+        }
+
+        Integer teamId = teamIntern.getTeam().getTeamId();
+
+        // 2) Get task ids assigned to team
+        List<Integer> taskIds = taskTeamAssignmentRepository.findTaskIdsByTeamId(teamId);
+        if (taskIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // 3) Get all tasks by id
+        List<Task> tasks = repository.findByTaskIdIn(taskIds);
+
+        // 4) Convert to DTO
+        return tasks.stream()
                 .map(this::convertToDTO)
                 .toList();
     }
