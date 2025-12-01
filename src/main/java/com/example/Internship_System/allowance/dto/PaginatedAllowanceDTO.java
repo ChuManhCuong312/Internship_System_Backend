@@ -1,7 +1,12 @@
 package com.example.Internship_System.allowance.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Setter
+@Getter
 public class PaginatedAllowanceDTO {
     private List<AllowanceDTO> data;
     private int totalAllowances;
@@ -9,6 +14,7 @@ public class PaginatedAllowanceDTO {
     private int pageSize;
     private int totalPages;
 
+    @SuppressWarnings("unused")
     public PaginatedAllowanceDTO() {
     }
 
@@ -20,43 +26,4 @@ public class PaginatedAllowanceDTO {
         this.totalPages = (int) Math.ceil((double) totalAllowances / pageSize);
     }
 
-    public List<AllowanceDTO> getData() {
-        return data;
-    }
-
-    public void setData(List<AllowanceDTO> data) {
-        this.data = data;
-    }
-
-    public int getTotalAllowances() {
-        return totalAllowances;
-    }
-
-    public void setTotalAllowances(int totalAllowances) {
-        this.totalAllowances = totalAllowances;
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
 }
