@@ -1,8 +1,11 @@
 package com.example.Internship_System.program.controller;
 
 import com.example.Internship_System.program.dto.*;
+import com.example.Internship_System.program.entity.MentorProgram;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.service.ProgramService;
+import com.example.Internship_System.team.dto.MentorInfoDTO;
+import com.example.Internship_System.team.service.MentorProgramService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +22,11 @@ import java.util.Map;
 public class ProgramController {
 
     private final ProgramService programService;
+    private final MentorProgramService mentorProgramService;
 
-    public ProgramController(ProgramService programService) {
+    public ProgramController(ProgramService programService, MentorProgramService mentorProgramService) {
         this.programService = programService;
+        this.mentorProgramService =mentorProgramService;
     }
 
     // ============= SEARCH ==================
@@ -115,6 +120,21 @@ public class ProgramController {
     public Program cloneProgram(@RequestBody ProgramCreateRequest request) {
         return programService.cloneProgram(request);
     }
+
+    @PostMapping("/{programId}/assign-mentor/{mentorId}")
+    public ResponseEntity<?> assignMentor(
+            @PathVariable Integer programId,
+            @PathVariable Integer mentorId) {
+
+        MentorProgram assigned = programService.assignMentorToProgram(programId, mentorId);
+        return ResponseEntity.ok("Mentor assigned successfully");
+    }
+
+    @GetMapping("/{programId}/mentors")
+    public List<MentorInfoDTO> getMentorsForProgram(@PathVariable Integer programId) {
+        return mentorProgramService.getAllMentorsAssignedToProgram(programId);
+    }
+
     @GetMapping("/intern/{internId}")
     public ResponseEntity<List<ScheduleEventDTO>> getProgramAndTaskByIntern(@PathVariable Integer internId) {
         return ResponseEntity.ok(programService.getProgramByInternId(internId));

@@ -117,6 +117,24 @@ CREATE TABLE mentor_program (
     FOREIGN KEY (program_id) REFERENCES programs(program_id),
     FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
 );
+CREATE TABLE program_events (
+    event_id        INT AUTO_INCREMENT PRIMARY KEY,
+    program_id      INT NOT NULL,                              -- FK tới programs
+    title           VARCHAR(200) NOT NULL,                     -- tên sự kiện
+    location        VARCHAR(200),                              -- địa điểm (tuỳ chọn)
+    event_date      DATE NOT NULL,                    -- ngày diễn ra
+    start_time      TIME NOT NULL,                    -- giờ bắt đầu
+    end_time        TIME NOT NULL,                    -- giờ kết thúc (cùng ngày)
+    description     TEXT,                                      -- mô tả chi tiết
+
+    -- Ràng buộc khóa ngoại: khi xóa chương trình thì xóa luôn sự kiện (CASCADE)
+    CONSTRAINT fk_program_events_program
+        FOREIGN KEY (program_id) REFERENCES programs(program_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    -- Tránh trùng lặp tiêu đề trong cùng một chương trình
+    CONSTRAINT uq_program_event_title UNIQUE (program_id, title)
+);
 CREATE TABLE teams (
 	team_id INT AUTO_INCREMENT PRIMARY KEY,
     program_id INT,
