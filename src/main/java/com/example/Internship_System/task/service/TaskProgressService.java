@@ -22,11 +22,11 @@ public class TaskProgressService {
     public Optional<TaskProgress> findById(int id) {
         return repository.findById(id);
     }
-
+@SuppressWarnings("unused")
     public Optional<TaskProgress> findByTaskId(int taskId) {
         return repository.findByTaskId(taskId);
     }
-
+@SuppressWarnings("unused")
     public List<TaskProgress> findAllByTaskId(int taskId) {
         return repository.findAllByTaskId(taskId);
     }

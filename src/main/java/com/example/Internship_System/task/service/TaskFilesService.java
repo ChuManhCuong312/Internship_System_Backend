@@ -20,7 +20,7 @@ public class TaskFilesService {
     public Optional<TaskFiles> findById(int id) {
         return repository.findById(id);
     }
-
+@SuppressWarnings("unused")
     public List<TaskFiles> findByTaskId(int taskId) {
         return repository.findByTaskId(taskId);
     }

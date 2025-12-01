@@ -1,7 +1,12 @@
 package com.example.Internship_System.task.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 public class TaskDTO {
     private int taskId;
     private int programId;
@@ -19,6 +24,7 @@ public class TaskDTO {
 
     public TaskDTO() {}
 
+    @SuppressWarnings("unused")
     public TaskDTO(int taskId, int programId, String programName, String title, String description, 
                    String assignedBy, String status, LocalDateTime createdAt, 
                    LocalDateTime deadline, boolean dueSoon, String priority, int mentorId, String mentorName) {
@@ -37,107 +43,4 @@ public class TaskDTO {
         this.mentorName = mentorName;
     }
 
-    public String getProgramName() {
-        return programName;
-    }
-
-    public void setProgramName(String programName) {
-        this.programName = programName;
-    }
-
-    public String getMentorName() {
-        return mentorName;
-    }
-
-    public void setMentorName(String mentorName) {
-        this.mentorName = mentorName;
-    }
-
-    public int getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
-    }
-
-    public int getProgramId() {
-        return programId;
-    }
-
-    public void setProgramId(int programId) {
-        this.programId = programId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAssignedBy() {
-        return assignedBy;
-    }
-
-    public void setAssignedBy(String assignedBy) {
-        this.assignedBy = assignedBy;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public boolean isDueSoon() {
-        return dueSoon;
-    }
-
-    public void setDueSoon(boolean dueSoon) {
-        this.dueSoon = dueSoon;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public int getMentorId() {
-        return mentorId;
-    }
-
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
-    }
 }

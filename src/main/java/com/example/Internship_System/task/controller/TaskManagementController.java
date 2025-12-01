@@ -16,16 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * TaskManagementController handles all operations for Section 4: TASK MANAGEMENT
- * This includes:
- * - Task Progress Management
- * - Task Files Management
- * - Task Team Assignments
- */
 @RestController
 @RequestMapping("/api/task-management")
 @CrossOrigin(origins = "*")
+@SuppressWarnings("unused")
 public class TaskManagementController {
 
     @Autowired

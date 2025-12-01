@@ -1,7 +1,12 @@
 package com.example.Internship_System.task.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Setter
+@Getter
 public class PaginatedTaskDTO {
     private List<TaskDTO> data;
     private int totalTasks;
@@ -9,6 +14,7 @@ public class PaginatedTaskDTO {
     private int pageSize;
     private int totalPages;
 
+    @SuppressWarnings("unused")
     public PaginatedTaskDTO() {
     }
 
@@ -20,43 +26,4 @@ public class PaginatedTaskDTO {
         this.totalPages = (int) Math.ceil((double) totalTasks / pageSize);
     }
 
-    public List<TaskDTO> getData() {
-        return data;
-    }
-
-    public void setData(List<TaskDTO> data) {
-        this.data = data;
-    }
-
-    public int getTotalTasks() {
-        return totalTasks;
-    }
-
-    public void setTotalTasks(int totalTasks) {
-        this.totalTasks = totalTasks;
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
 }
