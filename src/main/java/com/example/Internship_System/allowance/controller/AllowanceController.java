@@ -7,7 +7,6 @@ import com.example.Internship_System.allowance.entity.Allowance;
 import com.example.Internship_System.allowance.service.AllowanceService;
 import com.example.Internship_System.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +57,7 @@ public class AllowanceController {
             if (sortBy != null && !sortBy.isEmpty()) {
                 allowances = allowances.stream()
                         .sorted((a, b) -> {
-                            int comparison = 0;
+                            int comparison;
                             switch (sortBy.toLowerCase()) {
                                 case "allowanceid" -> comparison = Integer.compare(a.getAllowanceId(), b.getAllowanceId());
                                 case "internid" -> comparison = Integer.compare(a.getInternId(), b.getInternId());
