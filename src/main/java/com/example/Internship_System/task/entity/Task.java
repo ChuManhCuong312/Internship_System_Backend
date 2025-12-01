@@ -2,6 +2,11 @@ package com.example.Internship_System.task.entity;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -36,93 +41,4 @@ public class Task {
     private String priority;
     @Column(name = "mentorId", nullable = false)
     private int mentorId;
-
-
-    public int getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAssignedBy() {
-        return assignedBy;
-    }
-
-    public void setAssignedBy(String assignedBy) {
-        this.assignedBy = assignedBy;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getMentorId() {
-        return mentorId;
-    }
-
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public int getProgramId() {
-        return programId;
-    }
-
-    public void setProgramId(int programId) {
-        this.programId = programId;
-    }
-
-    public boolean isDue_soon() {
-        return due_soon;
-    }
-
-    public void setDue_soon(boolean due_soon) {
-        this.due_soon = due_soon;
-    }
-
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
-    }
 }
