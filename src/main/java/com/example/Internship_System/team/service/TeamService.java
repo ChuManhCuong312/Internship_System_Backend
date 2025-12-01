@@ -3,13 +3,10 @@ package com.example.Internship_System.team.service;
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
-import com.example.Internship_System.team.dto.CreateTeamDTO;
+import com.example.Internship_System.team.dto.*;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.entity.ProgramStatus;
 import com.example.Internship_System.repository.*;
-import com.example.Internship_System.team.dto.TeamInfoDTO;
-import com.example.Internship_System.team.dto.TeamInternInfoDTO;
-import com.example.Internship_System.team.dto.UpdateTeamRequestDTO;
 import com.example.Internship_System.team.entity.Team;
 import com.example.Internship_System.team.entity.TeamIntern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,21 +87,13 @@ public class TeamService {
         return teamRepository.save(team);
     }
 
-    public Team createTeam(CreateTeamDTO dto) {
-
+    public TeamResponseDTO createTeam(CreateTeamDTO dto) {
         Program program = programRepository.findById(dto.getProgramId())
                 .orElseThrow(() -> new RuntimeException("Program not found"));
+
         if (program.getProgramStatus() == ProgramStatus.ON_GOING ||
                 program.getProgramStatus() == ProgramStatus.FINISHED) {
-            throw new RuntimeException("Cannot create team for  this program because it is FINISHED.");
-        }
-
-        // Validate max interns
-        int currentInterns = teamInternRepository.countInterns(dto.getProgramId());
-        int incoming = dto.getInternIds().size();
-
-        if (currentInterns + incoming > program.getMaxInterns()) {
-            throw new RuntimeException("Too many interns! Exceeds program max interns.");
+            throw new RuntimeException("Cannot create team for this program because it is FINISHED.");
         }
 
         MentorUser mentor = mentorRepository.findById(dto.getMentorId())
@@ -112,17 +101,9 @@ public class TeamService {
 
         Team team = new Team(program, mentor, LocalDateTime.now());
         Team savedTeam = teamRepository.save(team);
-
-        for (Integer internId : dto.getInternIds()) {
-            InternProfile intern = internRepository.findById(internId)
-                    .orElseThrow(() -> new RuntimeException("Intern not found"));
-
-            TeamIntern ti = new TeamIntern(savedTeam, intern, LocalDateTime.now());
-            teamInternRepository.save(ti);
-        }
-
-        return savedTeam;
+        return new TeamResponseDTO(savedTeam);
     }
+
 
     @Transactional
     public void removeMentorFromProgram(Integer programId, Integer mentorId) {
@@ -173,13 +154,11 @@ public class TeamService {
 
     @Transactional
     public void updateTeam(Integer teamId, UpdateTeamRequestDTO request) {
-
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new RuntimeException("Team not found"));
 
         Program program = team.getProgram();
 
-        // Validate mentor
         boolean mentorInProgram = mentorProgramRepository
                 .existsByProgram_ProgramIdAndMentor_MentorId(
                         program.getProgramId(),
@@ -190,27 +169,29 @@ public class TeamService {
             throw new RuntimeException("Mentor is not assigned to this program");
         }
 
-        // Validate intern count
-        if (request.getInternIds().size() > program.getMaxInterns()) {
-            throw new RuntimeException("Intern list exceeds program max interns");
-        }
-
-        // Update mentor + name
         team.setMentor(mentorRepository.findById(request.getMentorId())
                 .orElseThrow(() -> new RuntimeException("Mentor not found")));
 
-        // Remove old interns
-        teamInternRepository.deleteAllByTeam_TeamId(teamId);
-
-        // Add new interns
-        for (Integer internId : request.getInternIds()) {
-            TeamIntern ti = new TeamIntern();
-            ti.setTeam(team);
-            ti.setIntern(internRepository.findById(internId)
-                    .orElseThrow(() -> new RuntimeException("Intern not found")));
-            teamInternRepository.save(ti);
-        }
-
         teamRepository.save(team);
+    }
+
+
+    public List<MentorInfoDTO> searchMentorsInProgram(Integer programId, String query) {
+        return mentorProgramRepository.searchMentorsInProgram(programId, query)
+                .stream()
+                .map(mp -> {
+                    var mentor = mp.getMentor();
+                    var user = mentor.getUser();
+
+                    return new MentorInfoDTO(
+                            mentor.getMentorId(),
+                            user.getFullName(),
+                            user.getEmail(),
+                            user.getPhone(),
+                            mentor.getDepartment(),
+                            mentor.getExpertise()
+                    );
+                })
+                .toList();
     }
 }
