@@ -34,11 +34,11 @@ public class CloudinaryService {
     public Map<String, Object> delete(String publicId) throws IOException {
         return (Map<String, Object>) cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
     }
-
+@SuppressWarnings("unused")
     public String getImageUrl(String publicId) {
         return cloudinary.url().generate(publicId);
     }
-
+@SuppressWarnings("unused")
     public String getImageUrl(String publicId, int width, int height) {
         return cloudinary.url()
                 .transformation(new com.cloudinary.Transformation()

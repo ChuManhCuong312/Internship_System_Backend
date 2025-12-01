@@ -392,7 +392,7 @@ public class CloudinaryController {
 
     /**
      * Extract public ID from Cloudinary URL
-     * Example: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/filename.jpg
+     * Example: <a href="https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/filename.jpg">...</a>
      * Returns: folder/filename
      */
     private String extractPublicIdFromUrl(String url) {
