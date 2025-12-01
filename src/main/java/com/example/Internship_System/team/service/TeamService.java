@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -193,5 +194,17 @@ public class TeamService {
                     );
                 })
                 .toList();
+    }
+    public List<TeamSimpleDTO> getSimpleTeamsByProgram(Integer programId) {
+        List<Team> teams = teamRepository.findByProgramProgramId(programId);
+
+        return teams.stream().map(team -> {
+            TeamSimpleDTO dto = new TeamSimpleDTO();
+            dto.setTeam_id(team.getTeamId());
+            dto.setTeam_name("Nhóm " + team.getTeamId()); // Nếu muốn tên nhóm tùy biến
+            int memberCount = teamInternRepository.countByTeamId(team.getTeamId());
+            dto.setMember_count(memberCount);
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

@@ -132,4 +132,8 @@ public class TeamController {
     ) {
         return teamService.searchMentorsInProgram(programId, query);
     }
+    @GetMapping("/by-program/{programId}")
+    public List<TeamSimpleDTO> getTeamsByProgram(@PathVariable Integer programId) {
+        return teamService.getSimpleTeamsByProgram(programId);
+    }
 }
