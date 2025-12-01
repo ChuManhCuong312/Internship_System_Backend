@@ -37,12 +37,12 @@ public class AllowanceService {
     public List<Allowance> findAll() {
         return repository.findAll();
     }
-
+    @SuppressWarnings("unused")
     public List<Allowance> findAllSorted(String sortBy, String direction) {
         Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         return repository.findAll(Sort.by(sortDirection, sortBy));
     }
-
+    @SuppressWarnings("unused")
     public Page<Allowance> findAllPaginated(int page, int size, String sortBy, String direction) {
         Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
@@ -61,7 +61,7 @@ public class AllowanceService {
     public List<Allowance> findByInternId(int internId) {
         return repository.findByInternId(internId);
     }
-
+    @SuppressWarnings("unused")
     public List<Allowance> findByInternIdSorted(int internId, String sortBy, String direction) {
         Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         List<Allowance> allowances = repository.findByInternId(internId);
@@ -107,9 +107,7 @@ public class AllowanceService {
         Optional<InternProfile> internProfile = internRepository.findById(allowance.getInternId());
         if (internProfile.isPresent()) {
             Optional<User> user = userRepository.findById(internProfile.get().getUserId());
-            if (user.isPresent()) {
-                dto.setInternName(user.get().getFullName());
-            }
+            user.ifPresent(value -> dto.setInternName(value.getFullName()));
         }
 
         return dto;
@@ -126,14 +124,14 @@ public class AllowanceService {
                 .map(this::convertToDTO)
                 .toList();
     }
-
+    @SuppressWarnings("unused")
     public List<AllowanceDTO> filterAllowancesWithInternNames(Integer internId, String type, BigDecimal minAmount,
                                                                BigDecimal maxAmount, LocalDate startDate, LocalDate endDate) {
         return repository.filterAllowances(internId, type, minAmount, maxAmount, startDate, endDate).stream()
                 .map(this::convertToDTO)
                 .toList();
     }
-
+@SuppressWarnings("unused")
     public List<InternProfile> searchInternsByName(String name) {
         return internRepository.searchInternsByName(name);
     }
