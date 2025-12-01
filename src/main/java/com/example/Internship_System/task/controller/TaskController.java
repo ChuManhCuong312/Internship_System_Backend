@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
+
+import com.example.Internship_System.repository.TaskProgressRepository;
+import com.example.Internship_System.task.entity.TaskProgress;
+import com.example.Internship_System.task.dto.ProgressRequest;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -18,6 +23,9 @@ import java.util.Optional;
 public class TaskController {
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private TaskProgressRepository taskProgressRepository;
 
     //CREATE - Add new task
     @PostMapping

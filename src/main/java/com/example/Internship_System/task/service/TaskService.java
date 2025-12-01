@@ -45,6 +45,18 @@ public class TaskService {
         return repository.findByProgramId(programId);
     }
 
+    public List<Task> findByInternId(int internId) {
+        return repository.findByInternId(internId);
+    }
+
+    public Optional<Task> findById(int taskId) {
+        return repository.findById(taskId);
+    }
+
+    public Task saveAndFlush(Task task) {
+        return repository.saveAndFlush(task);
+    }
+
     public void deleteById(int id) {
         repository.deleteById(id);
     }
