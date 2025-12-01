@@ -79,7 +79,7 @@ public class TaskService {
         dto.setProgramId(task.getProgramId());
         dto.setTitle(task.getTitle());
         dto.setDescription(task.getDescription());
-        dto.setAssignedBy(task.getAssignedBy());
+        dto.setAssignedBy(task.getAssignedBy() != null ? task.getAssignedBy().toString() : null);
         dto.setStatus(task.getStatus());
         dto.setCreatedAt(task.getCreated_at());
         dto.setDeadline(task.getDeadline());
