@@ -45,11 +45,11 @@ public class TaskService {
     public Optional<Task> findById(int id) {
         return repository.findById(id);
     }
-
+@SuppressWarnings("unused")
     public List<Task> findByMentorId(int mentorId) {
         return repository.findByMentorId(mentorId);
     }
-
+@SuppressWarnings("unused")
     public List<Task> findByProgramId(int programId) {
         return repository.findByProgramId(programId);
     }
@@ -57,17 +57,17 @@ public class TaskService {
     public void deleteById(int id) {
         repository.deleteById(id);
     }
-
+@SuppressWarnings("unused")
     public List<Task> findAllSorted(String sortBy, String direction) {
         Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         return repository.findAll(Sort.by(sortDirection, sortBy));
     }
-
+@SuppressWarnings("unused")
     public List<Task> filterTasks(Integer mentorId, Integer programId, String status, 
                                  String priority, LocalDateTime startDate, LocalDateTime endDate) {
         return repository.filterTasks(mentorId, programId, status, priority, startDate, endDate);
     }
-
+@SuppressWarnings("unused")
     private int compareByField(Task a, Task b, String field) {
         return switch (field.toLowerCase()) {
             case "taskid" -> Integer.compare(a.getTaskId(), b.getTaskId());
@@ -88,7 +88,7 @@ public class TaskService {
         dto.setProgramId(task.getProgramId());
         dto.setTitle(task.getTitle());
         dto.setDescription(task.getDescription());
-        dto.setAssignedBy(task.getAssignedBy());
+        dto.setAssignedBy(task.getAssignedBy() != null ? task.getAssignedBy().toString() : null);
         dto.setStatus(task.getStatus());
         dto.setCreatedAt(task.getCreated_at());
         dto.setDeadline(task.getDeadline());

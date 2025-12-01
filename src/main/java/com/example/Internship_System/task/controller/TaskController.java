@@ -15,6 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/tasks")
 @CrossOrigin(origins = "*")
+@SuppressWarnings("unused")
 public class TaskController {
     @Autowired
     private TaskService taskService;
@@ -43,7 +44,7 @@ public class TaskController {
             if (sortBy != null && !sortBy.isEmpty()) {
                 tasks = tasks.stream()
                         .sorted((a, b) -> {
-                            int comparison = 0;
+                            int comparison;
                             switch (sortBy.toLowerCase()) {
                                 case "taskid" -> comparison = Integer.compare(a.getTaskId(), b.getTaskId());
                                 case "mentorid" -> comparison = Integer.compare(a.getMentorId(), b.getMentorId());

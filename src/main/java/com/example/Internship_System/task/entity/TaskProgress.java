@@ -3,8 +3,13 @@ package com.example.Internship_System.task.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "task_progress")
 public class TaskProgress {
@@ -26,9 +31,9 @@ public class TaskProgress {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
+    @SuppressWarnings("unused")
     public TaskProgress() {}
-
+@SuppressWarnings("unused")
     public TaskProgress(int taskId, int percentComplete, String note) {
         this.taskId = taskId;
         this.percentComplete = percentComplete;
@@ -36,43 +41,4 @@ public class TaskProgress {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public int getProgressId() {
-        return progressId;
-    }
-
-    public void setProgressId(int progressId) {
-        this.progressId = progressId;
-    }
-
-    public int getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
-    }
-
-    public int getPercentComplete() {
-        return percentComplete;
-    }
-
-    public void setPercentComplete(int percentComplete) {
-        this.percentComplete = percentComplete;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }
