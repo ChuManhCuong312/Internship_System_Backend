@@ -27,4 +27,5 @@ public interface TeamInternRepository extends JpaRepository<TeamIntern, Integer>
     TeamIntern findByInternId(@Param("internId") Integer internId);
     @Query("SELECT COUNT(ti) FROM TeamIntern ti WHERE ti.team.teamId = :teamId")
     int countByTeamId(@Param("teamId") Integer teamId);
+    List<TeamIntern> findByTeam_TeamId(Integer teamId);
 }
