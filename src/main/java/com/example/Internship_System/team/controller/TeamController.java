@@ -55,6 +55,11 @@ public class TeamController {
         return mentorProgramService.getProgramMentorInfo(programId);
     }
 
+    @GetMapping("/teams/{teamId}/mentor")
+    public MentorInfoDTO getMentorForTeam(@PathVariable Integer teamId) {
+        return mentorProgramService.getMentorByTeam(teamId);
+    }
+
     @GetMapping("/mentors/search")
     public List<MentorInfoDTO> searchMentor(@RequestParam String name) {
         return mentorRepository.searchMentorByName(name)
@@ -131,5 +136,26 @@ public class TeamController {
             @RequestParam("q") String query
     ) {
         return teamService.searchMentorsInProgram(programId, query);
+    }
+
+    @GetMapping("/search")
+    public List<InternSearchDTO> searchInterns(
+            @RequestParam String keyword
+    ) {
+        return teamService.searchAvailableInterns(keyword);
+    }
+
+    @PostMapping("/{programId}/{teamId}/add-intern")
+    public String addInternToTeam(
+            @PathVariable Integer programId,
+            @PathVariable Integer teamId,
+            @RequestParam Integer internId
+    ) {
+        return teamService.addInternToTeam(programId, teamId, internId);
+    }
+
+    @GetMapping("/{teamId}/interns")
+    public List<InternDetailDTO> getInternsInTeam(@PathVariable Integer teamId) {
+        return teamService.getInternsByTeam(teamId);
     }
 }
