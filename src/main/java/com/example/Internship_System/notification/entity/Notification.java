@@ -1,8 +1,13 @@
 package com.example.Internship_System.notification.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "notifications")
 public class Notification {
@@ -30,6 +35,7 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @SuppressWarnings("unused")
     public Notification() {
     }
 
@@ -42,59 +48,4 @@ public class Notification {
         this.createdAt = LocalDateTime.now();
     }
 
-    public int getNotificationId() {
-        return notificationId;
-    }
-
-    public void setNotificationId(int notificationId) {
-        this.notificationId = notificationId;
-    }
-
-    public int getInternId() {
-        return internId;
-    }
-
-    public void setInternId(int internId) {
-        this.internId = internId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }
