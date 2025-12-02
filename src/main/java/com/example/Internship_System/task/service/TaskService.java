@@ -97,15 +97,24 @@ public class TaskService {
         dto.setPriority(task.getPriority());
         dto.setMentorId(task.getMentorId());
 
-        // Fetch mentor name from User entity
-        Optional<MentorUser> mentor = mentorRepository.findById(task.getMentorId());
-        if (mentor.isPresent() && mentor.get().getUser() != null) {
-            dto.setMentorName(mentor.get().getUser().getFullName());
-        }
+        try {
+            // Fetch mentor name from User entity
+            if (task.getMentorId() > 0) {
+                Optional<MentorUser> mentor = mentorRepository.findById(task.getMentorId());
+                if (mentor.isPresent() && mentor.get().getUser() != null) {
+                    dto.setMentorName(mentor.get().getUser().getFullName());
+                }
+            }
 
-        // Fetch program name
-        Optional<Program> program = programRepository.findById(task.getProgramId());
-        program.ifPresent(p -> dto.setProgramName(p.getName()));
+            // Fetch program name
+            if (task.getProgramId() > 0) {
+                Optional<Program> program = programRepository.findById(task.getProgramId());
+                program.ifPresent(p -> dto.setProgramName(p.getName()));
+            }
+        } catch (Exception e) {
+            // Log error but don't fail - return DTO with partial data
+            System.err.println("Warning: Error fetching mentor/program details for task " + task.getTaskId() + ": " + e.getMessage());
+        }
 
         return dto;
     }
