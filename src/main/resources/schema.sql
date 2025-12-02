@@ -309,7 +309,7 @@ CREATE TABLE HRNotifications (
     is_read BOOLEAN DEFAULT FALSE, -- trong MySQL là TINYINT(1)
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (hr_id) REFERENCES hr_users(hr_id)
-)
+);
 -- Bảng thông báo cho Mentor
 CREATE TABLE MentorNotifications (
     notification_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -320,4 +320,4 @@ CREATE TABLE MentorNotifications (
     is_read BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
-)
+);
