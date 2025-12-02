@@ -1,6 +1,7 @@
 package com.example.Internship_System.task.controller;
 import com.example.Internship_System.task.dto.PaginatedTaskDTO;
 import com.example.Internship_System.task.dto.TaskDTO;
+import com.example.Internship_System.task.dto.TaskStatisticsDTO;
 import com.example.Internship_System.task.entity.Task;
 import com.example.Internship_System.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +144,17 @@ public class TaskController {
         try {
             List<TaskDTO> tasks = taskService.findTasksByIntern(internId);
             return new ResponseEntity<>(tasks, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/intern/{internId}/statistics")
+    public ResponseEntity<?> getTaskStatisticsForIntern(
+            @PathVariable("internId") int internId) {
+        try {
+            TaskStatisticsDTO stats = taskService.getTaskStatisticsForIntern(internId);
+            return new ResponseEntity<>(stats, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -8,6 +8,7 @@ import com.example.Internship_System.repository.TaskRepository;
 import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
 import com.example.Internship_System.repository.TeamInternRepository;
 import com.example.Internship_System.task.dto.TaskDTO;
+import com.example.Internship_System.task.dto.TaskStatisticsDTO;
 import com.example.Internship_System.task.entity.Task;
 import com.example.Internship_System.team.entity.TeamIntern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,5 +157,16 @@ public class TaskService {
         return tasks.stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public TaskStatisticsDTO getTaskStatisticsForIntern(Integer internId) {
+        List<TaskDTO> tasks = findTasksByIntern(internId);
+        
+        int inProgress = (int) tasks.stream().filter(t -> "IN_PROGRESS".equals(t.getStatus())).count();
+        int todo = (int) tasks.stream().filter(t -> "TODO".equals(t.getStatus())).count();
+        int done = (int) tasks.stream().filter(t -> "DONE".equals(t.getStatus())).count();
+        int total = tasks.size();
+        
+        return new TaskStatisticsDTO(inProgress, todo, done, total);
     }
 }
