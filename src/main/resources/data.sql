@@ -207,15 +207,52 @@ INSERT INTO team_intern (team_intern_id, team_id, intern_id, assigned_date) VALU
 
 INSERT INTO tasks (program_id, title, description, assigned_by, priority, status, deadline, due_soon)
 VALUES
-(1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot', 1, 'HIGH', 'IN_PROGRESS', '2025-11-27', FALSE),
-(1, 'Dashboard', 'Biểu đồ thống kê', 1, 'MEDIUM', 'TODO', '2025-11-28', FALSE),
-(1, 'Landing Page', 'Thiết kế giao diện', 2, 'HIGH', 'DONE', '2025-11-29', FALSE);
+(1, 'Xây dựng trang đăng nhập', 'Dùng React + Spring Boot với validation và JWT authentication', 1, 'HIGH', 'IN_PROGRESS', '2025-12-25', FALSE),
+(1, 'Dashboard', 'Biểu đồ thống kê tương tác, dữ liệu real-time từ API', 1, 'MEDIUM', 'TODO', '2025-12-28', FALSE),
+(1, 'Landing Page', 'Thiết kế giao diện responsive cho desktop, tablet, mobile', 2, 'HIGH', 'DONE', '2025-12-20', FALSE),
+(2, 'Phân tích thị trường Facebook Ads', 'Phân tích chi phí, hiệu suất, ROI của các chiến dịch', 2, 'HIGH', 'IN_PROGRESS', '2025-12-27', FALSE),
+(2, 'SEO optimization cho website', 'Tối ưu từ khóa, meta tags, backlinks, sitemap', 2, 'MEDIUM', 'TODO', '2026-01-05', FALSE),
+(3, 'Data cleaning và preprocessing', 'Xử lý missing values, outliers, normalize data từ CSV', 3, 'MEDIUM', 'IN_PROGRESS', '2025-12-26', FALSE),
+(3, 'Power BI Dashboard', 'Tạo dashboard báo cáo bán hàng theo category và region', 3, 'HIGH', 'TODO', '2026-01-08', FALSE);
 
 INSERT INTO task_team_assignments (task_id, team_id)
 VALUES
-(1, 1),
-(2, 1),
-(3, 2);
+(1, 1), -- Task 1 to Team Web
+(2, 1), -- Task 2 to Team Web
+(3, 2), -- Task 3 to Team Marketing
+(4, 2), -- Task 4 to Team Marketing
+(5, 2), -- Task 5 to Team Marketing
+(6, 3), -- Task 6 to Team Data
+(7, 3); -- Task 7 to Team Data
+
+INSERT INTO task_progress (task_id, percent_complete, note, updated_at)
+VALUES
+-- Task 1 (Xây dựng trang đăng nhập) - IN_PROGRESS: 60%
+(1, 20, 'Bắt đầu làm: phân tích yêu cầu và thiết kế database', '2025-12-10 09:00:00'),
+(1, 40, 'Hoàn thành backend API authentication, còn frontend login form', '2025-12-12 14:30:00'),
+(1, 60, 'Giao diện login hoàn thành, đang test validation và error handling', '2025-12-15 10:15:00'),
+
+-- Task 2 (Dashboard) - TODO: 0%
+(2, 0, 'Chưa bắt đầu, chờ hoàn thành task 1', '2025-12-10 08:00:00'),
+
+-- Task 3 (Landing Page) - DONE: 100%
+(3, 30, 'Hoàn thành header, hero section và features section', '2025-11-20 11:00:00'),
+(3, 70, 'Thêm footer, blog section, testimonials, responsive CSS', '2025-11-22 15:30:00'),
+(3, 100, 'Landing page hoàn thành, test responsive trên desktop/tablet/mobile, deploy lên staging', '2025-12-20 16:45:00'),
+
+-- Task 4 (Phân tích Facebook Ads) - IN_PROGRESS: 50%
+(4, 25, 'Tình lên dữ liệu từ 10 chiến dịch, phân tích cost per click', '2025-12-11 09:30:00'),
+(4, 50, 'Tính toán ROI, conversion rate, so sánh các chiến dịch, chuẩn bị báo cáo', '2025-12-14 13:00:00'),
+
+-- Task 5 (SEO optimization) - TODO: 0%
+(5, 0, 'Chưa bắt đầu, lên lịch cho tuần sau', '2025-12-10 08:00:00'),
+
+-- Task 6 (Data cleaning) - IN_PROGRESS: 35%
+(6, 15, 'Import CSV vào Python, kiểm tra structure và data types', '2025-12-12 08:30:00'),
+(6, 35, 'Xử lý missing values (drop/fill), detect và loại bỏ outliers', '2025-12-14 11:00:00'),
+
+-- Task 7 (Power BI Dashboard) - TODO: 0%
+(7, 0, 'Chờ task 6 hoàn thành để lấy dữ liệu clean', '2025-12-10 08:00:00');
 
 INSERT INTO attendance (intern_id, date, check_in, check_out) VALUES
 (1, '2025-02-10', '08:05:00', '17:00:00'),
