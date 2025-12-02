@@ -139,11 +139,11 @@ public class ProgramController {
     public ResponseEntity<List<ScheduleEventDTO>> getProgramAndTaskByIntern(@PathVariable Integer internId) {
         return ResponseEntity.ok(programService.getProgramByInternId(internId));
     }
-    @GetMapping("/mentor/{mentorId}/ongoing")
+    @GetMapping("/mentor/{userId}/ongoing")
     public ResponseEntity<List<ProgramSimpleDTO>> getOngoingProgramsByMentor(
-            @PathVariable Integer mentorId
+            @PathVariable Integer userId
     ) {
-        List<ProgramSimpleDTO> programs = programService.getSimpleProgramListByMentor(mentorId);
+        List<ProgramSimpleDTO> programs = programService.getSimpleProgramListByUser(userId);
         return ResponseEntity.ok(programs);
     }
 

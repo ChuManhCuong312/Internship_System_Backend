@@ -354,11 +354,11 @@ public class ProgramService {
             return ProgramStatus.FINISHED;
         }
     }
-    public List<Program> getOngoingProgramsByMentor(Integer mentorId) {
-        return programRepository.findOngoingProgramsByMentorId(mentorId);
+    public List<Program> getOngoingProgramsByUser(Integer userId) {
+        return programRepository.findOngoingProgramsByMentorUserId(userId);
     }
-    public List<ProgramSimpleDTO> getSimpleProgramListByMentor(Integer mentorId) {
-        List<Program> programs = getOngoingProgramsByMentor(mentorId);
+    public List<ProgramSimpleDTO> getSimpleProgramListByUser(Integer userId) {
+        List<Program> programs = getOngoingProgramsByUser(userId);
 
         return programs.stream().map(p -> {
             ProgramSimpleDTO dto = new ProgramSimpleDTO();
