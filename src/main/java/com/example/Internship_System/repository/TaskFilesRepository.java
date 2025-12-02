@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface TaskFilesRepository extends JpaRepository<TaskFiles, Integer> {
     List<TaskFiles> findByTaskId(int taskId);
+    void deleteByTaskId(int taskId);
 }

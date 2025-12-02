@@ -14,5 +14,7 @@ public interface TaskTeamAssignmentRepository extends JpaRepository<TaskTeamAssi
     List<TaskTeamAssignment> findByTaskId(int taskId);
 
     List<TaskTeamAssignment> findByTeamId(int teamId);
+
+    void deleteByTaskId(int taskId);
 }
 
