@@ -1,13 +1,17 @@
 
 package com.example.Internship_System.evaluation.service;
 
+import com.example.Internship_System.evaluation.DTO.EvaluationRequest;
 import com.example.Internship_System.evaluation.entity.Evaluation;
+import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.repository.EvaluationRepository;
 import com.example.Internship_System.repository.TeamInternRepository;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.team.entity.TeamIntern;
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.repository.UserRepository;
+import com.example.Internship_System.repository.InternRepository;
+import com.example.Internship_System.repository.MentorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,13 +26,19 @@ public class EvaluationService {
     private final TeamInternRepository teamInternRepository;
     private final EvaluationRepository evaluationRepository;
     private final UserRepository userRepository;
+    private final InternRepository internRepository;
+    private final MentorRepository mentorRepository;
 
     public EvaluationService(TeamInternRepository teamInternRepository,
                              EvaluationRepository evaluationRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository,
+                             InternRepository internRepository,
+                             MentorRepository mentorRepository) {
         this.teamInternRepository = teamInternRepository;
         this.evaluationRepository = evaluationRepository;
         this.userRepository = userRepository;
+        this.internRepository = internRepository;
+        this.mentorRepository = mentorRepository;
     }
 
     public TeamInfoDTO buildTeamInfo(Integer teamId) {
@@ -161,4 +171,83 @@ public class EvaluationService {
         public String getNote() { return note; }
         public String getCreated_at() { return created_at; }
     }
+
+    public EvaluationDTO createEvaluation(EvaluationRequest req) {
+
+        InternProfile intern = internRepository.findById(req.getInternId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Intern không tồn tại"));
+
+        MentorUser mentor = mentorRepository.findById(req.getMentorId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mentor không tồn tại"));
+
+        Evaluation e = new Evaluation();
+        e.setIntern(intern);
+        e.setMentorEvaluate(mentor);
+        e.setTitle(req.getTitle());
+        e.setTechnical(req.getTechnical());
+        e.setCommunication(req.getCommunication());
+        e.setDiscipline(req.getDiscipline());
+        e.setAttitude(req.getAttitude());
+        e.setWeight(req.getWeight());
+        e.setNote(req.getNote());
+
+        evaluationRepository.save(e);
+
+        return toDTO(e);
+    }
+    public EvaluationDTO updateEvaluation(Integer id, EvaluationRequest req) {
+
+        Evaluation e = evaluationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation không tồn tại"));
+
+        // Cho phép cập nhật intern/mentor nếu muốn
+        if (req.getInternId() != null) {
+            InternProfile intern = internRepository.findById(req.getInternId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Intern không tồn tại"));
+            e.setIntern(intern);
+        }
+
+        if (req.getMentorId() != null) {
+            MentorUser mentor = mentorRepository.findById(req.getMentorId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mentor không tồn tại"));
+            e.setMentorEvaluate(mentor);
+        }
+
+        e.setTitle(req.getTitle());
+        e.setTechnical(req.getTechnical());
+        e.setCommunication(req.getCommunication());
+        e.setDiscipline(req.getDiscipline());
+        e.setAttitude(req.getAttitude());
+        e.setWeight(req.getWeight());
+        e.setNote(req.getNote());
+
+        evaluationRepository.save(e);
+
+        return toDTO(e);
+    }
+    public void deleteEvaluation(Integer id) {
+        if (!evaluationRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation không tồn tại");
+        }
+        evaluationRepository.deleteById(id);
+    }
+    public EvaluationDTO getById(Integer id) {
+        Evaluation e = evaluationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation không tồn tại"));
+        return toDTO(e);
+    }
+    private EvaluationDTO toDTO(Evaluation e) {
+        return new EvaluationDTO(
+                e.getEvaluationId(),
+                e.getTitle(),
+                e.getTechnical(),
+                e.getCommunication(),
+                e.getDiscipline(),
+                e.getAttitude(),
+                e.getWeight(),
+                e.getNote(),
+                e.getCreatedAt() != null ? e.getCreatedAt().toLocalDate().toString() : null
+        );
+    }
+
 }
