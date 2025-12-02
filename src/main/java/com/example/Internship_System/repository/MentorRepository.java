@@ -16,4 +16,7 @@ public interface MentorRepository extends JpaRepository<MentorUser, Integer> {
 
     @Query("SELECT m FROM MentorUser m WHERE LOWER(m.user.fullName) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<MentorUser> searchMentorByName(@Param("name") String name);
+
+    @Query("SELECT m FROM MentorUser m WHERE m.user.userId = :userId")
+    Optional<MentorUser> findByUserId(@Param("userId") Integer userId);
 }
