@@ -24,7 +24,7 @@ public class InternProfileDTO {
     private String phone;
     private LocalDateTime createdAt;
     private List<String> documents;
-
+@SuppressWarnings("unused")
 public InternProfileDTO(){}
 
     public InternProfileDTO(int internId, int userId, String fullName, String email,
