@@ -27,7 +27,7 @@ public class Task {
             message = "Trạng thái phải hợp lệ")
     @Column(name = "status")
     private String status;
-    @Column(name = "create_at")
+    @Column(name = "created_at")
     private LocalDateTime created_at;
     @Column(name = "deadline")
     @NotNull(message ="Deadline là bắt buộc")
