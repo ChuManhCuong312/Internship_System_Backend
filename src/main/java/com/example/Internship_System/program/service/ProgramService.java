@@ -179,6 +179,7 @@ public class ProgramService {
 
         // Apply updates
         program.setName(request.getName());
+        program.setDepartment(request.getDepartment());
         program.setStartDate(request.getStartDate());
         program.setEndDate(request.getEndDate());
         program.setDetail(request.getDetail());

@@ -243,6 +243,14 @@ public class TeamService {
             throw new RuntimeException("Intern already assigned to another team");
         }
 
+
+        int currentInternCount = teamInternRepository.countInterns(programId);
+        if (currentInternCount >= program.getMaxInterns()) {
+            throw new RuntimeException("Cannot add intern: Program has reached its maximum capacity of "
+                    + program.getMaxInterns() + " interns");
+        }
+
+
         var team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new RuntimeException("Team not found"));
 
