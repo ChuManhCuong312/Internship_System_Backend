@@ -4,16 +4,23 @@ import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.repository.MentorRepository;
 import com.example.Internship_System.repository.ProgramRepository;
+import com.example.Internship_System.repository.TaskFilesRepository;
+import com.example.Internship_System.repository.TaskProgressRepository;
 import com.example.Internship_System.repository.TaskRepository;
 import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
 import com.example.Internship_System.repository.TeamInternRepository;
 import com.example.Internship_System.task.dto.TaskDTO;
 import com.example.Internship_System.task.dto.TaskStatisticsDTO;
+import com.example.Internship_System.task.dto.TaskUpdateRequest;
 import com.example.Internship_System.task.entity.Task;
+import com.example.Internship_System.task.entity.TaskFiles;
+import com.example.Internship_System.task.entity.TaskProgress;
+import com.example.Internship_System.task.entity.TaskTeamAssignment;
 import com.example.Internship_System.team.entity.TeamIntern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -35,6 +42,12 @@ public class TaskService {
     @Autowired
     private TaskTeamAssignmentRepository taskTeamAssignmentRepository;
 
+    @Autowired
+    private TaskFilesRepository taskFilesRepository;
+
+    @Autowired
+    private TaskProgressRepository taskProgressRepository;
+
     public Task save(Task task) {
         return repository.save(task);
     }
@@ -55,8 +68,165 @@ public class TaskService {
         return repository.findByProgramId(programId);
     }
 
+    @Transactional
     public void deleteById(int id) {
+        // Xóa các bản ghi liên quan trước khi xóa task
+        taskTeamAssignmentRepository.deleteByTaskId(id);
+        taskFilesRepository.deleteByTaskId(id);
+        taskProgressRepository.deleteByTaskId(id);
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public Task updateTask(int id, Task taskUpdate) {
+        Task existingTask = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task không tồn tại với id: " + id));
+        
+        // Cập nhật các trường từ request, giữ nguyên các trường không được gửi
+        if (taskUpdate.getTitle() != null) {
+            existingTask.setTitle(taskUpdate.getTitle());
+        }
+        if (taskUpdate.getDescription() != null) {
+            existingTask.setDescription(taskUpdate.getDescription());
+        }
+        if (taskUpdate.getStatus() != null) {
+            existingTask.setStatus(taskUpdate.getStatus());
+        }
+        if (taskUpdate.getPriority() != null) {
+            existingTask.setPriority(taskUpdate.getPriority());
+        }
+        if (taskUpdate.getDeadline() != null) {
+            existingTask.setDeadline(taskUpdate.getDeadline());
+        }
+        if (taskUpdate.getProgramId() != 0) {
+            existingTask.setProgramId(taskUpdate.getProgramId());
+        }
+        if (taskUpdate.getMentorId() != 0) {
+            existingTask.setMentorId(taskUpdate.getMentorId());
+        }
+        if (taskUpdate.getAssignedBy() != null) {
+            existingTask.setAssignedBy(taskUpdate.getAssignedBy());
+        }
+        existingTask.setDue_soon(taskUpdate.isDue_soon());
+        
+        return repository.save(existingTask);
+    }
+
+    /**
+     * Tạo task mới với đầy đủ thông tin liên quan (teams, files, progress)
+     * Xử lý tất cả trong 1 transaction
+     */
+    @Transactional
+    public Task createTaskFull(TaskUpdateRequest request) {
+        // 1. Tạo task
+        Task task = new Task();
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+        task.setStatus(request.getStatus() != null ? request.getStatus() : "TODO");
+        task.setPriority(request.getPriority() != null ? request.getPriority() : "MEDIUM");
+        task.setDeadline(request.getDeadline());
+        task.setProgramId(request.getProgramId());
+        task.setMentorId(request.getMentorId());
+        task.setAssignedBy(request.getAssignedBy());
+        task.setDue_soon(request.isDueSoon());
+        task.setCreated_at(LocalDateTime.now());
+        
+        Task savedTask = repository.save(task);
+        int taskId = savedTask.getTaskId();
+        
+        // 2. Gán teams
+        if (request.getTeamIds() != null && !request.getTeamIds().isEmpty()) {
+            for (Integer teamId : request.getTeamIds()) {
+                TaskTeamAssignment assignment = new TaskTeamAssignment();
+                assignment.setTaskId(taskId);
+                assignment.setTeamId(teamId);
+                taskTeamAssignmentRepository.save(assignment);
+            }
+        }
+        
+        // 3. Thêm files
+        if (request.getFileLinks() != null && !request.getFileLinks().isEmpty()) {
+            for (String link : request.getFileLinks()) {
+                TaskFiles file = new TaskFiles(taskId, link);
+                taskFilesRepository.save(file);
+            }
+        }
+        
+        // 4. Tạo progress ban đầu
+        if (request.getProgressPercent() != null) {
+            TaskProgress progress = new TaskProgress(taskId, request.getProgressPercent(), request.getProgressNote());
+            taskProgressRepository.save(progress);
+        }
+        
+        return savedTask;
+    }
+
+    /**
+     * Cập nhật task với đầy đủ thông tin liên quan (teams, files, progress)
+     * Xử lý tất cả trong 1 transaction
+     */
+    @Transactional
+    public Task updateTaskFull(int id, TaskUpdateRequest request) {
+        Task existingTask = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task không tồn tại với id: " + id));
+        
+        // 1. Cập nhật task info
+        if (request.getTitle() != null) {
+            existingTask.setTitle(request.getTitle());
+        }
+        if (request.getDescription() != null) {
+            existingTask.setDescription(request.getDescription());
+        }
+        if (request.getStatus() != null) {
+            existingTask.setStatus(request.getStatus());
+        }
+        if (request.getPriority() != null) {
+            existingTask.setPriority(request.getPriority());
+        }
+        if (request.getDeadline() != null) {
+            existingTask.setDeadline(request.getDeadline());
+        }
+        if (request.getProgramId() != 0) {
+            existingTask.setProgramId(request.getProgramId());
+        }
+        if (request.getMentorId() != 0) {
+            existingTask.setMentorId(request.getMentorId());
+        }
+        if (request.getAssignedBy() != null) {
+            existingTask.setAssignedBy(request.getAssignedBy());
+        }
+        existingTask.setDue_soon(request.isDueSoon());
+        
+        Task savedTask = repository.save(existingTask);
+        
+        // 2. Cập nhật team assignments (nếu có gửi teamIds)
+        if (request.getTeamIds() != null) {
+            taskTeamAssignmentRepository.deleteByTaskId(id);
+            for (Integer teamId : request.getTeamIds()) {
+                TaskTeamAssignment assignment = new TaskTeamAssignment();
+                assignment.setTaskId(id);
+                assignment.setTeamId(teamId);
+                taskTeamAssignmentRepository.save(assignment);
+            }
+        }
+        
+        // 3. Cập nhật files (nếu có gửi fileLinks)
+        if (request.getFileLinks() != null) {
+            taskFilesRepository.deleteByTaskId(id);
+            for (String link : request.getFileLinks()) {
+                TaskFiles file = new TaskFiles(id, link);
+                taskFilesRepository.save(file);
+            }
+        }
+        
+        // 4. Cập nhật progress (nếu có gửi progressPercent)
+        if (request.getProgressPercent() != null) {
+            taskProgressRepository.deleteByTaskId(id);
+            TaskProgress progress = new TaskProgress(id, request.getProgressPercent(), request.getProgressNote());
+            taskProgressRepository.save(progress);
+        }
+        
+        return savedTask;
     }
 @SuppressWarnings("unused")
     public List<Task> findAllSorted(String sortBy, String direction) {

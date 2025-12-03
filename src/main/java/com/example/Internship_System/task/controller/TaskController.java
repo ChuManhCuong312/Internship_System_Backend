@@ -2,6 +2,7 @@ package com.example.Internship_System.task.controller;
 import com.example.Internship_System.task.dto.PaginatedTaskDTO;
 import com.example.Internship_System.task.dto.TaskDTO;
 import com.example.Internship_System.task.dto.TaskStatisticsDTO;
+import com.example.Internship_System.task.dto.TaskUpdateRequest;
 import com.example.Internship_System.task.entity.Task;
 import com.example.Internship_System.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    //CREATE - Add new task
+    //CREATE - Add new task with full related data (teams, files, progress)
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task){
+    public ResponseEntity<Task> createTask(@RequestBody TaskUpdateRequest request){
         try{
-            Task savedTask = taskService.save(task);
+            Task savedTask = taskService.createTaskFull(request);
             return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -161,36 +162,14 @@ public class TaskController {
         }
     }
 
-    //UPDATE - Update task
+    //UPDATE - Update task with full related data (teams, files, progress) in one request
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable int id, @RequestBody Task task){
+    public ResponseEntity<Task> updateTask(@PathVariable int id, @RequestBody TaskUpdateRequest request){
         try{
-            Optional<Task> existingTask = taskService.findById(id);
-            if(existingTask.isPresent()){
-                task.setTaskId(id);
-                Task updatedTask = taskService.save(task);
-                return new ResponseEntity<>(updatedTask, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //UPDATE - Update task status
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<Task> updateTaskStatus(@PathVariable int id, @RequestBody String status){
-        try{
-            Optional<Task> existingTask = taskService.findById(id);
-            if(existingTask.isPresent()){
-                Task task = existingTask.get();
-                task.setStatus(status);
-                Task updatedTask = taskService.save(task);
-                return new ResponseEntity<>(updatedTask, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            Task updatedTask = taskService.updateTaskFull(id, request);
+            return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+        } catch (RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
