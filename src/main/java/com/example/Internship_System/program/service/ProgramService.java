@@ -234,9 +234,8 @@ public class ProgramService {
                 .orElseThrow(() -> new RuntimeException("Program not found"));
 
         // ❌ Block assignment if program is ongoing or finished
-        if (program.getProgramStatus() == ProgramStatus.ON_GOING ||
-                program.getProgramStatus() == ProgramStatus.FINISHED) {
-            throw new RuntimeException("Cannot assign mentor because the program is ON_GOING or FINISHED.");
+        if (program.getProgramStatus() == ProgramStatus.FINISHED) {
+            throw new RuntimeException("Cannot assign mentor because the program is FINISHED.");
         }
 
         MentorUser mentor = mentorRepository.findById(mentorId)

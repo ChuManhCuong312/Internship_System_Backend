@@ -219,8 +219,8 @@ public class TeamService {
         var program = programRepository.findById(programId)
                 .orElseThrow(() -> new RuntimeException("Program not found"));
 
-        if (!program.getProgramStatus().equals(ProgramStatus.UPCOMING)) {
-            throw new RuntimeException("Intern can only be added when program is UPCOMING");
+        if (program.getProgramStatus().equals(ProgramStatus.FINISHED)) {
+            throw new RuntimeException("Intern can only be added when program is UPCOMING or ON_GOING");
         }
 
         if (teamInternRepository.isInternInProgram(internId, programId)) {
