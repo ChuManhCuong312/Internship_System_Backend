@@ -5,6 +5,7 @@ import com.example.Internship_System.task.dto.TaskProgressDTO;
 import com.example.Internship_System.task.entity.TaskProgress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,11 @@ public class TaskProgressService {
 
     public void deleteById(int id) {
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteByTaskId(int taskId) {
+        repository.deleteByTaskId(taskId);
     }
 
     private TaskProgressDTO convertToDTO(TaskProgress taskProgress) {

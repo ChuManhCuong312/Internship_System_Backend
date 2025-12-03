@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface TaskProgressRepository extends JpaRepository<TaskProgress, Integer> {
     Optional<TaskProgress> findByTaskId(int taskId);
     List<TaskProgress> findAllByTaskId(int taskId);
+    void deleteByTaskId(int taskId);
 }
