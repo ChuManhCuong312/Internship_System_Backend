@@ -179,20 +179,23 @@ VALUES
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES
 (1, 'Thực tập lập trình Web', 'CNTT', '2025-09-25', '2025-12-25', 'ON_GOING', 10),
-(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-12-25', '2026-01-25', 'UPCOMING', 8),
+(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-11-25', '2026-01-25', 'ON_GOING', 8),
 (3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-12-25', '2026-01-25', 'UPCOMING', 6);
 
 -- Gán mentor cho program
 INSERT INTO mentor_program (mentor_program_id, program_id, mentor_id, assigned_date) VALUES
 (1, 1, 1, NOW()),
-(2, 2, 2, NOW()),
+(2, 2, 1, NOW()),
 (3, 3, 3, NOW());
 
 -- Tạo teams (thay thế intern_program)
 INSERT INTO teams (team_id, program_id, mentor_id, assigned_date) VALUES
 (1, 1, 1, NOW()), -- Team lập trình Web
 (2, 2, 2, NOW()), -- Team Marketing
-(3, 3, 3, NOW()); -- Team Data
+(3, 1, 1, NOW()), -- Team lập trình Web
+(4, 2, 2, NOW()), -- Team Marketing
+(5, 1, 1, NOW()), -- Team lập trình Web
+(6, 3, 3, NOW()); -- Team Data
 
 -- Gán intern vào teams
 INSERT INTO team_intern (team_intern_id, team_id, intern_id, assigned_date) VALUES
@@ -282,11 +285,17 @@ INSERT INTO support_requests (intern_id, description, file_path, status, created
 (5, 'Thắc mắc về phụ cấp tháng 2',NULL, 'RESOLVED', NOW()),
 (7, 'Xin nghỉ phép 1 ngày',NULL, 'OPEN', NOW());
 
-INSERT INTO evaluations (intern_id, mentor_id, technical, communication, discipline, attitude, note) VALUES
-(1, 1, 9, 8, 9, 9, 'Thực tập sinh chăm chỉ, hoàn thành tốt công việc'),
-(3, 1, 8, 8, 9, 8, 'Tốt, cần cải thiện tốc độ xử lý'),
-(5, 3, 9, 9, 8, 9, 'Hiểu dữ liệu tốt, cần luyện kỹ năng trình bày'),
-(7, 2, 8, 8, 8, 9, 'Thực hiện đầy đủ yêu cầu của mentor');
+INSERT INTO evaluations
+(intern_id, mentor_evaluate_id, title, technical, communication, discipline, attitude, weight, note)
+VALUES
+(1, 1, 'Đánh giá cuối kì', 9, 8, 9, 9, 50, 'Thực tập sinh chăm chỉ, hoàn thành tốt công việc'),
+(3, 1, 'Đánh giá cuối kì', 8, 8, 9, 8, 50, 'Tốt, cần cải thiện tốc độ xử lý'),
+(5, 3, 'Đánh giá cuối kì', 9, 9, 8, 9, 50, 'Hiểu dữ liệu tốt, cần luyện kỹ năng trình bày'),
+(7, 2, 'Đánh giá cuối kì', 8, 8, 8, 9, 50, 'Thực hiện đầy đủ yêu cầu của mentor'),
+(1, 1, 'Đánh giá giữa kì', 6, 8, 3, 7, 25, 'Thực tập sinh chăm chỉ, hoàn thành tốt '),
+(3, 1, 'Đánh giá giữa kì', 8, 6, 9, 7, 25, 'Thực tập sinh chăm chỉ, hoàn thành tốt'),
+(5, 3, 'Đánh giá giữa kì', 9, 7, 8, 8, 25, 'Thực tập sinh chăm chỉ, hoàn thành tốt'),
+(7, 2, 'Đánh giá giữa kì', 5, 8, 7, 6, 25, 'Thực tập sinh chăm chỉ, hoàn thành tốt');
 
 INSERT INTO admin_logs (details) VALUES
 (' Admin tạo HR01 với role HR'),

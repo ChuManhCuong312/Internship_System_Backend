@@ -249,15 +249,17 @@ CREATE TABLE support_requests (
 CREATE TABLE evaluations (
     evaluation_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
-    mentor_id INT,
-    technical INT CHECK (technical BETWEEN 0 AND 10),
-    communication INT CHECK (communication BETWEEN 0 AND 10),
-    discipline INT CHECK (discipline BETWEEN 0 AND 10),
-    attitude INT CHECK (attitude BETWEEN 0 AND 10),
+    mentor_evaluate_id INT,
+    title VARCHAR(255) NOT NULL,
+    technical DOUBLE CHECK (technical BETWEEN 0 AND 10),
+    communication DOUBLE CHECK (communication BETWEEN 0 AND 10),
+    discipline DOUBLE CHECK (discipline BETWEEN 0 AND 10),
+    attitude DOUBLE CHECK (attitude BETWEEN 0 AND 10),
+    weight INT CHECK (weight BETWEEN 0 AND 100),
     note TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id),
-    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
+    FOREIGN KEY (mentor_evaluate_id) REFERENCES mentor_users(mentor_id)
 );
 
 -- ======================================

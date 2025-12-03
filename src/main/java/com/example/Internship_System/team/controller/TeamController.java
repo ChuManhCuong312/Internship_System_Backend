@@ -158,4 +158,8 @@ public class TeamController {
     public List<InternDetailDTO> getInternsInTeam(@PathVariable Integer teamId) {
         return teamService.getInternsByTeam(teamId);
     }
+    @GetMapping("/by-program/{programId}")
+    public List<TeamSimpleDTO> getTeamsByProgram(@PathVariable Integer programId) {
+        return teamService.getSimpleTeamsByProgram(programId);
+    }
 }

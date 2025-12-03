@@ -196,6 +196,18 @@ public class TeamService {
                 })
                 .toList();
     }
+    public List<TeamSimpleDTO> getSimpleTeamsByProgram(Integer programId) {
+        List<Team> teams = teamRepository.findByProgramProgramId(programId);
+
+        return teams.stream().map(team -> {
+            TeamSimpleDTO dto = new TeamSimpleDTO();
+            dto.setTeam_id(team.getTeamId());
+            dto.setTeam_name("Nhóm " + team.getTeamId()); // Nếu muốn tên nhóm tùy biến
+            int memberCount = teamInternRepository.countByTeamId(team.getTeamId());
+            dto.setMember_count(memberCount);
+            return dto;
+        }).collect(Collectors.toList());
+    }
 
     public List<InternSearchDTO> searchAvailableInterns(String keyword) {
         List<InternProfile> interns = teamInternRepository.searchAvailableInterns(keyword);
