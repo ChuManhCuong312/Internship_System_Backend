@@ -67,4 +67,5 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
             "FROM InternProfile i JOIN User u ON i.userId = u.userId " +
             "WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<InternSearchDTO> searchInternsByNameForAllowance(@Param("name") String name);
+
 }

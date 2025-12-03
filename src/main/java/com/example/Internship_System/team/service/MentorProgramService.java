@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MentorProgramService {
@@ -21,22 +22,24 @@ public class MentorProgramService {
     private MentorProgramRepository mentorProgramRepository;
 
     public List<MentorInfoDTO> getProgramMentorInfo(Integer programId) {
-
         List<Team> teams = teamRepository.findByProgramProgramId(programId);
 
-        return teams.stream().map(team -> {
-            MentorUser mentor = team.getMentor();
-            User user = mentor.getUser();
-
-            return new MentorInfoDTO(
-                    mentor.getMentorId(),
-                    user.getFullName(),
-                    user.getEmail(),
-                    user.getPhone(),
-                    mentor.getDepartment(),
-                    mentor.getExpertise()
-            );
-        }).toList();
+        return teams.stream()
+                .map(Team::getMentor)
+                .filter(Objects::nonNull)
+                .distinct() // ensures each mentor appears only once
+                .map(mentor -> {
+                    User user = mentor.getUser();
+                    return new MentorInfoDTO(
+                            mentor.getMentorId(),
+                            user.getFullName(),
+                            user.getEmail(),
+                            user.getPhone(),
+                            mentor.getDepartment(),
+                            mentor.getExpertise()
+                    );
+                })
+                .toList();
     }
 
     public List<MentorInfoDTO> getAllMentorsAssignedToProgram(Integer programId) {
@@ -56,5 +59,22 @@ public class MentorProgramService {
                     );
                 })
                 .toList();
+    }
+
+    public MentorInfoDTO getMentorByTeam(Integer teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+
+        MentorUser mentor = team.getMentor();
+        var user = mentor.getUser();
+
+        return new MentorInfoDTO(
+                mentor.getMentorId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getPhone(),
+                mentor.getDepartment(),
+                mentor.getExpertise()
+        );
     }
 }

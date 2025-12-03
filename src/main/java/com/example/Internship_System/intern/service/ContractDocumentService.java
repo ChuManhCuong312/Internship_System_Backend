@@ -188,17 +188,16 @@ public class ContractDocumentService {
     /**
      * Check if intern has contract
      */
+    @SuppressWarnings("unused")
     public boolean hasContract(int internId) {
         Optional<InternProfile> internOpt = internRepository.findById(internId);
-        if (internOpt.isPresent()) {
-            return contractRepository.findByIntern(internOpt.get()).isPresent();
-        }
-        return false;
+        return internOpt.filter(internProfile -> contractRepository.findByIntern(internProfile).isPresent()).isPresent();
     }
 
     /**
      * Get pending contracts (not uploaded or pending approval)
      */
+    @SuppressWarnings("unused")
     public List<ContractDocument> getPendingContracts() {
         return contractRepository.findByInternConfirmStatus(InternConfirmStatus.PENDING);
     }
@@ -206,6 +205,7 @@ public class ContractDocumentService {
     /**
      * Get approved contracts
      */
+    @SuppressWarnings("unused")
     public List<ContractDocument> getApprovedContracts() {
         return contractRepository.findByInternConfirmStatus(InternConfirmStatus.APPROVED);
     }

@@ -45,6 +45,7 @@ public class TeamService {
         List<Team> teams = teamRepository.findByProgramProgramId(programId);
 
         return teams.stream().map(team -> {
+            Integer mentorId = team.getMentor().getMentorId();
             String mentorName = team.getMentor().getUser().getFullName();
 
             List<TeamIntern> teamInterns = teamInternRepository.findByTeamTeamId(team.getTeamId());
@@ -62,7 +63,7 @@ public class TeamService {
                     })
                     .toList();
 
-            return new TeamInfoDTO(team.getTeamId(), mentorName, internDTOs);
+            return new TeamInfoDTO(team.getTeamId(), mentorId,mentorName, internDTOs);
 
         }).toList();
     }
@@ -205,6 +206,83 @@ public class TeamService {
             int memberCount = teamInternRepository.countByTeamId(team.getTeamId());
             dto.setMember_count(memberCount);
             return dto;
+        }).collect(Collectors.toList());
+    }
+
+    public List<InternSearchDTO> searchAvailableInterns(String keyword) {
+        List<InternProfile> interns = teamInternRepository.searchAvailableInterns(keyword);
+
+        return interns.stream().map(i -> {
+            User u = userRepository.findById(i.getUserId()).orElse(null);
+            return new InternSearchDTO(
+                    i.getInternId(),
+                    u.getFullName(),
+                    u.getEmail(),
+                    u.getPhone(),
+                    i.getGpa(),
+                    i.getMajor(),
+                    i.getSchool()
+            );
+        }).toList();
+    }
+
+    public String addInternToTeam(Integer programId, Integer teamId, Integer internId) {
+
+        var program = programRepository.findById(programId)
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+
+        if (!program.getProgramStatus().equals(ProgramStatus.UPCOMING)) {
+            throw new RuntimeException("Intern can only be added when program is UPCOMING");
+        }
+
+        if (teamInternRepository.isInternInProgram(internId, programId)) {
+            throw new RuntimeException("Intern already assigned in this program");
+        }
+
+        if (teamInternRepository.isInternInAnyTeam(internId)) {
+            throw new RuntimeException("Intern already assigned to another team");
+        }
+
+        var team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+
+        // ✅ Check that the team belongs to the correct program
+        if (!team.getProgram().getProgramId().equals(programId)) {
+            throw new RuntimeException("Team does not belong to the specified program");
+        }
+
+        var intern = internRepository.findById(internId)
+                .orElseThrow(() -> new RuntimeException("Intern not found"));
+
+        TeamIntern teamIntern = new TeamIntern(
+                team,
+                intern,
+                LocalDateTime.now()
+        );
+
+        teamInternRepository.save(teamIntern);
+
+        return "Intern added successfully";
+    }
+
+    public List<InternDetailDTO> getInternsByTeam(Integer teamId) {
+
+        List<TeamIntern> teamInterns = teamInternRepository.findByTeamTeamId(teamId);
+
+        return teamInterns.stream().map(teamIntern -> {
+            InternProfile intern = teamIntern.getIntern();
+            User user = userRepository.findById(intern.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found for intern " + intern.getInternId()));
+
+            return new InternDetailDTO(
+                    intern.getInternId(),
+                    user.getFullName(),
+                    user.getEmail(),
+                    user.getPhone(),
+                    intern.getGpa(),
+                    intern.getMajor(),
+                    intern.getSchool()
+            );
         }).collect(Collectors.toList());
     }
 }
