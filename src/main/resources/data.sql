@@ -219,7 +219,7 @@ INSERT INTO task_team_assignments (task_id, team_id)
 VALUES
 (1, 1), -- Task 1 to Team Web
 (2, 1), -- Task 2 to Team Web
-(3, 2), -- Task 3 to Team Marketing
+(3, 1), -- Task 3 to Team Marketing
 (4, 2), -- Task 4 to Team Marketing
 (5, 2), -- Task 5 to Team Marketing
 (6, 3), -- Task 6 to Team Data
