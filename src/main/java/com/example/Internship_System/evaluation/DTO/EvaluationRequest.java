@@ -10,7 +10,7 @@ public class EvaluationRequest {
     @NotNull
     private Integer mentorId;
 
-    @NotBlank
+    @NotBlank(message = "Tiêu đề không được rỗng")
     private String title;
 
     @DecimalMin("0.0") @DecimalMax("10.0")
@@ -28,6 +28,7 @@ public class EvaluationRequest {
     @Min(0) @Max(100)
     private Integer weight;
 
+    @NotBlank(message = "Ghi chú không được rỗng")
     private String note;
 
     // ===== GETTERS =====
