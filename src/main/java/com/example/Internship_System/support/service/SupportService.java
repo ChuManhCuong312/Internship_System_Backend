@@ -40,7 +40,7 @@ public class SupportService {
                 .supportType(dto.getSupportType())
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .status(SupportStatus.PENDING)
+                .status(SupportStatus.OPEN)
                 .requestDate(LocalDateTime.now())
                 .build();
 
@@ -113,13 +113,13 @@ public class SupportService {
     public SupportRequest approveSupportRequest(Integer id, Integer hrId, String response) {
         SupportRequest supportRequest = getSupportRequestById(id);
 
-        if (supportRequest.getStatus() != SupportStatus.PENDING) {
-            throw new RuntimeException("Chỉ có thể duyệt yêu cầu ở trạng thái PENDING");
+        if (supportRequest.getStatus() != SupportStatus.OPEN) {
+            throw new RuntimeException("Chỉ có thể duyệt yêu cầu ở trạng thái OPEN");
         }
 
         SupportRequest oldRequest = cloneSupportRequest(supportRequest);
 
-        supportRequest.setStatus(SupportStatus.APPROVED);
+        supportRequest.setStatus(SupportStatus.RESOLVED);
         supportRequest.setProcessedBy(hrId);
         supportRequest.setProcessedDate(LocalDateTime.now());
         supportRequest.setResponse(response);
@@ -141,8 +141,8 @@ public class SupportService {
 
         SupportRequest supportRequest = getSupportRequestById(id);
 
-        if (supportRequest.getStatus() != SupportStatus.PENDING) {
-            throw new RuntimeException("Chỉ có thể từ chối yêu cầu ở trạng thái PENDING");
+        if (supportRequest.getStatus() != SupportStatus.OPEN) {
+            throw new RuntimeException("Chỉ có thể từ chối yêu cầu ở trạng thái OPEN");
         }
 
         SupportRequest oldRequest = cloneSupportRequest(supportRequest);

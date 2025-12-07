@@ -35,7 +35,7 @@ public class SupportRequest {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private SupportStatus status = SupportStatus.PENDING;
+    private SupportStatus status = SupportStatus.OPEN;
 
     @Column(nullable = false, updatable = false)
     @Builder.Default
