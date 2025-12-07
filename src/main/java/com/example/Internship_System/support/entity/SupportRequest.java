@@ -16,6 +16,7 @@ public class SupportRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer supportId;
 
     @Column(nullable = false)
