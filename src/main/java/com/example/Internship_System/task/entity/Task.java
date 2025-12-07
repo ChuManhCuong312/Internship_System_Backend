@@ -28,12 +28,12 @@ public class Task {
     @Column(name = "status")
     private String status;
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
     @Column(name = "deadline")
     @NotNull(message ="Deadline là bắt buộc")
     private LocalDateTime deadline;
     @Column(name ="due_soon")
-    private boolean due_soon;
+    private boolean dueSoon;
 
     @Pattern(regexp = "^(LOW|MEDIUM|HIGH)?$",
             message = "Độ ưu tiên phải hợp lệ")

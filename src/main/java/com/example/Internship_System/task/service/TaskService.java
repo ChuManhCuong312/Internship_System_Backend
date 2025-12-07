@@ -21,42 +21,28 @@ import com.example.Internship_System.task.entity.TaskFiles;
 import com.example.Internship_System.task.entity.TaskProgress;
 import com.example.Internship_System.task.entity.TaskTeamAssignment;
 import com.example.Internship_System.team.entity.TeamIntern;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
-    @Autowired
-    private TaskRepository repository;
-
-    @Autowired
-    private MentorRepository mentorRepository;
-
-    @Autowired
-    private ProgramRepository programRepository;
-
-    @Autowired
-    private TeamInternRepository teamInternRepository;
-
-    @Autowired
-    private TaskTeamAssignmentRepository taskTeamAssignmentRepository;
-
-    @Autowired
-    private TaskFilesRepository taskFilesRepository;
-
-    @Autowired
-    private TaskProgressRepository taskProgressRepository;
-
-    @Autowired
-    private TagRepository tagRepository;
-
-    @Autowired
-    private TaskTagRepository taskTagRepository;
+    private final TaskRepository repository;
+    private final MentorRepository mentorRepository;
+    private final ProgramRepository programRepository;
+    private final TeamInternRepository teamInternRepository;
+    private final TaskTeamAssignmentRepository taskTeamAssignmentRepository;
+    private final TaskFilesRepository taskFilesRepository;
+    private final TaskProgressRepository taskProgressRepository;
+    private final TagRepository tagRepository;
+    private final TaskTagRepository taskTagRepository;
 
     public Task save(Task task) {
         return repository.save(task);
@@ -118,7 +104,7 @@ public class TaskService {
         if (taskUpdate.getAssignedBy() != null) {
             existingTask.setAssignedBy(taskUpdate.getAssignedBy());
         }
-        existingTask.setDue_soon(taskUpdate.isDue_soon());
+        existingTask.setDueSoon(taskUpdate.isDueSoon());
         
         return repository.save(existingTask);
     }
@@ -139,8 +125,8 @@ public class TaskService {
         task.setProgramId(request.getProgramId());
         task.setMentorId(request.getMentorId());
         task.setAssignedBy(request.getAssignedBy());
-        task.setDue_soon(request.isDueSoon());
-        task.setCreated_at(LocalDateTime.now());
+        task.setDueSoon(request.isDueSoon());
+        task.setCreatedAt(LocalDateTime.now());
         
         Task savedTask = repository.save(task);
         int taskId = savedTask.getTaskId();
@@ -215,7 +201,7 @@ public class TaskService {
         if (request.getAssignedBy() != null) {
             existingTask.setAssignedBy(request.getAssignedBy());
         }
-        existingTask.setDue_soon(request.isDueSoon());
+        existingTask.setDueSoon(request.isDueSoon());
         
         Task savedTask = repository.save(existingTask);
         
@@ -278,12 +264,18 @@ public class TaskService {
             case "status" -> a.getStatus() != null ? a.getStatus().compareTo(b.getStatus() != null ? b.getStatus() : "") : 0;
             case "priority" -> a.getPriority() != null ? a.getPriority().compareTo(b.getPriority() != null ? b.getPriority() : "") : 0;
             case "deadline" -> a.getDeadline().compareTo(b.getDeadline());
-            case "createdat" -> a.getCreated_at() != null ? a.getCreated_at().compareTo(b.getCreated_at()) : 0;
+            case "createdat" -> a.getCreatedAt() != null ? a.getCreatedAt().compareTo(b.getCreatedAt()) : 0;
             default -> 0;
         };
     }
 
-    private TaskDTO convertToDTO(Task task) {
+    /**
+     * Convert a single task to DTO with pre-loaded lookup maps (batch optimized)
+     */
+    private TaskDTO convertToDTO(Task task, 
+                                  Map<Integer, String> mentorNameMap, 
+                                  Map<Integer, String> programNameMap,
+                                  Map<Integer, List<TagDTO>> taskTagsMap) {
         TaskDTO dto = new TaskDTO();
         dto.setTaskId(task.getTaskId());
         dto.setProgramId(task.getProgramId());
@@ -291,70 +283,111 @@ public class TaskService {
         dto.setDescription(task.getDescription());
         dto.setAssignedBy(task.getAssignedBy() != null ? task.getAssignedBy().toString() : null);
         dto.setStatus(task.getStatus());
-        dto.setCreatedAt(task.getCreated_at());
+        dto.setCreatedAt(task.getCreatedAt());
         dto.setDeadline(task.getDeadline());
-        dto.setDueSoon(task.isDue_soon());
+        dto.setDueSoon(task.isDueSoon());
         dto.setPriority(task.getPriority());
         dto.setMentorId(task.getMentorId());
 
-        try {
-            // Fetch mentor name from User entity
-            if (task.getMentorId() > 0) {
-                Optional<MentorUser> mentor = mentorRepository.findById(task.getMentorId());
-                if (mentor.isPresent() && mentor.get().getUser() != null) {
-                    dto.setMentorName(mentor.get().getUser().getFullName());
-                }
-            }
-
-            // Fetch program name
-            if (task.getProgramId() > 0) {
-                Optional<Program> program = programRepository.findById(task.getProgramId());
-                program.ifPresent(p -> dto.setProgramName(p.getName()));
-            }
-
-            // Fetch tags for this task
-            List<Integer> tagIds = taskTagRepository.findTagIdsByTaskId(task.getTaskId());
-            if (!tagIds.isEmpty()) {
-                List<Tag> tags = tagRepository.findAllById(tagIds);
-                List<TagDTO> tagDTOs = tags.stream()
-                        .map(tag -> new TagDTO(tag.getTagId(), tag.getName(), tag.getColor(), tag.getProgramId()))
-                        .toList();
-                dto.setTags(tagDTOs);
-            } else {
-                dto.setTags(new ArrayList<>());
-            }
-        } catch (Exception e) {
-            // Log error but don't fail - return DTO with partial data
-            System.err.println("Warning: Error fetching mentor/program/tags details for task " + task.getTaskId() + ": " + e.getMessage());
-            dto.setTags(new ArrayList<>());
-        }
+        // Use pre-loaded maps instead of individual queries
+        dto.setMentorName(mentorNameMap.getOrDefault(task.getMentorId(), null));
+        dto.setProgramName(programNameMap.getOrDefault(task.getProgramId(), null));
+        dto.setTags(taskTagsMap.getOrDefault(task.getTaskId(), new ArrayList<>()));
 
         return dto;
     }
 
-    public List<TaskDTO> findAllWithDetails() {
-        return repository.findAll().stream()
-                .map(this::convertToDTO)
+    /**
+     * Batch convert tasks to DTOs - solves N+1 query problem
+     */
+    private List<TaskDTO> convertToDTOBatch(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Collect unique IDs
+        Set<Integer> mentorIds = tasks.stream()
+                .map(Task::getMentorId)
+                .filter(id -> id > 0)
+                .collect(Collectors.toSet());
+        Set<Integer> programIds = tasks.stream()
+                .map(Task::getProgramId)
+                .filter(id -> id > 0)
+                .collect(Collectors.toSet());
+        List<Integer> taskIds = tasks.stream()
+                .map(Task::getTaskId)
                 .toList();
+
+        // Batch load mentors
+        Map<Integer, String> mentorNameMap = new HashMap<>();
+        if (!mentorIds.isEmpty()) {
+            mentorRepository.findAllById(mentorIds).forEach(mentor -> {
+                if (mentor.getUser() != null) {
+                    mentorNameMap.put(mentor.getMentorId(), mentor.getUser().getFullName());
+                }
+            });
+        }
+
+        // Batch load programs
+        Map<Integer, String> programNameMap = new HashMap<>();
+        if (!programIds.isEmpty()) {
+            programRepository.findAllById(programIds).forEach(program -> 
+                programNameMap.put(program.getProgramId(), program.getName())
+            );
+        }
+
+        // Batch load tags for all tasks
+        Map<Integer, List<TagDTO>> taskTagsMap = new HashMap<>();
+        if (!taskIds.isEmpty()) {
+            // Get all task-tag mappings for these tasks
+            List<Object[]> taskTagMappings = taskTagRepository.findTagIdsByTaskIds(taskIds);
+            
+            // Collect all unique tag IDs
+            Set<Integer> allTagIds = taskTagMappings.stream()
+                    .map(arr -> (Integer) arr[1])
+                    .collect(Collectors.toSet());
+            
+            // Batch load all tags
+            Map<Integer, Tag> tagMap = new HashMap<>();
+            if (!allTagIds.isEmpty()) {
+                tagRepository.findAllById(allTagIds).forEach(tag -> 
+                    tagMap.put(tag.getTagId(), tag)
+                );
+            }
+            
+            // Build task -> tags map
+            for (Object[] mapping : taskTagMappings) {
+                Integer taskId = (Integer) mapping[0];
+                Integer tagId = (Integer) mapping[1];
+                Tag tag = tagMap.get(tagId);
+                if (tag != null) {
+                    taskTagsMap.computeIfAbsent(taskId, k -> new ArrayList<>())
+                            .add(new TagDTO(tag.getTagId(), tag.getName(), tag.getColor(), tag.getProgramId()));
+                }
+            }
+        }
+
+        // Convert all tasks using the pre-loaded maps
+        return tasks.stream()
+                .map(task -> convertToDTO(task, mentorNameMap, programNameMap, taskTagsMap))
+                .toList();
+    }
+
+    public List<TaskDTO> findAllWithDetails() {
+        return convertToDTOBatch(repository.findAll());
     }
 
     public List<TaskDTO> findByMentorIdWithDetails(int mentorId) {
-        return repository.findByMentorId(mentorId).stream()
-                .map(this::convertToDTO)
-                .toList();
+        return convertToDTOBatch(repository.findByMentorId(mentorId));
     }
 
     public List<TaskDTO> findByProgramIdWithDetails(int programId) {
-        return repository.findByProgramId(programId).stream()
-                .map(this::convertToDTO)
-                .toList();
+        return convertToDTOBatch(repository.findByProgramId(programId));
     }
 
     public List<TaskDTO> filterTasksWithDetails(Integer mentorId, Integer programId, String status,
                                                 String priority, LocalDateTime startDate, LocalDateTime endDate) {
-        return repository.filterTasks(mentorId, programId, status, priority, startDate, endDate).stream()
-                .map(this::convertToDTO)
-                .toList();
+        return convertToDTOBatch(repository.filterTasks(mentorId, programId, status, priority, startDate, endDate));
     }
 
     public List<TaskDTO> findTasksByIntern(Integer internId) {
@@ -375,10 +408,8 @@ public class TaskService {
         // 3) Get all tasks by id
         List<Task> tasks = repository.findByTaskIdIn(taskIds);
 
-        // 4) Convert to DTO
-        return tasks.stream()
-                .map(this::convertToDTO)
-                .toList();
+        // 4) Convert to DTO using batch method
+        return convertToDTOBatch(tasks);
     }
 
     public TaskStatisticsDTO getTaskStatisticsForIntern(Integer internId) {

@@ -12,7 +12,12 @@ public class TaskTeamAssignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+
+    @Column(name = "task_id", nullable = false)
     private Integer taskId;
+
+    @Column(name = "team_id", nullable = false)
     private Integer teamId;
 }

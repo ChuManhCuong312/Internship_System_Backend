@@ -3,7 +3,7 @@ package com.example.Internship_System.task.service;
 import com.example.Internship_System.repository.TaskProgressRepository;
 import com.example.Internship_System.task.dto.TaskProgressDTO;
 import com.example.Internship_System.task.entity.TaskProgress;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TaskProgressService {
-    @Autowired
-    private TaskProgressRepository repository;
+    private final TaskProgressRepository repository;
 
     public TaskProgress save(TaskProgress taskProgress) {
         taskProgress.setUpdatedAt(LocalDateTime.now());
