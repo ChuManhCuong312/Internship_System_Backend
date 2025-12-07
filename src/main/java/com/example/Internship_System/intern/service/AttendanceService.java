@@ -106,11 +106,6 @@ public class AttendanceService {
             throw new RuntimeException("Bạn chưa check-in hôm nay");
         }
 
-        if (attendance.getCheckOut() != null) {
-            throw new RuntimeException("Bạn đã check-out rồi lúc " +
-                    attendance.getCheckOut().toString());
-        }
-
         attendance.setCheckOut(now);
         return repository.save(attendance);
     }
@@ -317,7 +312,6 @@ public class AttendanceService {
                     ? program.getEndDate().toLocalDate()
                     : LocalDate.MAX;
 
-            // Bỏ qua nếu khoảng thời gian program không giao với tháng filter
             if (programEnd.isBefore(monthStart) || programStart.isAfter(monthEnd)) {
                 continue;
             }

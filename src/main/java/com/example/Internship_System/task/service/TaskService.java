@@ -4,14 +4,18 @@ import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.repository.MentorRepository;
 import com.example.Internship_System.repository.ProgramRepository;
+import com.example.Internship_System.repository.TagRepository;
 import com.example.Internship_System.repository.TaskFilesRepository;
 import com.example.Internship_System.repository.TaskProgressRepository;
 import com.example.Internship_System.repository.TaskRepository;
+import com.example.Internship_System.repository.TaskTagRepository;
 import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
 import com.example.Internship_System.repository.TeamInternRepository;
+import com.example.Internship_System.task.dto.TagDTO;
 import com.example.Internship_System.task.dto.TaskDTO;
 import com.example.Internship_System.task.dto.TaskStatisticsDTO;
 import com.example.Internship_System.task.dto.TaskUpdateRequest;
+import com.example.Internship_System.task.entity.Tag;
 import com.example.Internship_System.task.entity.Task;
 import com.example.Internship_System.task.entity.TaskFiles;
 import com.example.Internship_System.task.entity.TaskProgress;
@@ -48,6 +52,12 @@ public class TaskService {
     @Autowired
     private TaskProgressRepository taskProgressRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private TaskTagRepository taskTagRepository;
+
     public Task save(Task task) {
         return repository.save(task);
     }
@@ -74,6 +84,7 @@ public class TaskService {
         taskTeamAssignmentRepository.deleteByTaskId(id);
         taskFilesRepository.deleteByTaskId(id);
         taskProgressRepository.deleteByTaskId(id);
+        taskTagRepository.deleteByTaskId(id);
         repository.deleteById(id);
     }
 
@@ -157,6 +168,15 @@ public class TaskService {
             TaskProgress progress = new TaskProgress(taskId, request.getProgressPercent(), request.getProgressNote());
             taskProgressRepository.save(progress);
         }
+
+        // 5. Gán tags
+        if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
+            for (Integer tagId : request.getTagIds()) {
+                if (tagRepository.existsById(tagId)) {
+                    taskTagRepository.save(new com.example.Internship_System.task.entity.TaskTag(taskId, tagId));
+                }
+            }
+        }
         
         return savedTask;
     }
@@ -225,6 +245,16 @@ public class TaskService {
             TaskProgress progress = new TaskProgress(id, request.getProgressPercent(), request.getProgressNote());
             taskProgressRepository.save(progress);
         }
+
+        // 5. Cập nhật tags (nếu có gửi tagIds)
+        if (request.getTagIds() != null) {
+            taskTagRepository.deleteByTaskId(id);
+            for (Integer tagId : request.getTagIds()) {
+                if (tagRepository.existsById(tagId)) {
+                    taskTagRepository.save(new com.example.Internship_System.task.entity.TaskTag(id, tagId));
+                }
+            }
+        }
         
         return savedTask;
     }
@@ -281,9 +311,22 @@ public class TaskService {
                 Optional<Program> program = programRepository.findById(task.getProgramId());
                 program.ifPresent(p -> dto.setProgramName(p.getName()));
             }
+
+            // Fetch tags for this task
+            List<Integer> tagIds = taskTagRepository.findTagIdsByTaskId(task.getTaskId());
+            if (!tagIds.isEmpty()) {
+                List<Tag> tags = tagRepository.findAllById(tagIds);
+                List<TagDTO> tagDTOs = tags.stream()
+                        .map(tag -> new TagDTO(tag.getTagId(), tag.getName(), tag.getColor(), tag.getProgramId()))
+                        .toList();
+                dto.setTags(tagDTOs);
+            } else {
+                dto.setTags(new ArrayList<>());
+            }
         } catch (Exception e) {
             // Log error but don't fail - return DTO with partial data
-            System.err.println("Warning: Error fetching mentor/program details for task " + task.getTaskId() + ": " + e.getMessage());
+            System.err.println("Warning: Error fetching mentor/program/tags details for task " + task.getTaskId() + ": " + e.getMessage());
+            dto.setTags(new ArrayList<>());
         }
 
         return dto;
