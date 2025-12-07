@@ -184,6 +184,8 @@ public class TaskController {
             @RequestParam(required = false) String priority,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) Integer tagId,
+            @RequestParam(required = false) String searchText,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         try {
@@ -191,6 +193,24 @@ public class TaskController {
             LocalDateTime end = endDate != null && !endDate.isEmpty() ? LocalDateTime.parse(endDate) : null;
             
             List<TaskDTO> allTasks = taskService.filterTasksWithDetails(mentorId, programId, status, priority, start, end);
+            
+            // Filter by tagId if provided
+            if (tagId != null) {
+                allTasks = allTasks.stream()
+                        .filter(task -> task.getTags() != null && 
+                                task.getTags().stream().anyMatch(tag -> tag.getTagId().equals(tagId)))
+                        .toList();
+            }
+
+            // Filter by searchText if provided
+            if (searchText != null && !searchText.trim().isEmpty()) {
+                String searchLower = searchText.toLowerCase().trim();
+                allTasks = allTasks.stream()
+                        .filter(task -> 
+                                (task.getTitle() != null && task.getTitle().toLowerCase().contains(searchLower)) ||
+                                (task.getDescription() != null && task.getDescription().toLowerCase().contains(searchLower)))
+                        .toList();
+            }
             
             if (page != null && size != null) {
                 int start_idx = page * size;

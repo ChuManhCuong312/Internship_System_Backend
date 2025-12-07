@@ -29,4 +29,5 @@ public class TaskUpdateRequest {
     private List<String> fileLinks;         // Danh sách link file đính kèm
     private Integer progressPercent;        // Phần trăm hoàn thành (0-100)
     private String progressNote;            // Ghi chú tiến độ
+    private List<Integer> tagIds;           // Danh sách tag IDs
 }
