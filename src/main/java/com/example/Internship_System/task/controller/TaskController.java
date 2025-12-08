@@ -208,7 +208,7 @@ public class TaskController {
             @RequestParam(required = false) String priority,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Integer tagId,
+            @RequestParam(required = false) String tagIds,
             @RequestParam(required = false) String searchText,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
@@ -218,12 +218,24 @@ public class TaskController {
             
             List<TaskDTO> allTasks = taskService.filterTasksWithDetails(mentorId, programId, status, priority, start, end);
             
-            // Filter by tagId if provided
-            if (tagId != null) {
-                allTasks = allTasks.stream()
-                        .filter(task -> task.getTags() != null && 
-                                task.getTags().stream().anyMatch(tag -> tag.getTagId().equals(tagId)))
-                        .toList();
+            // Filter by multiple tagIds if provided
+            if (tagIds != null && !tagIds.trim().isEmpty()) {
+                String[] tagIdArray = tagIds.split(",");
+                java.util.Set<Integer> tagIdSet = new java.util.HashSet<>();
+                for (String id : tagIdArray) {
+                    try {
+                        tagIdSet.add(Integer.parseInt(id.trim()));
+                    } catch (NumberFormatException e) {
+                        // Skip invalid tag IDs
+                    }
+                }
+                
+                if (!tagIdSet.isEmpty()) {
+                    allTasks = allTasks.stream()
+                            .filter(task -> task.getTags() != null && 
+                                    task.getTags().stream().anyMatch(tag -> tagIdSet.contains(tag.getTagId())))
+                            .toList();
+                }
             }
 
             // Filter by searchText if provided
