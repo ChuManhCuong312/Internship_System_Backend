@@ -23,4 +23,7 @@ public interface TaskTagRepository extends JpaRepository<TaskTag, Integer> {
 
     @Query("SELECT tt.taskId FROM TaskTag tt WHERE tt.tagId = :tagId")
     List<Integer> findTaskIdsByTagId(@Param("tagId") Integer tagId);
+
+    @Query("SELECT tt.taskId, tt.tagId FROM TaskTag tt WHERE tt.taskId IN :taskIds")
+    List<Object[]> findTagIdsByTaskIds(@Param("taskIds") List<Integer> taskIds);
 }
