@@ -19,7 +19,7 @@ public class Team {
     private Program program;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "mentor_id", nullable = false)
+    @JoinColumn(name = "mentor_id", nullable = true)
     private MentorUser mentor;
 
     @Column(name = "assigned_date", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
