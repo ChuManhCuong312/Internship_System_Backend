@@ -129,6 +129,7 @@ public class TaskController {
     }
 
     //READ tasks by program id with details and pagination info
+    @SuppressWarnings("CallToPrintStackTrace")
     @GetMapping("/program/{programId}")
     public ResponseEntity<?> getTasksByProgramId(
             @PathVariable("programId") int programId,
