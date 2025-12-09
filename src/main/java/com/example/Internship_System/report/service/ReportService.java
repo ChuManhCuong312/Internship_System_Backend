@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -160,6 +161,8 @@ public class ReportService {
                             null,
                             null,
                             null,
+                            null,
+                            null,
                             null
                     );
                     internReports.add(dto);
@@ -173,6 +176,10 @@ public class ReportService {
                 double weightedDiscipline = 0.0;
                 double weightedAttitude = 0.0;
                 double weightedTotalScore = 0.0;
+
+                String latestNote = null;
+                LocalDateTime latestCreatedAt = null;
+                StringBuilder allNotesBuilder = new StringBuilder();
 
                 for (Evaluation e : evaluations) {
                     int weightInt = e.getWeight() != null ? e.getWeight() : 0;
@@ -195,6 +202,20 @@ public class ReportService {
 
                     double evalAverage = (technical + communication + discipline + attitude) / 4.0;
                     weightedTotalScore += evalAverage * w;
+
+                    if (e.getCreatedAt() != null) {
+                        if (latestCreatedAt == null || e.getCreatedAt().isAfter(latestCreatedAt)) {
+                            latestCreatedAt = e.getCreatedAt();
+                            latestNote = e.getNote();
+                        }
+                    }
+
+                    if (e.getNote() != null && !e.getNote().isBlank()) {
+                        if (!allNotesBuilder.isEmpty()) {
+                            allNotesBuilder.append("\n\n");
+                        }
+                        allNotesBuilder.append(e.getNote());
+                    }
                 }
 
                 Double avgTechnical = evaluations.isEmpty() ? null : weightedTechnical;
@@ -202,6 +223,7 @@ public class ReportService {
                 Double avgDiscipline = evaluations.isEmpty() ? null : weightedDiscipline;
                 Double avgAttitude = evaluations.isEmpty() ? null : weightedAttitude;
                 Double finalScore = evaluations.isEmpty() ? null : weightedTotalScore;
+                String allNotes = allNotesBuilder.isEmpty() ? null : allNotesBuilder.toString();
 
                 ReportDTO.InternReportDTO dto = new ReportDTO.InternReportDTO(
                         intern.getInternId(),
@@ -218,7 +240,9 @@ public class ReportService {
                         avgCommunication,
                         avgDiscipline,
                         avgAttitude,
-                        finalScore
+                        finalScore,
+                        latestNote,
+                        allNotes
                 );
                 internReports.add(dto);
             }
@@ -295,7 +319,8 @@ public class ReportService {
             createCell(headerRow, col++, "Avg Communication");
             createCell(headerRow, col++, "Avg Discipline");
             createCell(headerRow, col++, "Avg Attitude");
-            createCell(headerRow, col, "Final Score");
+            createCell(headerRow, col++, "Final Score");
+            createCell(headerRow, col, "Notes");
 
             if (report.getInterns() != null) {
                 for (ReportDTO.InternReportDTO intern : report.getInterns()) {
@@ -314,11 +339,12 @@ public class ReportService {
                     createCell(row, c++, intern.getAvgCommunication() != null ? intern.getAvgCommunication().toString() : "");
                     createCell(row, c++, intern.getAvgDiscipline() != null ? intern.getAvgDiscipline().toString() : "");
                     createCell(row, c++, intern.getAvgAttitude() != null ? intern.getAvgAttitude().toString() : "");
-                    createCell(row, c, intern.getFinalScore() != null ? intern.getFinalScore().toString() : "");
+                    createCell(row, c++, intern.getFinalScore() != null ? intern.getFinalScore().toString() : "");
+                    createCell(row, c, intern.getAllNotes() != null ? intern.getAllNotes() : "");
                 }
             }
 
-            for (int i = 0; i <= 13; i++) {
+            for (int i = 0; i <= 14; i++) {
                 sheet.autoSizeColumn(i);
             }
 
