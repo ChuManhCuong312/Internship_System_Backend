@@ -22,5 +22,5 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
 
     boolean existsByProgramProgramIdAndMentorMentorId(Integer programId, Integer mentorId);
 
-
+    boolean existsByTeamIdAndProgram_ProgramId(Integer teamId, Integer programId);
 }

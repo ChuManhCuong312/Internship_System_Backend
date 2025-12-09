@@ -21,8 +21,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
             "(:programId IS NULL OR t.programId = :programId) AND " +
             "(:status IS NULL OR t.status = :status) AND " +
             "(:priority IS NULL OR t.priority = :priority) AND " +
-            "(:startDate IS NULL OR t.created_at >= :startDate) AND " +
-            "(:endDate IS NULL OR t.created_at <= :endDate)")
+            "(:startDate IS NULL OR t.createdAt >= :startDate) AND " +
+            "(:endDate IS NULL OR t.createdAt <= :endDate)")
     List<Task> filterTasks(
             @Param("mentorId") Integer mentorId,
             @Param("programId") Integer programId,

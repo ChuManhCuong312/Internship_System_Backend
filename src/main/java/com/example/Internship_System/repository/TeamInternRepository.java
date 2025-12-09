@@ -60,4 +60,12 @@ public interface TeamInternRepository extends JpaRepository<TeamIntern, Integer>
     WHERE ti.intern.internId = :internId
 """)
     boolean isInternInAnyTeam(int internId);
+
+    @Query("SELECT COUNT(ti) FROM TeamIntern ti WHERE ti.team.program.programId = :programId")
+    int countInternsByProgram(@Param("programId") Integer programId);
+
+    @Query("SELECT ti FROM TeamIntern ti WHERE ti.team.teamId = :teamId")
+    List<TeamIntern> findTeamIntern(@Param("teamId") Integer teamId);
+
+    boolean existsByIntern_InternId(Integer internId);
 }

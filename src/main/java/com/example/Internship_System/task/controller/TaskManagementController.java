@@ -8,7 +8,8 @@ import com.example.Internship_System.task.entity.TaskTeamAssignment;
 import com.example.Internship_System.task.service.TaskFilesService;
 import com.example.Internship_System.task.service.TaskProgressService;
 import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +20,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/task-management")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 @SuppressWarnings("unused")
 public class TaskManagementController {
-
-    @Autowired
-    private TaskProgressService taskProgressService;
-
-    @Autowired
-    private TaskFilesService taskFilesService;
-
-    @Autowired
-    private TaskTeamAssignmentRepository taskTeamAssignmentRepository;
+    private final TaskProgressService taskProgressService;
+    private final TaskFilesService taskFilesService;
+    private final TaskTeamAssignmentRepository taskTeamAssignmentRepository;
 
     // ======================================
     // TASK PROGRESS ENDPOINTS
@@ -39,7 +35,7 @@ public class TaskManagementController {
      * Create new task progress record
      */
     @PostMapping("/progress")
-    public ResponseEntity<TaskProgress> createTaskProgress(@RequestBody TaskProgress taskProgress) {
+    public ResponseEntity<TaskProgress> createTaskProgress(@Valid @RequestBody TaskProgress taskProgress) {
         try {
             TaskProgress savedProgress = taskProgressService.save(taskProgress);
             return new ResponseEntity<>(savedProgress, HttpStatus.CREATED);
@@ -96,7 +92,7 @@ public class TaskManagementController {
      * Update task progress
      */
     @PutMapping("/progress/{progressId}")
-    public ResponseEntity<TaskProgress> updateTaskProgress(@PathVariable int progressId, @RequestBody TaskProgress taskProgress) {
+    public ResponseEntity<TaskProgress> updateTaskProgress(@PathVariable int progressId, @Valid @RequestBody TaskProgress taskProgress) {
         try {
             Optional<TaskProgress> existingProgress = taskProgressService.findById(progressId);
             if (existingProgress.isPresent()) {
@@ -155,7 +151,7 @@ public class TaskManagementController {
      * Create new task file record
      */
     @PostMapping("/files")
-    public ResponseEntity<TaskFiles> createTaskFile(@RequestBody TaskFiles taskFiles) {
+    public ResponseEntity<TaskFiles> createTaskFile(@Valid @RequestBody TaskFiles taskFiles) {
         try {
             TaskFiles savedFile = taskFilesService.save(taskFiles);
             return new ResponseEntity<>(savedFile, HttpStatus.CREATED);
@@ -208,7 +204,7 @@ public class TaskManagementController {
      * Update task file
      */
     @PutMapping("/files/{fileId}")
-    public ResponseEntity<TaskFiles> updateTaskFile(@PathVariable int fileId, @RequestBody TaskFiles taskFiles) {
+    public ResponseEntity<TaskFiles> updateTaskFile(@PathVariable int fileId, @Valid @RequestBody TaskFiles taskFiles) {
         try {
             Optional<TaskFiles> existingFile = taskFilesService.findById(fileId);
             if (existingFile.isPresent()) {
@@ -244,7 +240,7 @@ public class TaskManagementController {
      * Create new task team assignment
      */
     @PostMapping("/team-assignments")
-    public ResponseEntity<TaskTeamAssignment> createTaskTeamAssignment(@RequestBody TaskTeamAssignment assignment) {
+    public ResponseEntity<TaskTeamAssignment> createTaskTeamAssignment(@Valid @RequestBody TaskTeamAssignment assignment) {
         try {
             TaskTeamAssignment savedAssignment = taskTeamAssignmentRepository.save(assignment);
             return new ResponseEntity<>(savedAssignment, HttpStatus.CREATED);
@@ -310,7 +306,7 @@ public class TaskManagementController {
      * Update task team assignment
      */
     @PutMapping("/team-assignments/{assignmentId}")
-    public ResponseEntity<TaskTeamAssignment> updateTaskTeamAssignment(@PathVariable int assignmentId, @RequestBody TaskTeamAssignment assignment) {
+    public ResponseEntity<TaskTeamAssignment> updateTaskTeamAssignment(@PathVariable int assignmentId, @Valid @RequestBody TaskTeamAssignment assignment) {
         try {
             Optional<TaskTeamAssignment> existingAssignment = taskTeamAssignmentRepository.findById(assignmentId);
             if (existingAssignment.isPresent()) {

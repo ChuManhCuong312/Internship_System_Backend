@@ -9,6 +9,7 @@ import com.example.Internship_System.team.dto.*;
 import com.example.Internship_System.team.entity.Team;
 import com.example.Internship_System.team.service.MentorProgramService;
 import com.example.Internship_System.team.service.ProgramStatisticsService;
+import com.example.Internship_System.team.service.TeamAutoService;
 import com.example.Internship_System.team.service.TeamService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +26,22 @@ public class TeamController {
     private final MentorRepository mentorRepository;
     private final InternRepository internRepository;
     private final UserRepository userRepository;
+    private final TeamAutoService teamAutoService;
 
     public TeamController(ProgramStatisticsService programStatisticsService,
                           TeamService teamService,
                           MentorProgramService mentorProgramService,
                           MentorRepository mentorRepository,
                           InternRepository internRepository,
-                          UserRepository userRepository){
+                          UserRepository userRepository,
+                          TeamAutoService teamAutoService){
         this.programStatisticsService = programStatisticsService;
         this.teamService = teamService;
         this.mentorProgramService = mentorProgramService;
         this.mentorRepository = mentorRepository;
         this.internRepository = internRepository;
         this.userRepository = userRepository;
+        this.teamAutoService = teamAutoService;
     }
 
     @GetMapping("/{programId}/overview")

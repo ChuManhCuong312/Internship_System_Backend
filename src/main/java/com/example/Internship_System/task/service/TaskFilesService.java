@@ -3,16 +3,16 @@ package com.example.Internship_System.task.service;
 import com.example.Internship_System.repository.TaskFilesRepository;
 import com.example.Internship_System.task.dto.TaskFilesDTO;
 import com.example.Internship_System.task.entity.TaskFiles;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TaskFilesService {
-    @Autowired
-    private TaskFilesRepository repository;
+    private final TaskFilesRepository repository;
 
     public TaskFiles save(TaskFiles taskFiles) {
         return repository.save(taskFiles);
