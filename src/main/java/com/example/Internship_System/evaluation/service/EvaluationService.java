@@ -180,6 +180,17 @@ public class EvaluationService {
         MentorUser mentor = mentorRepository.findById(req.getMentorId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mentor không tồn tại"));
 
+        // Tổng weight hiện tại của intern
+        Integer currentTotal = evaluationRepository.sumWeightByInternId(req.getInternId());
+        int newWeight = req.getWeight() != null ? req.getWeight() : 0;
+
+        if (currentTotal + newWeight > 100) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    String.format("Tổng hệ số hiện tại (%d) + hệ số mới (%d) vượt quá 100", currentTotal, newWeight)
+            );
+        }
+
         Evaluation e = new Evaluation();
         e.setIntern(intern);
         e.setMentorEvaluate(mentor);
@@ -200,7 +211,6 @@ public class EvaluationService {
         Evaluation e = evaluationRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation không tồn tại"));
 
-        // Cho phép cập nhật intern/mentor nếu muốn
         if (req.getInternId() != null) {
             InternProfile intern = internRepository.findById(req.getInternId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Intern không tồn tại"));
@@ -211,6 +221,18 @@ public class EvaluationService {
             MentorUser mentor = mentorRepository.findById(req.getMentorId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mentor không tồn tại"));
             e.setMentorEvaluate(mentor);
+        }
+        Integer sumOtherWeights = evaluationRepository
+                .sumWeightByInternExcludeCurrent(req.getInternId(), e.getEvaluationId());
+        if (sumOtherWeights == null) sumOtherWeights = 0;
+        Integer newWeight = (req.getWeight() != null) ? req.getWeight() : 0;
+        int totalAfterUpdate = sumOtherWeights + newWeight;
+        if (totalAfterUpdate > 100) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    String.format("Tổng hệ số sau cập nhật là %d, vượt quá 100",
+                            totalAfterUpdate)
+            );
         }
 
         e.setTitle(req.getTitle());
