@@ -20,7 +20,7 @@ public class SupportService {
     private final SupportRequestHistoryRepository historyRepository;
 
     public SupportService(SupportRequestRepository supportRequestRepository,
-                          SupportRequestHistoryRepository historyRepository) {
+            SupportRequestHistoryRepository historyRepository) {
         this.supportRequestRepository = supportRequestRepository;
         this.historyRepository = historyRepository;
     }
