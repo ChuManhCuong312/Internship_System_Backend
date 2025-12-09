@@ -323,3 +323,7 @@ CREATE TABLE MentorNotifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
 );
+
+
+ALTER TABLE internship_system.support_requests
+ADD COLUMN request_date DATETIME NULL;
