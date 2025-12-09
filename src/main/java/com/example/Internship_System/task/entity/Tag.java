@@ -28,7 +28,7 @@ public class Tag {
     private Integer programId;
 
     public Tag() {}
-
+@SuppressWarnings("unused")
     public Tag(String name, String color, Integer programId) {
         this.name = name;
         this.color = color;

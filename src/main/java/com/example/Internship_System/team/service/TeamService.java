@@ -45,8 +45,14 @@ public class TeamService {
         List<Team> teams = teamRepository.findByProgramProgramId(programId);
 
         return teams.stream().map(team -> {
-            Integer mentorId = team.getMentor().getMentorId();
-            String mentorName = team.getMentor().getUser().getFullName();
+            Integer mentorId = null;
+            String mentorName = "Chưa có mentor";
+
+            // SAFE CHECK FOR NULL
+            if (team.getMentor() != null) {
+                mentorId = team.getMentor().getMentorId();
+                mentorName = team.getMentor().getUser().getFullName();
+            }
 
             List<TeamIntern> teamInterns = teamInternRepository.findByTeamTeamId(team.getTeamId());
 
@@ -63,10 +69,11 @@ public class TeamService {
                     })
                     .toList();
 
-            return new TeamInfoDTO(team.getTeamId(), mentorId,mentorName, internDTOs);
+            return new TeamInfoDTO(team.getTeamId(), mentorId, mentorName, internDTOs);
 
         }).toList();
     }
+
 
     public Team assignMentorToProgram(Integer programId, Integer mentorId) {
         Program program = programRepository.findById(programId)

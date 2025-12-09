@@ -1,7 +1,5 @@
 package com.example.Internship_System.task.service;
 
-import com.example.Internship_System.mentor.entity.MentorUser;
-import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.repository.MentorRepository;
 import com.example.Internship_System.repository.ProgramRepository;
 import com.example.Internship_System.repository.TagRepository;
@@ -28,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,10 +106,6 @@ public class TaskService {
         return repository.save(existingTask);
     }
 
-    /**
-     * Tạo task mới với đầy đủ thông tin liên quan (teams, files, progress)
-     * Xử lý tất cả trong 1 transaction
-     */
     @Transactional
     public Task createTaskFull(TaskUpdateRequest request) {
         // 1. Tạo task
@@ -167,10 +160,6 @@ public class TaskService {
         return savedTask;
     }
 
-    /**
-     * Cập nhật task với đầy đủ thông tin liên quan (teams, files, progress)
-     * Xử lý tất cả trong 1 transaction
-     */
     @Transactional
     public Task updateTaskFull(int id, TaskUpdateRequest request) {
         Task existingTask = repository.findById(id)
@@ -269,9 +258,6 @@ public class TaskService {
         };
     }
 
-    /**
-     * Convert a single task to DTO with pre-loaded lookup maps (batch optimized)
-     */
     private TaskDTO convertToDTO(Task task, 
                                   Map<Integer, String> mentorNameMap, 
                                   Map<Integer, String> programNameMap,
@@ -297,9 +283,6 @@ public class TaskService {
         return dto;
     }
 
-    /**
-     * Batch convert tasks to DTOs - solves N+1 query problem
-     */
     private List<TaskDTO> convertToDTOBatch(List<Task> tasks) {
         if (tasks.isEmpty()) {
             return new ArrayList<>();

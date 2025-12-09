@@ -18,7 +18,7 @@ public class TaskTag {
 
     @Column(name = "tag_id", nullable = false)
     private Integer tagId;
-
+@SuppressWarnings("unused")
     public TaskTag() {}
 
     public TaskTag(Integer taskId, Integer tagId) {

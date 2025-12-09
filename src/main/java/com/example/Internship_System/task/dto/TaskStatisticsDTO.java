@@ -1,11 +1,16 @@
 package com.example.Internship_System.task.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class TaskStatisticsDTO {
     private int inProgress;
     private int todo;
     private int done;
     private int total;
-
+@SuppressWarnings("unused")
     public TaskStatisticsDTO() {
         this.inProgress = 0;
         this.todo = 0;
@@ -20,35 +25,4 @@ public class TaskStatisticsDTO {
         this.total = total;
     }
 
-    public int getInProgress() {
-        return inProgress;
-    }
-
-    public void setInProgress(int inProgress) {
-        this.inProgress = inProgress;
-    }
-
-    public int getTodo() {
-        return todo;
-    }
-
-    public void setTodo(int todo) {
-        this.todo = todo;
-    }
-
-    public int getDone() {
-        return done;
-    }
-
-    public void setDone(int done) {
-        this.done = done;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
 }
