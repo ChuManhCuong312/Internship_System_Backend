@@ -76,6 +76,8 @@ public class ReportDTO {
         private Double avgDiscipline;
         private Double avgAttitude;
         private Double finalScore;
+        private String latestNote;
+        private String allNotes;
 
         public InternReportDTO(Integer internId,
                                String fullName,
@@ -91,7 +93,9 @@ public class ReportDTO {
                                Double avgCommunication,
                                Double avgDiscipline,
                                Double avgAttitude,
-                               Double finalScore) {
+                               Double finalScore,
+                               String latestNote,
+                               String allNotes) {
             this.internId = internId;
             this.fullName = fullName;
             this.email = email;
@@ -107,6 +111,8 @@ public class ReportDTO {
             this.avgDiscipline = avgDiscipline;
             this.avgAttitude = avgAttitude;
             this.finalScore = finalScore;
+            this.latestNote = latestNote;
+            this.allNotes = allNotes;
         }
 
         public Integer getInternId() {
@@ -167,6 +173,14 @@ public class ReportDTO {
 
         public Double getFinalScore() {
             return finalScore;
+        }
+
+        public String getLatestNote() {
+            return latestNote;
+        }
+
+        public String getAllNotes() {
+            return allNotes;
         }
     }
 }
