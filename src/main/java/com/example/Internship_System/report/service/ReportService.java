@@ -168,70 +168,40 @@ public class ReportService {
 
                 int evalCount = evaluations.size();
 
-                double sumTechnical = 0.0;
-                int countTechnical = 0;
-                double sumCommunication = 0.0;
-                int countCommunication = 0;
-                double sumDiscipline = 0.0;
-                int countDiscipline = 0;
-                double sumAttitude = 0.0;
-                int countAttitude = 0;
-
-                double totalWeightedScore = 0.0;
-                int totalWeight = 0;
+                double weightedTechnical = 0.0;
+                double weightedCommunication = 0.0;
+                double weightedDiscipline = 0.0;
+                double weightedAttitude = 0.0;
+                double weightedTotalScore = 0.0;
 
                 for (Evaluation e : evaluations) {
-                    if (e.getTechnical() != null) {
-                        sumTechnical += e.getTechnical();
-                        countTechnical++;
-                    }
-                    if (e.getCommunication() != null) {
-                        sumCommunication += e.getCommunication();
-                        countCommunication++;
-                    }
-                    if (e.getDiscipline() != null) {
-                        sumDiscipline += e.getDiscipline();
-                        countDiscipline++;
-                    }
-                    if (e.getAttitude() != null) {
-                        sumAttitude += e.getAttitude();
-                        countAttitude++;
-                    }
+                    int weightInt = e.getWeight() != null ? e.getWeight() : 0;
+                    double w = weightInt / 100.0; // giống FE: weight (%) / 100
 
-                    double evalScoreSum = 0.0;
-                    int evalScoreCount = 0;
-                    if (e.getTechnical() != null) {
-                        evalScoreSum += e.getTechnical();
-                        evalScoreCount++;
-                    }
-                    if (e.getCommunication() != null) {
-                        evalScoreSum += e.getCommunication();
-                        evalScoreCount++;
-                    }
-                    if (e.getDiscipline() != null) {
-                        evalScoreSum += e.getDiscipline();
-                        evalScoreCount++;
-                    }
-                    if (e.getAttitude() != null) {
-                        evalScoreSum += e.getAttitude();
-                        evalScoreCount++;
-                    }
+                    Double technicalObj = e.getTechnical();
+                    Double communicationObj = e.getCommunication();
+                    Double disciplineObj = e.getDiscipline();
+                    Double attitudeObj = e.getAttitude();
 
-                    if (evalScoreCount > 0) {
-                        double evalScore = evalScoreSum / evalScoreCount;
-                        int weight = e.getWeight() != null ? e.getWeight() : 1;
-                        if (weight > 0) {
-                            totalWeightedScore += evalScore * weight;
-                            totalWeight += weight;
-                        }
-                    }
+                    double technical = technicalObj != null ? technicalObj : 0.0;
+                    double communication = communicationObj != null ? communicationObj : 0.0;
+                    double discipline = disciplineObj != null ? disciplineObj : 0.0;
+                    double attitude = attitudeObj != null ? attitudeObj : 0.0;
+
+                    weightedTechnical += technical * w;
+                    weightedCommunication += communication * w;
+                    weightedDiscipline += discipline * w;
+                    weightedAttitude += attitude * w;
+
+                    double evalAverage = (technical + communication + discipline + attitude) / 4.0;
+                    weightedTotalScore += evalAverage * w;
                 }
 
-                Double avgTechnical = countTechnical > 0 ? (sumTechnical / countTechnical) : null;
-                Double avgCommunication = countCommunication > 0 ? (sumCommunication / countCommunication) : null;
-                Double avgDiscipline = countDiscipline > 0 ? (sumDiscipline / countDiscipline) : null;
-                Double avgAttitude = countAttitude > 0 ? (sumAttitude / countAttitude) : null;
-                Double finalScore = totalWeight > 0 ? (totalWeightedScore / totalWeight) : null;
+                Double avgTechnical = evaluations.isEmpty() ? null : weightedTechnical;
+                Double avgCommunication = evaluations.isEmpty() ? null : weightedCommunication;
+                Double avgDiscipline = evaluations.isEmpty() ? null : weightedDiscipline;
+                Double avgAttitude = evaluations.isEmpty() ? null : weightedAttitude;
+                Double finalScore = evaluations.isEmpty() ? null : weightedTotalScore;
 
                 ReportDTO.InternReportDTO dto = new ReportDTO.InternReportDTO(
                         intern.getInternId(),
