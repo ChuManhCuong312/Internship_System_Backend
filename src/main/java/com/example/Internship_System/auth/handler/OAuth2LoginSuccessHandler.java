@@ -1,6 +1,7 @@
 package com.example.Internship_System.auth.handler;
 
 import com.example.Internship_System.auth.entity.User;
+import com.example.Internship_System.auth.entity.UserStatus;
 import com.example.Internship_System.config.JwtUtils;
 import com.example.Internship_System.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -29,26 +30,34 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        // Cast to OAuth2AuthenticationToken to access attributes
         var oauthToken = (org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken) authentication;
         var attributes = oauthToken.getPrincipal().getAttributes();
 
         String email = (String) attributes.get("email");
         String fullNameAttr = (String) attributes.get("name");
 
-        // Extract role
+        // Lookup user in DB FIRST
+        Optional<User> existingUser = userRepository.findByEmail(email);
+
+        // NEW — check rejection block
+        if (existingUser.isPresent() && existingUser.get().getStatus() == UserStatus.REJECTED) {
+            // Redirect to a proper error page
+            getRedirectStrategy().sendRedirect(request, response,
+                    "http://localhost:5173/oauth-failed");
+            return;
+        }
+
+        // Extract role as before
         String rawRole = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(Object::toString)
                 .orElse("INTERN");
         String role = rawRole.equalsIgnoreCase("OAUTH2_USER") ? "INTERN" : rawRole;
 
-        // Lookup user in DB
-        Optional<User> existingUser = userRepository.findByEmail(email);
         Integer userId = existingUser.map(User::getUserId).orElse(null);
         String fullName = existingUser.map(User::getFullName).orElse(fullNameAttr != null ? fullNameAttr : "Unknown");
 
-        // Generate JWT with correct info
+        // Generate JWT normally
         String token = jwtUtils.generateToken(email, role, userId, fullName);
 
         // Set cookie
@@ -60,9 +69,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         cookie.setAttribute("SameSite", "Lax");
         response.addCookie(cookie);
 
-        // Redirect to frontend
+        // Redirect to frontend success
         String redirectUrl = "http://localhost:5173/oauth-success?token=" + token;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
+
 
 }

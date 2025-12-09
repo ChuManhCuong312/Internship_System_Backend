@@ -74,6 +74,11 @@ public class AuthService {
 
         User user = userOpt.get();
 
+        // NEW — Block REJECTED users
+        if (user.getStatus() == UserStatus.REJECTED) {
+            throw new RuntimeException("User account has been deactivated");
+        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             return null;
         }
