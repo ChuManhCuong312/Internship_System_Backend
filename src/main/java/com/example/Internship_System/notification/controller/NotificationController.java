@@ -125,6 +125,7 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Lỗi khi gửi kết quả thực tập");
         }
+
     }
 
 }
