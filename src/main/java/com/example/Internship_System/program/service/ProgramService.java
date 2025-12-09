@@ -1,5 +1,8 @@
 package com.example.Internship_System.program.service;
 
+import com.example.Internship_System.auth.entity.User;
+import com.example.Internship_System.auth.entity.UserStatus;
+import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.program.dto.*;
 import com.example.Internship_System.program.entity.MentorProgram;
@@ -11,9 +14,11 @@ import com.example.Internship_System.repository.TaskRepository;
 import com.example.Internship_System.repository.TaskTeamAssignmentRepository;
 import com.example.Internship_System.team.entity.Team;
 import jakarta.annotation.PostConstruct;
+import org.apache.xmlbeans.impl.values.XmlIntegerRestriction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.example.Internship_System.team.entity.TeamIntern;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +39,8 @@ public class ProgramService {
     private final TaskTeamAssignmentRepository taskTeamAssignmentRepository;
     private final TaskRepository taskRepository;
     private final MentorRepository mentorRepository;
+    private final InternRepository internRepository;
+    private final UserRepository userRepository;
 
     public ProgramService(ProgramRepository programRepository,
                           MentorProgramRepository mentorProgramRepository,
@@ -41,7 +48,9 @@ public class ProgramService {
                           TeamInternRepository teamInternRepository,
                           TaskTeamAssignmentRepository taskTeamAssignmentRepository,
                           TaskRepository taskRepository,
-                          MentorRepository mentorRepository) {
+                          MentorRepository mentorRepository,
+                          InternRepository internRepository,
+                          UserRepository userRepository) {
         this.programRepository = programRepository;
         this.mentorProgramRepository = mentorProgramRepository;
         this.teamRepository = teamRepository;
@@ -49,6 +58,8 @@ public class ProgramService {
         this.taskTeamAssignmentRepository = taskTeamAssignmentRepository;
         this.taskRepository = taskRepository;
         this.mentorRepository = mentorRepository;
+        this.internRepository = internRepository;
+        this.userRepository = userRepository;
     }
 
     // Search program by name
@@ -325,11 +336,7 @@ public class ProgramService {
         return events;
     }
 
-
-
-    @PostConstruct
-    @Transactional
-    public void updateStatusesOnStartup() {
+    private void updateStatuses() {
         List<Program> programs = programRepository.findAll();
 
         for (Program p : programs) {
@@ -342,18 +349,48 @@ public class ProgramService {
     }
 
     /**
-     * Calculates the status of a program based on the current date
+     * Calculates status based on timeline
      */
     private ProgramStatus calculateStatus(Program p) {
         LocalDateTime today = LocalDateTime.now();
-        if (today.isBefore(p.getStartDate())) {
-            return ProgramStatus.UPCOMING;
-        } else if (!today.isAfter(p.getEndDate())) {
-            return ProgramStatus.ON_GOING;
-        } else {
+
+        // HR must manually change to FINISHED
+        if (p.getProgramStatus() == ProgramStatus.FINISHED) {
             return ProgramStatus.FINISHED;
         }
+
+        if (today.isBefore(p.getStartDate())) {
+            return ProgramStatus.UPCOMING;
+        } else {
+            return ProgramStatus.ON_GOING;
+        }
     }
+
+
+    /**
+     * Runs ONCE when backend starts
+     */
+    @PostConstruct
+    @Transactional
+    public void updateStatusesOnStartup() {
+        System.out.println("Running startup program status update...");
+        updateStatuses();
+    }
+
+    /**
+     * Runs EVERY DAY at midnight
+     * Format = second minute hour day month dayOfWeek
+     * 0 0 0 → 00:00:00 daily
+     */
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    public void updateStatusesDaily() {
+        System.out.println("Running scheduled program status update...");
+        updateStatuses();
+    }
+
+
+
     public List<Program> getOngoingProgramsByUser(Integer userId) {
         return programRepository.findOngoingProgramsByMentorUserId(userId);
     }
@@ -371,5 +408,34 @@ public class ProgramService {
         }).toList();
     }
 
+    @Transactional
+    public int finishProgram(Integer programId) {
+        Program program = programRepository.findById(programId)
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+
+        if (program.getProgramStatus() == ProgramStatus.FINISHED) {
+            throw new RuntimeException("Program is already finished");
+        }
+
+        // Set program to FINISHED
+        program.setProgramStatus(ProgramStatus.FINISHED);
+        programRepository.save(program);
+
+        // Get all interns assigned to teams in this program
+        List<InternProfile> internProfiles =
+                internRepository.findInternsByProgramId(programId);
+
+        int count = 0;
+        for (InternProfile intern : internProfiles) {
+            User user = userRepository.findById(intern.getUserId()).orElse(null);
+            if (user != null) {
+                user.setStatus(UserStatus.REJECTED); // update
+                userRepository.save(user);
+                count++;
+            }
+        }
+
+        return count;
+    }
 
 }

@@ -98,4 +98,12 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
     """)
     List<InternProfile> findAvailableInternsByMajor(@Param("major") String major);
 
+    @Query("""
+        SELECT i
+        FROM InternProfile i
+        JOIN TeamIntern ti ON ti.intern.id = i.id
+        JOIN Team t ON t.id = ti.team.id
+        WHERE t.program.id = :programId
+        """)
+    List<InternProfile> findInternsByProgramId(Integer programId);
 }
