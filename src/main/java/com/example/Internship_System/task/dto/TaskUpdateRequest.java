@@ -6,10 +6,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * DTO để tạo/cập nhật task với đầy đủ thông tin liên quan
- * Bao gồm: task info, team assignments, files, progress
- */
 @Getter
 @Setter
 public class TaskUpdateRequest {
