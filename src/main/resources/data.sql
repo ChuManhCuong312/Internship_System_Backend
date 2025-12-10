@@ -25,7 +25,17 @@ INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role
 (18, 'tts12@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Gia Huy', '0127465497', 'PENDING_APPROVAL', 4),
 (19, 'tts13@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Minh Đức', '0477326788', 'ACTIVE', 4),
 (20, 'tts14@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Thị Anh', '0379296795', 'REJECTED', 4),
-(21, 'tts15@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Nguyên Chương', '0521163478', 'ACTIVE', 4);
+(21, 'tts15@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Nguyên Chương', '0521163478', 'ACTIVE', 4),
+(22, 'tts16@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Thị', '0389988777', 'ACTIVE', 4),
+(23, 'tts17@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Minh', '0366999889', 'ACTIVE', 4),
+(24, 'tts18@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Thị', '0345678911', 'ACTIVE', 4),
+(25, 'tts19@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Văn', '0329988778', 'ACTIVE', 4),
+(26, 'tts20@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Văn', '0377111224', 'ACTIVE', 4),
+(27, 'tts21@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo', '0399227411', 'ACTIVE', 4),
+(28, 'tts22@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Bình', '0329983477', 'ACTIVE', 4),
+(29, 'tts23@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Đạt', '0377111852', 'ACTIVE', 4),
+(30, 'tts24@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Ngọc', '0399226411', 'ACTIVE', 4),
+(31, 'tts25@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Bảo Châu', '0399229311', 'ACTIVE', 4);
 INSERT INTO admin_users (admin_id, user_id, position) VALUES
 (1, 1, 'Quản trị hệ thống chính');
 
@@ -138,7 +148,87 @@ INSERT INTO intern_users (
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
  'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
  'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
- 'PENDING', NULL);
+ 'PENDING', NULL),
+
+-- 13. (user_id = 22)
+(13, 22, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 14. (user_id = 23)
+(14, 23, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 15. (user_id = 24)
+(15, 24, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 16. (user_id = 25)
+(16, 25, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 17. (user_id = 26)
+(17, 26, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 18. (user_id = 27)
+(18, 27, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 19. (user_id = 28)
+(19, 28, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 20. (user_id = 29)
+(20, 29, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 21. (user_id = 30)
+(21, 30, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL),
+
+-- 22. (user_id = 31)
+(22, 31, 'CMC University', 'An toàn thông tin', 3.4, '2003-12-31', 'MALE', 'Hà Đông, Hà Nội',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763991166/Screenshot_2025-11-24_203214_tlboai.png',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745941/Chuong_uni_confirm_zh4pok.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/raw/upload/v1763745146/Chuong_app_mjkbqi.docx',
+ 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1763740803/Phan_Nguy%C3%AAn_Ch%C6%B0%C6%A1ng_CV_ppgelx.pdf',
+ 'APPROVED', NULL);
 
 
 
@@ -174,7 +264,37 @@ VALUES
  'UPLOAD', 'PENDING', NOW(), 'Hợp đồng đã ký và xác nhận'),
 -- 10) tts10 - PENDING
 (10, 10, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_H%C3%A0_oqpxmo.pdf',
- 'NOT_UPLOAD', 'APPROVED',NOW(), 'Hợp đồng đã ký và xác nhận');
+ 'NOT_UPLOAD', 'APPROVED',NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 11) tts16 - APPROVED
+ (11, 13, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Nam_si6y5e.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 12) tts17 - APPROVED
+ (12, 14, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Mai_tujgx1.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 13) tts18 - APPROVED
+ (13, 15, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Qu%C3%A2n_omzuki.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 14) tts19 - APPROVED
+ (14, 16, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096329/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_H%E1%BA%B1ng_erlcsy.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 15) tts20 - APPROVED
+ (15, 17, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_B%C3%ACnh_yk5vxg.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 16) tts21 - APPROVED
+ (16, 18, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_%C4%90%E1%BA%A1t_ka5avg.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 17) tts22 - APPROVED
+ (17, 19, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_Ng%E1%BB%8Dc_ybmljg.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 18) tts23 - APPROVED
+ (18, 20, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_%C4%90%E1%BB%A9c_tscjgi.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 19) tts24 - APPROVED
+ (19, 21, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_%C4%90%E1%BB%A9c_Anh_kkha5g.pdf',
+  'UPLOAD', 'APPROVED', NOW(), 'Hợp đồng đã ký và xác nhận'),
+ -- 20) tts25 - PENDING
+ (20, 22, 'https://res.cloudinary.com/dbudb7i8v/image/upload/v1764096328/H%E1%BB%A3p_%C4%91%E1%BB%93ng_th%E1%BB%B1c_t%E1%BA%ADp_c%E1%BB%A7a_H%C3%A0_oqpxmo.pdf',
+  'UPLOAD', 'APPROVED',NOW(), 'Hợp đồng đã ký và xác nhận');
 
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES

@@ -1,5 +1,7 @@
 package com.example.Internship_System.notification.controller;
 
+import com.example.Internship_System.evaluation.service.EvaluationService;
+import com.example.Internship_System.notification.DTO.EvaluationSummaryRequest;
 import com.example.Internship_System.notification.entity.Notification;
 import com.example.Internship_System.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,4 +79,53 @@ public class NotificationController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/evaluation-summary")
+    public ResponseEntity<?> sendEvaluationSummary(@RequestBody EvaluationSummaryRequest request) {
+
+        try {
+            for (EvaluationSummaryRequest.InternData intern : request.getInterns()) {
+
+                List<EvaluationService.EvaluationDTO> evaluations = intern.getEvaluations();
+
+                // Nếu intern không có đánh giá → bỏ qua
+                if (evaluations == null || evaluations.isEmpty()) {
+                    continue;
+                }
+
+                // Build message
+                StringBuilder msg = new StringBuilder();
+
+                for (EvaluationService.EvaluationDTO e : evaluations) {
+                    msg.append("• ").append(e.getTitle())
+                            .append(" (").append(e.getCreated_at()).append(")\n")
+                            .append("  - Kỹ thuật: ").append(e.getTechnical()).append("\n")
+                            .append("  - Giao tiếp: ").append(e.getCommunication()).append("\n")
+                            .append("  - Kỷ luật: ").append(e.getDiscipline()).append("\n")
+                            .append("  - Thái độ: ").append(e.getAttitude()).append("\n")
+                            .append("  - Hệ số: ").append(e.getWeight()).append("%\n")
+                            .append("  - Ghi chú: ").append(e.getNote()).append("\n\n");
+                }
+
+                String title = "Đánh giá tổng hợp kết quả kì thực tập";
+
+                Notification notification = new Notification(
+                        intern.getIntern_id(),
+                        title,
+                        msg.toString(),
+                        "Đánh giá"
+                );
+
+                notificationService.save(notification);
+            }
+
+            return ResponseEntity.ok("Gửi kết quả thực tập đến thực tập sinh thành công");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Lỗi khi gửi kết quả thực tập");
+        }
+
+    }
+
 }

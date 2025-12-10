@@ -163,12 +163,14 @@ CREATE TABLE tasks (
     title VARCHAR(200),
     description TEXT,
     assigned_by INT,
+    mentorId INT,
     priority ENUM('LOW','MEDIUM','HIGH') DEFAULT 'MEDIUM',
     status ENUM('TODO','IN_PROGRESS','DONE','REVIEWED') DEFAULT 'TODO',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deadline DATE,
+    deadline DATETIME,
     due_soon BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (assigned_by) REFERENCES mentor_users(mentor_id),
+    FOREIGN KEY (mentorId) REFERENCES mentor_users(mentor_id),
     FOREIGN KEY (program_id) REFERENCES programs(program_id)
 );
 
@@ -193,6 +195,24 @@ CREATE TABLE task_progress (
     note TEXT,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (task_id) REFERENCES tasks(task_id)
+);
+
+CREATE TABLE tags (
+    tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    color VARCHAR(20) DEFAULT '#3b82f6',
+    program_id INT NOT NULL,
+    FOREIGN KEY (program_id) REFERENCES programs(program_id),
+    UNIQUE KEY unique_tag_name_program (name, program_id)
+);
+
+CREATE TABLE task_tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    FOREIGN KEY (task_id) REFERENCES tasks(task_id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_task_tag (task_id, tag_id)
 );
 
 -- ======================================

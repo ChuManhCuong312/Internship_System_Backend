@@ -80,4 +80,42 @@ public interface InternRepository extends JpaRepository<InternProfile, Integer> 
                         ")")
         List<InternProfileDTO> findByInternIdsOrKeyword(@Param("internIds") List<Long> internIds,
                         @Param("keyword") String keyword);
+    // returns interns whose user.fullName matches, contract approved and user active and intern not assigned anywhere
+    @Query("""
+        SELECT i
+        FROM InternProfile i
+        JOIN com.example.Internship_System.auth.entity.User u ON u.userId = i.userId
+        JOIN com.example.Internship_System.intern.entity.ContractDocument cd ON cd.intern.internId = i.internId
+        WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :name, '%'))
+          AND cd.internConfirmStatus = 'APPROVED'
+          AND u.status = 'ACTIVE'
+          AND i.internId NOT IN (
+               SELECT ti.intern.internId FROM com.example.Internship_System.team.entity.TeamIntern ti
+          )
+    """)
+    List<InternProfile> searchAvailableInterns(@Param("name") String name);
+
+    // filter by major + same availability rule
+    @Query("""
+        SELECT i
+        FROM InternProfile i
+        JOIN com.example.Internship_System.auth.entity.User u ON u.userId = i.userId
+        JOIN com.example.Internship_System.intern.entity.ContractDocument cd ON cd.intern.internId = i.internId
+        WHERE LOWER(i.major) = LOWER(:major)
+          AND cd.internConfirmStatus = 'APPROVED'
+          AND u.status = 'ACTIVE'
+          AND i.internId NOT IN (
+               SELECT ti.intern.internId FROM com.example.Internship_System.team.entity.TeamIntern ti
+          )
+    """)
+    List<InternProfile> findAvailableInternsByMajor(@Param("major") String major);
+
+    @Query("""
+        SELECT i
+        FROM InternProfile i
+        JOIN TeamIntern ti ON ti.intern.id = i.id
+        JOIN Team t ON t.id = ti.team.id
+        WHERE t.program.id = :programId
+        """)
+    List<InternProfile> findInternsByProgramId(Integer programId);
 }

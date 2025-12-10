@@ -147,5 +147,16 @@ public class ProgramController {
         return ResponseEntity.ok(programs);
     }
 
+    @PutMapping("/{programId}/finish")
+    public ResponseEntity<?> finishProgram(@PathVariable Integer programId) {
+        int updatedInterns = programService.finishProgram(programId);
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Program has been finished and interns rejected.",
+                        "updatedInterns", updatedInterns
+                )
+        );
+    }
 
 }

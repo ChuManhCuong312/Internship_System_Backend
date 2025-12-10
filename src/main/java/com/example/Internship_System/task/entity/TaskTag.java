@@ -7,17 +7,22 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "task_team_assignments")
-public class TaskTeamAssignment {
-
+@Table(name = "task_tags")
+public class TaskTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     @Column(name = "task_id", nullable = false)
     private Integer taskId;
 
-    @Column(name = "team_id", nullable = false)
-    private Integer teamId;
+    @Column(name = "tag_id", nullable = false)
+    private Integer tagId;
+@SuppressWarnings("unused")
+    public TaskTag() {}
+
+    public TaskTag(Integer taskId, Integer tagId) {
+        this.taskId = taskId;
+        this.tagId = tagId;
+    }
 }
