@@ -34,7 +34,7 @@ public class SupportRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SupportStatus status = SupportStatus.PENDING;
+    private SupportStatus status = SupportStatus.OPEN;
 
     @Column(length = 1000)
     private String response;

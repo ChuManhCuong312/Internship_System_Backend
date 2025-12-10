@@ -52,7 +52,7 @@ public class SupportService {
                 .supportType(type)
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .status(SupportStatus.PENDING)
+                .status(SupportStatus.OPEN)
                 .requestDate(LocalDateTime.now())
                 .build();
 
@@ -61,7 +61,7 @@ public class SupportService {
         SupportRequestHistory h = SupportRequestHistory.builder()
                 .request(saved)
                 .oldStatus(null)
-                .newStatus(SupportStatus.PENDING)
+                .newStatus(SupportStatus.OPEN)
                 .changeDate(LocalDateTime.now())
                 .changedBy(internId)
                 .remarks("Tạo yêu cầu")
@@ -74,11 +74,11 @@ public class SupportService {
     @Transactional
     public SupportRequest approve(Integer id, Integer hrId, String response) {
         SupportRequest req = getById(id);
-        if (req.getStatus() != SupportStatus.PENDING) {
+        if (req.getStatus() != SupportStatus.OPEN) {
             throw new RuntimeException("Chỉ xử lý yêu cầu ở trạng thái Chờ xử lý");
         }
         SupportStatus old = req.getStatus();
-        req.setStatus(SupportStatus.APPROVED);
+        req.setStatus(SupportStatus.RESOLVED);
         req.setProcessedBy(hrId);
         req.setProcessedDate(LocalDateTime.now());
         if (response != null && !response.trim().isEmpty()) {
@@ -89,7 +89,7 @@ public class SupportService {
         SupportRequestHistory h = SupportRequestHistory.builder()
                 .request(saved)
                 .oldStatus(old)
-                .newStatus(SupportStatus.APPROVED)
+                .newStatus(SupportStatus.RESOLVED)
                 .changeDate(LocalDateTime.now())
                 .changedBy(hrId)
                 .remarks(response)
@@ -102,7 +102,7 @@ public class SupportService {
     @Transactional
     public SupportRequest reject(Integer id, Integer hrId, String response) {
         SupportRequest req = getById(id);
-        if (req.getStatus() != SupportStatus.PENDING) {
+        if (req.getStatus() != SupportStatus.IN_PROGRESS) {
             throw new RuntimeException("Chỉ xử lý yêu cầu ở trạng thái Chờ xử lý");
         }
         if (response == null || response.trim().isEmpty()) {
