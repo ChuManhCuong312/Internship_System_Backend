@@ -30,7 +30,7 @@ public class SupportController {
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> getAll() {
         try {
-            List<SupportRequest> list = supportService.getAll();
+            List<SupportRequestDTO> list = supportService.filter(null, null, null, null);
             return ResponseEntity.ok(list);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
