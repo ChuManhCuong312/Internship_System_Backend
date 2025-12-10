@@ -1,6 +1,7 @@
 package com.example.Internship_System.support.service;
 
 import com.example.Internship_System.support.dto.SupportDTO;
+import com.example.Internship_System.support.dto.SupportRequestDTO;
 import com.example.Internship_System.support.entity.SupportRequest;
 import com.example.Internship_System.support.entity.SupportRequestHistory;
 import com.example.Internship_System.support.entity.SupportStatus;
@@ -38,8 +39,9 @@ public class SupportService {
         return supportRequestRepository.findByInternIdOrderByRequestDateDesc(internId);
     }
 
-    public List<SupportRequest> filter(SupportStatus status, SupportType type, Integer internId) {
-        return supportRequestRepository.findByCriteria(status, type, internId);
+    public List<SupportRequestDTO> filter(SupportStatus status, SupportType type, Integer internId, String keyword) {
+
+        return supportRequestRepository.findByCriteria(status, type, internId, keyword);
     }
 
     @Transactional

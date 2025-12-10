@@ -1,6 +1,7 @@
 package com.example.Internship_System.support.controller;
 
 import com.example.Internship_System.support.dto.SupportDTO;
+import com.example.Internship_System.support.dto.SupportRequestDTO;
 import com.example.Internship_System.support.entity.SupportRequest;
 import com.example.Internship_System.support.entity.SupportRequestHistory;
 import com.example.Internship_System.support.entity.SupportStatus;
@@ -50,12 +51,13 @@ public class SupportController {
     @GetMapping("/filter")
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> filter(@RequestParam(required = false) String status,
-                                    @RequestParam(required = false) String type,
-                                    @RequestParam(required = false) Integer internId) {
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) Integer internId,
+            @RequestParam(required = false) String keyword) {
         try {
             SupportStatus st = status != null && !status.isEmpty() ? SupportStatus.valueOf(status.toUpperCase()) : null;
             SupportType tp = type != null && !type.isEmpty() ? SupportType.valueOf(type.toUpperCase()) : null;
-            List<SupportRequest> list = supportService.filter(st, tp, internId);
+            List<SupportRequestDTO> list = supportService.filter(st, tp, internId, keyword);
             return ResponseEntity.ok(list);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", "Tham số lọc không hợp lệ"));
@@ -67,7 +69,7 @@ public class SupportController {
     @PostMapping
     @PreAuthorize("hasRole('INTERN')")
     public ResponseEntity<?> create(@Valid @RequestBody SupportDTO dto,
-                                    @RequestParam Integer internId) {
+            @RequestParam Integer internId) {
         try {
             SupportRequest created = supportService.createSupportRequest(dto, internId);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -92,8 +94,8 @@ public class SupportController {
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> approve(@PathVariable Integer id,
-                                     @RequestParam Integer hrId,
-                                     @RequestParam(required = false) String response) {
+            @RequestParam Integer hrId,
+            @RequestParam(required = false) String response) {
         try {
             SupportRequest updated = supportService.approve(id, hrId, response);
             return ResponseEntity.ok(updated);
@@ -107,8 +109,8 @@ public class SupportController {
     @PutMapping("/{id}/reject")
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> reject(@PathVariable Integer id,
-                                    @RequestParam Integer hrId,
-                                    @RequestParam String response) {
+            @RequestParam Integer hrId,
+            @RequestParam String response) {
         try {
             SupportRequest updated = supportService.reject(id, hrId, response);
             return ResponseEntity.ok(updated);
