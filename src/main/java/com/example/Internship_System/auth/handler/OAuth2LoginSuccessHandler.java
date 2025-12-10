@@ -39,13 +39,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         // Lookup user in DB FIRST
         Optional<User> existingUser = userRepository.findByEmail(email);
 
-        // NEW — check rejection block
-        if (existingUser.isPresent() && existingUser.get().getStatus() == UserStatus.REJECTED) {
-            // Redirect to a proper error page
-            getRedirectStrategy().sendRedirect(request, response,
-                    "http://localhost:5173/oauth-failed");
-            return;
-        }
+
 
         // Extract role as before
         String rawRole = authentication.getAuthorities().stream()
