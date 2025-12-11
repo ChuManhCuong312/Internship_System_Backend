@@ -64,20 +64,20 @@ public class InternProfile {
     @Column(name = "intern_image_path")
     private String avatar;
 
-    @Column(name = "gpa", nullable = false)
+    @Column(name = "gpa")
     @DecimalMin(value = "0.0", inclusive = false, message = "GPA phải lớn hơn 0")
     @DecimalMax(value = "4.0", inclusive = true, message = "GPA phải nhỏ hơn hoặc bằng 4.0")
-    private double gpa;
+    private Double gpa;
 
     @Column(name = "rejection_reason")
     @Size(max = 255)
     private String rejectionReason;
 
-    public double getGpa() {
+    public Double getGpa() {
         return gpa;
     }
 
-    public void setGpa(double gpa) {
+    public void setGpa(Double gpa) {
         this.gpa = gpa;
     }
 
