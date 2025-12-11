@@ -50,9 +50,13 @@ public class InternController {
     public ResponseEntity<InternProfile> createInternProfile(
             @Valid @RequestBody InternProfile internProfile) {
         try {
+            System.out.println("Creating intern profile: " + internProfile);
             InternProfile savedProfile = internService.save(internProfile);
+            System.out.println("Saved profile: " + savedProfile);
             return new ResponseEntity<>(savedProfile, HttpStatus.CREATED);
         } catch (Exception e) {
+            System.err.println("Error creating profile: " + e.getMessage());
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -74,7 +78,7 @@ public class InternController {
     public ResponseEntity<InternProfile> getInternProfileById(@PathVariable("id") int id) {
         Optional<InternProfile> profile = internService.findById(id);
         return profile.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.OK));
     }
 
     @GetMapping("/user/{userId}")
@@ -82,7 +86,7 @@ public class InternController {
             @PathVariable("userId") int userId) {
         Optional<InternProfileWithPhoneDTO> profile = internService.findByUserIdWithPhone(userId);
         return profile.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.OK));
     }
 
     @GetMapping("/status/{status}")
