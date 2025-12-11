@@ -3,6 +3,7 @@ package com.example.Internship_System.notification.service;
 import com.example.Internship_System.notification.entity.Notification;
 import com.example.Internship_System.notification.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
@@ -51,6 +52,7 @@ public class NotificationService {
     }
 
 
+    @Async
     public void createProfileStatusNotification(int internId, String status, String rejectionReason) {
         String upperStatus = status != null ? status.toUpperCase() : "";
 
@@ -76,6 +78,7 @@ public class NotificationService {
     }
 
 
+    @Async
     public void createProfileUpdatedNotification(int internId) {
         String title = "Hồ sơ thực tập đã được cập nhật";
         String message = "Hồ sơ của bạn đã được HR cập nhật. Vui lòng kiểm tra lại thông tin.";
