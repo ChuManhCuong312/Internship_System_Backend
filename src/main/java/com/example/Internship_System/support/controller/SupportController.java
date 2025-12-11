@@ -2,6 +2,7 @@ package com.example.Internship_System.support.controller;
 
 import com.example.Internship_System.support.dto.SupportDTO;
 import com.example.Internship_System.support.dto.SupportRequestDTO;
+import com.example.Internship_System.support.dto.TablePaging;
 import com.example.Internship_System.support.entity.SupportRequest;
 import com.example.Internship_System.support.entity.SupportRequestHistory;
 import com.example.Internship_System.support.entity.SupportStatus;
@@ -30,7 +31,7 @@ public class SupportController {
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> getAll() {
         try {
-            List<SupportRequestDTO> list = supportService.filter(null, null, null, null);
+            TablePaging<SupportRequestDTO> list = supportService.filter(null, null, null, null, 0, 10);
             return ResponseEntity.ok(list);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
@@ -53,11 +54,13 @@ public class SupportController {
     public ResponseEntity<?> filter(@RequestParam(required = false) String status,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) Integer internId,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size) {
         try {
             SupportStatus st = status != null && !status.isEmpty() ? SupportStatus.valueOf(status.toUpperCase()) : null;
             SupportType tp = type != null && !type.isEmpty() ? SupportType.valueOf(type.toUpperCase()) : null;
-            List<SupportRequestDTO> list = supportService.filter(st, tp, internId, keyword);
+            TablePaging<SupportRequestDTO> list = supportService.filter(st, tp, internId, keyword, page, size);
             return ResponseEntity.ok(list);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", "Tham số lọc không hợp lệ"));
@@ -113,6 +116,20 @@ public class SupportController {
             @RequestParam String response) {
         try {
             SupportRequest updated = supportService.reject(id, hrId, response);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/{id}/update-status")
+    @PreAuthorize("hasRole('HR')")
+    public ResponseEntity<?> updateStatus(@PathVariable Integer id, @RequestParam Integer hrId,
+            @RequestParam SupportStatus status) {
+        try {
+            SupportRequest updated = supportService.updateStatus(id, hrId, status);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

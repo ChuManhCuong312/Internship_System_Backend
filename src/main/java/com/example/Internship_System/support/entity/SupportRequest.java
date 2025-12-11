@@ -42,9 +42,10 @@ public class SupportRequest {
     @Column(length = 1000)
     private String rejectionReason;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime requestDate = LocalDateTime.now();
+    // @Column(nullable = false, updatable = false)
+    // private LocalDateTime requestDate = LocalDateTime.now();
 
+    @Column(nullable = false)
     private Integer processedBy;
 
     private LocalDateTime processedDate;

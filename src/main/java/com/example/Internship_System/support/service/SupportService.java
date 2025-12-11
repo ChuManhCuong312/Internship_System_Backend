@@ -2,6 +2,7 @@ package com.example.Internship_System.support.service;
 
 import com.example.Internship_System.support.dto.SupportDTO;
 import com.example.Internship_System.support.dto.SupportRequestDTO;
+import com.example.Internship_System.support.dto.TablePaging;
 import com.example.Internship_System.support.entity.SupportRequest;
 import com.example.Internship_System.support.entity.SupportRequestHistory;
 import com.example.Internship_System.support.entity.SupportStatus;
@@ -9,6 +10,9 @@ import com.example.Internship_System.support.entity.SupportType;
 import com.example.Internship_System.repository.SupportRequestRepository;
 import com.example.Internship_System.repository.SupportRequestHistoryRepository;
 import jakarta.transaction.Transactional;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +31,7 @@ public class SupportService {
     }
 
     public List<SupportRequest> getAll() {
-        return supportRequestRepository.findAllByOrderByRequestDateDesc();
+        return supportRequestRepository.findAllByOrderByProcessedDateDesc();
     }
 
     public SupportRequest getById(Integer id) {
@@ -36,12 +40,15 @@ public class SupportService {
     }
 
     public List<SupportRequest> getMyRequests(Integer internId) {
-        return supportRequestRepository.findByInternIdOrderByRequestDateDesc(internId);
+        return supportRequestRepository.findByInternIdOrderByProcessedDateDesc(internId);
     }
 
-    public List<SupportRequestDTO> filter(SupportStatus status, SupportType type, Integer internId, String keyword) {
-
-        return supportRequestRepository.findByCriteria(status, type, internId, keyword);
+    public TablePaging<SupportRequestDTO> filter(SupportStatus status, SupportType type, Integer internId,
+            String keyword,
+            Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        var result = supportRequestRepository.findByCriteria(status, type, internId, keyword, pageable);
+        return new TablePaging<>(result);
     }
 
     @Transactional
@@ -53,7 +60,6 @@ public class SupportService {
                 .title(dto.getTitle())
                 .description(dto.getDescription())
                 .status(SupportStatus.OPEN)
-                .requestDate(LocalDateTime.now())
                 .build();
 
         SupportRequest saved = supportRequestRepository.save(req);
@@ -123,6 +129,27 @@ public class SupportService {
                 .changeDate(LocalDateTime.now())
                 .changedBy(hrId)
                 .remarks(response)
+                .build();
+        historyRepository.save(h);
+
+        return saved;
+    }
+
+    @Transactional
+    public SupportRequest updateStatus(Integer id, Integer hrId, SupportStatus status) {
+        SupportRequest req = getById(id);
+        req.setStatus(status);
+        req.setProcessedBy(hrId);
+        req.setProcessedDate(LocalDateTime.now());
+        SupportRequest saved = supportRequestRepository.save(req);
+
+        SupportRequestHistory h = SupportRequestHistory.builder()
+                .request(saved)
+                .oldStatus(req.getStatus())
+                .newStatus(status)
+                .changeDate(LocalDateTime.now())
+                .changedBy(req.getProcessedBy())
+                .remarks("Cập nhật trạng thái")
                 .build();
         historyRepository.save(h);
 
