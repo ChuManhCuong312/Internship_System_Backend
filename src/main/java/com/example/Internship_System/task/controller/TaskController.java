@@ -200,6 +200,22 @@ public class TaskController {
         }
     }
 
+    //PATCH - Update only status (intern/mentor can trigger via board)
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<?> updateTaskStatus(@PathVariable int id, @RequestBody String status) {
+        try {
+            String normalized = status == null ? null : status.replace("\"", "").trim();
+            Task updated = taskService.updateStatus(id, normalized);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body("Trạng thái không hợp lệ. Hợp lệ: TODO, IN_PROGRESS, REVIEWED, DONE");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task không tồn tại");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi hệ thống khi cập nhật trạng thái");
+        }
+    }
+
     //FILTER tasks with details and pagination info
     @GetMapping("/filter/search")
     public ResponseEntity<?> filterTasks(
