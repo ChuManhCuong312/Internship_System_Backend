@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
@@ -23,6 +24,7 @@ public class SupportRequestHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "support_id", nullable = false)
+    @JsonIgnore // tránh lỗi ByteBuddy proxy
     private SupportRequest request;
 
     @Enumerated(EnumType.STRING)

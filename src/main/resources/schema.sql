@@ -345,5 +345,13 @@ CREATE TABLE MentorNotifications (
 );
 
 
-ALTER TABLE internship_system.support_requests
-ADD COLUMN request_date DATETIME NULL;
+CREATE TABLE support_request_history (
+  history_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  change_date DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  changed_by int DEFAULT NULL,
+  new_status enum('OPEN','IN_PROGRESS','RESOLVED','REJECTED') DEFAULT 'OPEN',
+  old_status enum('OPEN','IN_PROGRESS','RESOLVED','REJECTED') DEFAULT 'OPEN',
+  remarks varchar(1000) DEFAULT NULL,
+  support_id int NOT NULL,
+  FOREIGN KEY (support_id) REFERENCES support_requests (request_id)
+)

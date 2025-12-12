@@ -8,6 +8,8 @@ import com.example.Internship_System.support.entity.SupportRequestHistory;
 import com.example.Internship_System.support.entity.SupportStatus;
 import com.example.Internship_System.support.entity.SupportType;
 import com.example.Internship_System.repository.SupportRequestRepository;
+import com.example.Internship_System.notification.entity.Notification;
+import com.example.Internship_System.notification.repository.NotificationRepository;
 import com.example.Internship_System.repository.SupportRequestHistoryRepository;
 import jakarta.transaction.Transactional;
 
@@ -23,11 +25,13 @@ public class SupportService {
 
     private final SupportRequestRepository supportRequestRepository;
     private final SupportRequestHistoryRepository historyRepository;
+    private final NotificationRepository notificationRepository;
 
     public SupportService(SupportRequestRepository supportRequestRepository,
-            SupportRequestHistoryRepository historyRepository) {
+            SupportRequestHistoryRepository historyRepository, NotificationRepository notificationRepository) {
         this.supportRequestRepository = supportRequestRepository;
         this.historyRepository = historyRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public List<SupportRequest> getAll() {
@@ -138,6 +142,7 @@ public class SupportService {
     @Transactional
     public SupportRequest updateStatus(Integer id, Integer hrId, SupportStatus status) {
         SupportRequest req = getById(id);
+        var oldStatus = req.getStatus();
         req.setStatus(status);
         req.setProcessedBy(hrId);
         req.setProcessedDate(LocalDateTime.now());
@@ -145,7 +150,7 @@ public class SupportService {
 
         SupportRequestHistory h = SupportRequestHistory.builder()
                 .request(saved)
-                .oldStatus(req.getStatus())
+                .oldStatus(oldStatus)
                 .newStatus(status)
                 .changeDate(LocalDateTime.now())
                 .changedBy(req.getProcessedBy())
@@ -153,10 +158,32 @@ public class SupportService {
                 .build();
         historyRepository.save(h);
 
+        Notification noti = Notification.builder()
+                .title("Yêu cầu hỗ trợ đã được cập nhật")
+                .message("Cán bộ QLNS đã cập nhật trạng thái yêu cầu hỗ trợ thành " + getStatusString(status))
+                .type("SUPPORT")
+                .internId(req.getInternId())
+                .build();
+        notificationRepository.save(noti);
         return saved;
     }
 
     public List<SupportRequestHistory> getHistory(Integer supportId) {
         return historyRepository.findByRequest_SupportIdOrderByChangeDateAsc(supportId);
+    }
+
+    private String getStatusString(SupportStatus status) {
+        switch (status) {
+            case OPEN:
+                return "Chờ xử lý";
+            case IN_PROGRESS:
+                return "Đang xử lý";
+            case RESOLVED:
+                return "Đã giải quyết";
+            case REJECTED:
+                return "Đã từ chối";
+            default:
+                return "Trạng thái không hợp lệ";
+        }
     }
 }
