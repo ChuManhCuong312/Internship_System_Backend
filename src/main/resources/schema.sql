@@ -344,7 +344,7 @@ CREATE TABLE MentorNotifications (
     FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
 );
 
-
+-- Bảng lịch sử yêu cầu hỗ trợ
 CREATE TABLE support_request_history (
   history_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   change_date DATETIME DEFAULT CURRENT_TIMESTAMP,  
