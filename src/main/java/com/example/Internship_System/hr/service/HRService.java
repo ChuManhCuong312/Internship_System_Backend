@@ -110,6 +110,18 @@ public class HRService {
         notificationService.createProfileStatusNotification(intern.getInternId(), status, rejectionReason);
     }
 
+    public void updateStatuses(List<Integer> internIds, String status, String rejectionReason) {
+        if (internIds == null || internIds.isEmpty()) {
+            throw new RuntimeException("Danh sách internIds không được trống");
+        }
+
+        for (Integer internId : internIds) {
+            if (internId != null) {
+                updateStatus(internId, status, rejectionReason);
+            }
+        }
+    }
+
     @Transactional
     public void createInternProfileForUser(int userId, String phone, InternProfile profileData) {
         User existingUser = userRepository.findById(userId)

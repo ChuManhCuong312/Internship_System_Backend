@@ -3,6 +3,7 @@ package com.example.Internship_System.hr.controller;
 import com.example.Internship_System.hr.dto.CandidateDTO;
 import com.example.Internship_System.hr.dto.HRInternDTO;
 import com.example.Internship_System.hr.dto.InternUpdateDTO;
+import com.example.Internship_System.hr.dto.InternStatusBatchUpdateRequest;
 import com.example.Internship_System.hr.service.HRService;
 import com.example.Internship_System.repository.UserRepository;
 import jakarta.validation.ConstraintViolationException;
@@ -59,6 +60,16 @@ public class HRController {
             @RequestParam(required = false) String rejectionReason) {
         hrService.updateStatus(id, status, rejectionReason);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/status/batch")
+    public ResponseEntity<?> updateInternStatuses(@RequestBody InternStatusBatchUpdateRequest request) {
+        try {
+            hrService.updateStatuses(request.getInternIds(), request.getStatus(), request.getRejectionReason());
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @GetMapping("/candidates")
