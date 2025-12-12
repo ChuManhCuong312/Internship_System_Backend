@@ -55,6 +55,8 @@ public class SupportRequest {
 
     private LocalDateTime processedDate;
 
+    private LocalDateTime createdAt;
+
     @OneToMany(mappedBy = "request", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<SupportRequestHistory> histories = new ArrayList<>();

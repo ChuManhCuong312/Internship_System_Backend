@@ -23,7 +23,7 @@ public interface SupportRequestRepository extends JpaRepository<SupportRequest, 
         @Query("SELECT new com.example.Internship_System.support.dto.SupportRequestDTO(" +
                         "sr.supportId, sr.internId, sr.supportType, sr.title, sr.description, " +
                         "sr.status, sr.response, sr.rejectionReason, " +
-                        "sr.processedBy, sr.processedDate, u.fullName) " +
+                        "sr.processedBy, sr.processedDate, sr.createdAt, u.fullName) " +
                         "FROM SupportRequest sr " +
                         "JOIN InternProfile i ON sr.internId = i.internId " +
                         "JOIN User u ON i.userId = u.userId " +
