@@ -107,6 +107,23 @@ public class TaskService {
     }
 
     @Transactional
+    public Task updateStatus(int id, String status) {
+        if (status == null || status.isEmpty()) {
+            throw new IllegalArgumentException("Status không được để trống");
+        }
+        // Validate whitelist
+        Set<String> allowed = Set.of("TODO", "IN_PROGRESS", "REVIEWED", "DONE");
+        String normalized = status.toUpperCase();
+        if (!allowed.contains(normalized)) {
+            throw new IllegalArgumentException("Status không hợp lệ");
+        }
+        Task task = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task không tồn tại với id: " + id));
+        task.setStatus(normalized);
+        return repository.save(task);
+    }
+
+    @Transactional
     public Task createTaskFull(TaskUpdateRequest request) {
         // 1. Tạo task
         Task task = new Task();
