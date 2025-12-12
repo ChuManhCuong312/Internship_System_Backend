@@ -3,6 +3,10 @@ package com.example.Internship_System.auth.handler;
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.auth.entity.UserStatus;
 import com.example.Internship_System.config.JwtUtils;
+import com.example.Internship_System.intern.entity.ContractDocument;
+import com.example.Internship_System.intern.entity.InternProfile;
+import com.example.Internship_System.repository.ContractDocumentRepository;
+import com.example.Internship_System.repository.InternRepository;
 import com.example.Internship_System.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import org.springframework.security.core.Authentication;
@@ -19,10 +23,15 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
+    private final InternRepository internRepository;
+    private final ContractDocumentRepository contractDocumentRepository;
 
-    public OAuth2LoginSuccessHandler(JwtUtils jwtUtils,UserRepository userRepository) {
+    public OAuth2LoginSuccessHandler(JwtUtils jwtUtils,UserRepository userRepository,
+                                     InternRepository internRepository, ContractDocumentRepository contractDocumentRepository) {
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
+        this.internRepository = internRepository;
+        this.contractDocumentRepository = contractDocumentRepository;
     }
 
 
@@ -51,8 +60,29 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         Integer userId = existingUser.map(User::getUserId).orElse(null);
         String fullName = existingUser.map(User::getFullName).orElse(fullNameAttr != null ? fullNameAttr : "Unknown");
 
+        // ---- NEW CLAIMS ----
+        String userStatus = existingUser.map(u -> u.getStatus().toString()).orElse(null);
+        String internStatus = null;
+        String internConfirmStatus = null;
+
+        if (role.equalsIgnoreCase("INTERN") && userId != null) {
+
+            InternProfile intern = internRepository.findByUserId(userId).orElse(null);
+            if (intern != null) {
+                internStatus = intern.getStatus().toString();
+
+                ContractDocument doc = contractDocumentRepository
+                        .findByIntern(intern)
+                        .orElse(null);
+
+                if (doc != null) {
+                    internConfirmStatus = doc.getInternConfirmStatus().toString();
+                }
+            }
+        }
+
         // Generate JWT normally
-        String token = jwtUtils.generateToken(email, role, userId, fullName);
+        String token = jwtUtils.generateToken(email, role, userId, fullName, userStatus, internStatus, internConfirmStatus);
 
         // Set cookie
         Cookie cookie = new Cookie("token", token);

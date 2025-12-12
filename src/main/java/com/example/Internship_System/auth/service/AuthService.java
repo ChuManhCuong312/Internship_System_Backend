@@ -7,9 +7,9 @@ import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.auth.entity.UserStatus;
 import com.example.Internship_System.auth.entity.VerificationToken;
 import com.example.Internship_System.config.JwtUtils;
-import com.example.Internship_System.repository.RoleRepository;
-import com.example.Internship_System.repository.UserRepository;
-import com.example.Internship_System.repository.VerificationTokenRepository;
+import com.example.Internship_System.intern.entity.ContractDocument;
+import com.example.Internship_System.intern.entity.InternProfile;
+import com.example.Internship_System.repository.*;
 import com.example.Internship_System.utils.EmailService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,15 +30,19 @@ public class AuthService {
     private final JwtUtils jwtUtils;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailService emailService;
+    private final InternRepository internRepository;
+    private final ContractDocumentRepository contractDocumentRepository;
 
     public AuthService(UserRepository userRepository, RoleRepository roleRepository, JwtUtils jwtUtils,VerificationTokenRepository verificationTokenRepository,
-                       EmailService emailService) {
+                       EmailService emailService,InternRepository internRepository, ContractDocumentRepository contractDocumentRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtils = jwtUtils;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.verificationTokenRepository = verificationTokenRepository;
         this.emailService = emailService;
+        this.internRepository = internRepository;
+        this.contractDocumentRepository = contractDocumentRepository;
     }
 
     // REGISTER
@@ -74,24 +78,61 @@ public class AuthService {
 
         User user = userOpt.get();
 
-
-
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             return null;
         }
 
-        // Generate JWT token with email + role
-        String token = jwtUtils.generateToken(user.getEmail(), user.getRole().getName(),user.getUserId(), user.getFullName());
+        // ---- NEW: Load extra intern data if role = INTERN ----
+        String internStatus = null;
+        String internConfirmStatus = null;
 
-        // Return both token and user info
+        if (user.getRole().getName().equalsIgnoreCase("INTERN")) {
+
+            // 1️⃣ Get intern record by userId
+            InternProfile internUser = internRepository.findByUserId(user.getUserId())
+                    .orElse(null);
+
+            if (internUser != null) {
+                internStatus = internUser.getStatus().toString();
+
+                // 2️⃣ Get contract document by internId
+                ContractDocument doc = contractDocumentRepository
+                        .findByIntern(internUser)
+                        .orElse(null);
+
+                if (doc != null) {
+                    internConfirmStatus = doc.getInternConfirmStatus().toString();
+                }
+            }
+        }
+
+        // ---- Create JWT with ALL claims ----
+        String token = jwtUtils.generateToken(
+                user.getEmail(),
+                user.getRole().getName(),
+                user.getUserId(),
+                user.getFullName(),
+                user.getStatus().toString(),   // userStatus
+                internStatus,                  // internStatus
+                internConfirmStatus            // internConfirmStatus
+        );
+
+        // ---- Response to frontend ----
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("userId", user.getUserId());
         response.put("role", user.getRole().getName());
         response.put("email", user.getEmail());
-        response.put("fullName:", user.getFullName());
+        response.put("fullName", user.getFullName());
+
+        // Add new fields so frontend doesn't need to decode jwt for these
+        response.put("userStatus", user.getStatus().toString());
+        response.put("internStatus", internStatus);
+        response.put("internConfirmStatus", internConfirmStatus);
+
         return response;
     }
+
 
     // Encode passowrd using BCrypt
     public String encodePassWord(String rawPassword){
