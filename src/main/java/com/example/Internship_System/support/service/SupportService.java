@@ -170,6 +170,7 @@ public class SupportService {
                 .message("Cán bộ QLNS đã cập nhật trạng thái yêu cầu hỗ trợ thành " + getStatusString(status))
                 .type("SUPPORT")
                 .internId(req.getInternId())
+                .createdAt(LocalDateTime.now())
                 .build();
         notificationRepository.save(noti);
         return saved;
