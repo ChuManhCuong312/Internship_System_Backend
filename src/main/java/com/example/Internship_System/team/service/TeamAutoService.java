@@ -2,6 +2,7 @@ package com.example.Internship_System.team.service;
 
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.intern.entity.InternProfile;
+import com.example.Internship_System.notification.service.NotificationService;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.repository.*;
 import com.example.Internship_System.team.dto.AutoTeamResultDTO;
@@ -13,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,17 +25,20 @@ public class TeamAutoService {
     private final TeamRepository teamRepository;
     private final ProgramRepository programRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public TeamAutoService(InternRepository internRepository,
                            TeamInternRepository teamInternRepository,
                            TeamRepository teamRepository,
                            ProgramRepository programRepository,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           NotificationService notificationService) {
         this.internRepository = internRepository;
         this.teamInternRepository = teamInternRepository;
         this.teamRepository = teamRepository;
         this.programRepository = programRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     // Get available interns for table (name search)
@@ -80,22 +81,22 @@ public class TeamAutoService {
         int numTeams = req.getNumberOfTeams() == null ? 0 : req.getNumberOfTeams();
 
         Program program = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
 
         // Program must be UPCOMING
         if (program.getProgramStatus() != com.example.Internship_System.program.entity.ProgramStatus.UPCOMING) {
-            throw new RuntimeException("Cannot auto-create teams: program is not UPCOMING");
+            throw new RuntimeException("Không thể tự động tạo teams: chương trình đã diễn ra hoặc đã kết thúc");
         }
 
         int nInterns = chosenInternIds.size();
         if (nInterns == 0) {
-            throw new RuntimeException("No interns selected");
+            throw new RuntimeException("Chưa có TTS được chọn");
         }
         if (numTeams <= 0) {
-            throw new RuntimeException("Number of teams must be >= 1");
+            throw new RuntimeException("Số lượng teams >= 1");
         }
         if (numTeams > nInterns) {
-            throw new RuntimeException("Number of teams cannot exceed number of selected interns");
+            throw new RuntimeException("Số lượng teams không thể vượt quá số TTS chọn");
         }
 
         int programMaxInterns = program.getMaxInterns();
@@ -104,15 +105,15 @@ public class TeamAutoService {
         // Validate total after auto team creation
         if (nInterns + alreadyAssignedInterns > programMaxInterns) {
             throw new RuntimeException(
-                    "Cannot create teams: selected interns exceed remaining available slots in program. " +
-                            "Remaining quota = " + (programMaxInterns - alreadyAssignedInterns)
+                    "Không thể tạo teams: Số lượng TTS đã chọn vượt quá số lượng TTS còn trống của chương trình. " +
+                            "Số lượng TTS còn trống = " + (programMaxInterns - alreadyAssignedInterns)
             );
         }
 
         // Ensure all interns are still available (not assigned to any team)
         for (Integer internId : chosenInternIds) {
             if (teamInternRepository.existsByIntern_InternId(internId)) {
-                throw new RuntimeException("Intern " + internId + " is already assigned to a team");
+                throw new RuntimeException("TTS " + internId + " đã được phân công đến 1 team");
             }
         }
 
@@ -125,6 +126,8 @@ public class TeamAutoService {
 
         List<AutoTeamResultDTO> results = new ArrayList<>();
         int idx = 0;
+
+        Map<Integer, List<Integer>> teamInternMap = new HashMap<>();
 
         for (int t = 0; t < numTeams; t++) {
             int size = base + (t < remainder ? 1 : 0);
@@ -142,13 +145,25 @@ public class TeamAutoService {
                 assigned.add(internId);
                 // create team_intern row
                 var intern = internRepository.findById(internId)
-                        .orElseThrow(() -> new RuntimeException("Intern not found: " + internId));
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy TTS: " + internId));
                 TeamIntern ti = new TeamIntern(savedTeam, intern, LocalDateTime.now());
                 teamInternRepository.save(ti);
             }
-
+            teamInternMap.put(savedTeam.getTeamId(), assigned);
             results.add(new AutoTeamResultDTO(savedTeam.getTeamId(), assigned));
         }
+
+        for (var entry : teamInternMap.entrySet()) {
+            Integer teamId = entry.getKey();
+            for (Integer internId : entry.getValue()) {
+                notificationService.createInternAddedToTeamNotification(
+                        internId,
+                        programId,
+                        teamId
+                );
+            }
+        }
+
 
         return results;
     }
