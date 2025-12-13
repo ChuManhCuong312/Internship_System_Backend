@@ -2,6 +2,7 @@ package com.example.Internship_System.support.service;
 
 import com.example.Internship_System.support.dto.SupportDTO;
 import com.example.Internship_System.support.dto.SupportRequestDTO;
+import com.example.Internship_System.support.dto.SupportRequestHistoryDTO;
 import com.example.Internship_System.support.dto.TablePaging;
 import com.example.Internship_System.support.entity.SupportRequest;
 import com.example.Internship_System.support.entity.SupportRequestHistory;
@@ -142,12 +143,15 @@ public class SupportService {
     }
 
     @Transactional
-    public SupportRequest updateStatus(Integer id, Integer hrId, SupportStatus status) {
+    public SupportRequest updateStatus(Integer id, Integer hrId, SupportStatus status, String response) {
         SupportRequest req = getById(id);
         var oldStatus = req.getStatus();
         req.setStatus(status);
         req.setProcessedBy(hrId);
         req.setProcessedDate(LocalDateTime.now());
+        if (response != null && !response.trim().isEmpty()) {
+            req.setResponse(response);
+        }
         SupportRequest saved = supportRequestRepository.save(req);
 
         SupportRequestHistory h = SupportRequestHistory.builder()
@@ -170,8 +174,8 @@ public class SupportService {
         return saved;
     }
 
-    public List<SupportRequestHistory> getHistory(Integer supportId) {
-        return historyRepository.findByRequest_SupportIdOrderByChangeDateAsc(supportId);
+    public List<SupportRequestHistoryDTO> getHistory(Integer supportId) {
+        return historyRepository.findHistoryBySupportId(supportId);
     }
 
     private String getStatusString(SupportStatus status) {

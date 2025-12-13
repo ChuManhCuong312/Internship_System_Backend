@@ -2,6 +2,7 @@ package com.example.Internship_System.support.controller;
 
 import com.example.Internship_System.support.dto.SupportDTO;
 import com.example.Internship_System.support.dto.SupportRequestDTO;
+import com.example.Internship_System.support.dto.SupportRequestHistoryDTO;
 import com.example.Internship_System.support.dto.TablePaging;
 import com.example.Internship_System.support.entity.SupportRequest;
 import com.example.Internship_System.support.entity.SupportRequestHistory;
@@ -127,9 +128,9 @@ public class SupportController {
     @PutMapping("/{id}/update-status")
     @PreAuthorize("hasRole('HR')")
     public ResponseEntity<?> updateStatus(@PathVariable Integer id, @RequestParam Integer hrId,
-            @RequestParam SupportStatus status) {
+            @RequestParam SupportStatus status, @RequestParam String response) {
         try {
-            SupportRequest updated = supportService.updateStatus(id, hrId, status);
+            SupportRequest updated = supportService.updateStatus(id, hrId, status, response);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -142,7 +143,7 @@ public class SupportController {
     @PreAuthorize("hasAnyRole('HR','INTERN')")
     public ResponseEntity<?> history(@PathVariable Integer id) {
         try {
-            List<SupportRequestHistory> list = supportService.getHistory(id);
+            List<SupportRequestHistoryDTO> list = supportService.getHistory(id);
             return ResponseEntity.ok(list);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
