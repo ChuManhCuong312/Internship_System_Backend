@@ -67,6 +67,7 @@ public class SupportService {
                 .status(SupportStatus.OPEN)
                 .processedDate(LocalDateTime.now())
                 .processedBy(internId)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         SupportRequest saved = supportRequestRepository.save(req);
