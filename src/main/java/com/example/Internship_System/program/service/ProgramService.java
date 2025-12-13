@@ -4,6 +4,7 @@ import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.auth.entity.UserStatus;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
+import com.example.Internship_System.notification.service.NotificationService;
 import com.example.Internship_System.program.dto.*;
 import com.example.Internship_System.program.entity.MentorProgram;
 import com.example.Internship_System.program.entity.Program;
@@ -41,6 +42,7 @@ public class ProgramService {
     private final MentorRepository mentorRepository;
     private final InternRepository internRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public ProgramService(ProgramRepository programRepository,
                           MentorProgramRepository mentorProgramRepository,
@@ -50,7 +52,8 @@ public class ProgramService {
                           TaskRepository taskRepository,
                           MentorRepository mentorRepository,
                           InternRepository internRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          NotificationService notificationService) {
         this.programRepository = programRepository;
         this.mentorProgramRepository = mentorProgramRepository;
         this.teamRepository = teamRepository;
@@ -60,6 +63,7 @@ public class ProgramService {
         this.mentorRepository = mentorRepository;
         this.internRepository = internRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     // Search program by name
@@ -113,16 +117,31 @@ public class ProgramService {
     public void deleteProgram(Integer programId) {
 
         Program program = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
 
         // ❌ Cannot delete ongoing program
         if (program.getProgramStatus().equals(ProgramStatus.ON_GOING)) {
-            throw new RuntimeException("Cannot delete program because it is ON_GOING");
+            throw new RuntimeException("Không thể xóa chương trình khi đang diễn ra");
+        }
+
+        String programName = program.getName();
+
+        List<Team> teams = teamRepository.findByProgramProgramId(programId);
+
+        // Notify all interns in all teams
+        for (Team team : teams) {
+            List<TeamIntern> teamInterns =
+                    teamInternRepository.findAllByTeam_TeamId(team.getTeamId());
+
+            for (TeamIntern ti : teamInterns) {
+                notificationService.createProgramDeletedNotification(
+                        ti.getIntern().getInternId(),
+                        programName
+                );
+            }
         }
 
         // 1️⃣ Delete team_intern mappings for all teams
-        List<Team> teams = teamRepository.findByProgramProgramId(programId);
-
         for (Team team : teams) {
             teamInternRepository.deleteAllByTeam_TeamId(team.getTeamId());
         }
@@ -141,14 +160,22 @@ public class ProgramService {
     public Program createProgram(ProgramCreateRequest request) {
         LocalDateTime now = LocalDateTime.now();
 
+        if(request.getStartDate() == null){
+            throw new IllegalArgumentException("Ngày bắt đầu không được để trống.");
+        }
+
+        if(request.getEndDate() == null){
+            throw new IllegalArgumentException("Ngày kết thúc không được để trống.");
+        }
+
         // RULE 1: startDate must be at least 2 weeks from now
         if (request.getStartDate().isBefore(now.plusWeeks(2))) {
-            throw new IllegalArgumentException("Start date must be at least 2 weeks from today.");
+            throw new IllegalArgumentException("Ngày bắt đầu phải sau ngày hôm nay ít nhất 2 tuần.");
         }
 
         // RULE 2: endDate must be at least 1 month after startDate
         if (request.getEndDate().isBefore(request.getStartDate().plusMonths(1))) {
-            throw new IllegalArgumentException("End date must be at least 1 month after the start date.");
+            throw new IllegalArgumentException("Ngày kết thúc phải sau ngày bắt đầu 1 tháng.");
         }
 
         // Create program
@@ -175,17 +202,25 @@ public class ProgramService {
         // ❌ Block editing if status is ON_GOING or FINISHED
         if (program.getProgramStatus() == ProgramStatus.ON_GOING ||
                 program.getProgramStatus() == ProgramStatus.FINISHED) {
-            throw new RuntimeException("Cannot edit this program because it is ON_GOING or FINISHED.");
+            throw new RuntimeException("Không thể cập chương khi đang diễn ra hoặc đã kết thúc.");
+        }
+
+        if(request.getStartDate() == null){
+            throw new IllegalArgumentException("Ngày bắt đầu không được để trống.");
+        }
+
+        if(request.getEndDate() == null){
+            throw new IllegalArgumentException("Ngày kết thúc không được để trống.");
         }
 
         // RULE 1: New start date CANNOT be BEFORE old start date
         if (request.getStartDate().isBefore(program.getStartDate())) {
-            throw new IllegalArgumentException("New start date cannot be earlier than the previous start date.");
+            throw new IllegalArgumentException("Ngày kết thúc mới không thể trước ngày kết thúc cũ.");
         }
 
         // RULE 2: End date must be at least 1 month after new start date
         if (request.getEndDate().isBefore(request.getStartDate().plusMonths(1))) {
-            throw new IllegalArgumentException("End date must be at least one month after the new start date.");
+            throw new IllegalArgumentException("Ngày kết thúc phải sau ngày bắt đầu mới 1 tháng.");
         }
 
         // Apply updates
@@ -201,7 +236,7 @@ public class ProgramService {
 
     public ProgramCloneDTO getCloneTemplate(Integer programId) {
         Program p = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
 
         ProgramCloneDTO dto = new ProgramCloneDTO();
         dto.setName(p.getName() + " (copy)");
@@ -218,12 +253,20 @@ public class ProgramService {
         LocalDateTime start = request.getStartDate();
         LocalDateTime end = request.getEndDate();
 
+        if(start == null){
+            throw new IllegalArgumentException("Ngày bắt đầu không được để trống.");
+        }
+
+        if(end == null){
+            throw new IllegalArgumentException("Ngày kết thúc không được để trống.");
+        }
+
         if (start.isBefore(LocalDateTime.now().plusWeeks(2))) {
-            throw new RuntimeException("Start date must be at least 2 weeks from now");
+            throw new RuntimeException("Ngày bắt đầu phải sau ngày hôm nay ít nhất 2 tuần.");
         }
 
         if (end.isBefore(start.plusMonths(1))) {
-            throw new RuntimeException("End date must be at least 1 month after start date");
+            throw new RuntimeException("Ngày kết thúc phải sau ngày bắt đầu 1 tháng.");
         }
 
         Program newProgram = new Program();
@@ -242,22 +285,22 @@ public class ProgramService {
     public MentorProgram assignMentorToProgram(Integer programId, Integer mentorId) {
 
         Program program = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
 
         // ❌ Block assignment if program is ongoing or finished
         if (program.getProgramStatus() == ProgramStatus.FINISHED) {
-            throw new RuntimeException("Cannot assign mentor because the program is FINISHED.");
+            throw new RuntimeException("Không thể phân công mentor khi chương trình đã kết thúc.");
         }
 
         MentorUser mentor = mentorRepository.findById(mentorId)
-                .orElseThrow(() -> new RuntimeException("Mentor not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy mentor"));
 
         // ❌ Prevent duplicate assignment
         boolean exists = mentorProgramRepository
                 .existsByProgram_ProgramIdAndMentor_MentorId(programId, mentorId);
 
         if (exists) {
-            throw new RuntimeException("This mentor is already assigned to this program.");
+            throw new RuntimeException("Mentor đã được phân công cho chương trình này.");
         }
 
         // Create new mentor-program link
@@ -411,10 +454,10 @@ public class ProgramService {
     @Transactional
     public int finishProgram(Integer programId) {
         Program program = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
 
         if (program.getProgramStatus() == ProgramStatus.FINISHED) {
-            throw new RuntimeException("Program is already finished");
+            throw new RuntimeException("Chương trình đã kết thúc");
         }
 
         // Set program to FINISHED
