@@ -7,14 +7,52 @@ services:
       MYSQL_DATABASE: internship_db
       MYSQL_USER: internship_user
       MYSQL_PASSWORD: internship_password
+      MYSQL_ROOT_HOST: 'localhost'  # Disable root login from remote
+      TZ: 'Asia/Bangkok'  # Set your timezone
+      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: 'mysql_native_password'
+      MYSQL_INITDB_SKIP_TZINFO: '1'
+      # Performance tuning
+      MYSQL_INNODB_BUFFER_POOL_SIZE: '512M'
+      MYSQL_INNODB_LOG_FILE_SIZE: '256M'
+      MYSQL_INNODB_LOG_BUFFER_SIZE: '16M'
+      MYSQL_MAX_CONNECTIONS: '200'
+      MYSQL_CHARACTER_SET_SERVER: 'utf8mb4'
+      MYSQL_COLLATION_SERVER: 'utf8mb4_unicode_ci'
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d  # For custom MySQL config
+    command: [
+      '--max_connections=200',
+      '--innodb_buffer_pool_size=512M',
+      '--innodb_log_file_size=256M',
+      '--innodb_flush_log_at_trx_commit=1',
+      '--innodb_flush_method=O_DIRECT',
+      '--innodb_file_per_table=1',
+      '--innodb_io_capacity=200',
+      '--innodb_io_capacity_max=400',
+      '--innodb_read_io_threads=4',
+      '--innodb_write_io_threads=4',
+      '--slow_query_log=1',
+      '--slow_query_log_file=/var/log/mysql/mysql-slow.log',
+      '--long_query_time=2',
+      '--log_queries_not_using_indexes=1'
+    ]
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "internship_user", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
       retries: 10
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          memory: 1G
+    restart: unless-stopped
     networks:
       - internship_network
 
