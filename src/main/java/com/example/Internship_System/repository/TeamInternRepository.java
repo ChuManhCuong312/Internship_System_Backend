@@ -68,4 +68,6 @@ public interface TeamInternRepository extends JpaRepository<TeamIntern, Integer>
     List<TeamIntern> findTeamIntern(@Param("teamId") Integer teamId);
 
     boolean existsByIntern_InternId(Integer internId);
+
+    List<TeamIntern> findAllByTeam_TeamId(Integer teamId);
 }
