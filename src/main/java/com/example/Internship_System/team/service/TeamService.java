@@ -3,6 +3,7 @@ package com.example.Internship_System.team.service;
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
+import com.example.Internship_System.notification.service.NotificationService;
 import com.example.Internship_System.team.dto.*;
 import com.example.Internship_System.program.entity.Program;
 import com.example.Internship_System.program.entity.ProgramStatus;
@@ -41,6 +42,9 @@ public class TeamService {
     @Autowired
     private MentorProgramRepository mentorProgramRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public List<TeamInfoDTO> getTeamsInProgram(Integer programId) {
         List<Team> teams = teamRepository.findByProgramProgramId(programId);
 
@@ -77,19 +81,18 @@ public class TeamService {
 
     public Team assignMentorToProgram(Integer programId, Integer mentorId) {
         Program program = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
-        if (program.getProgramStatus() == ProgramStatus.ON_GOING ||
-                program.getProgramStatus() == ProgramStatus.FINISHED) {
-            throw new RuntimeException("Cannot assign mentor to  this program because it is FINISHED.");
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
+        if (program.getProgramStatus() == ProgramStatus.FINISHED) {
+            throw new RuntimeException("Không thể phân công mentor vì chương trình đã kết thúc.");
         }
 
         MentorUser mentor = mentorRepository.findById(mentorId)
-                .orElseThrow(() -> new RuntimeException("Mentor not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy mentor"));
 
         // Prevent duplicate assignment
         boolean exists = teamRepository.existsByProgramProgramIdAndMentorMentorId(programId, mentorId);
         if (exists) {
-            throw new RuntimeException("This mentor is already assigned to this program");
+            throw new RuntimeException("Mentor đã được phân công cho chương trình này");
         }
 
         Team team = new Team(program, mentor, LocalDateTime.now());
@@ -98,15 +101,15 @@ public class TeamService {
 
     public TeamResponseDTO createTeam(CreateTeamDTO dto) {
         Program program = programRepository.findById(dto.getProgramId())
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
 
         if (program.getProgramStatus() == ProgramStatus.ON_GOING ||
                 program.getProgramStatus() == ProgramStatus.FINISHED) {
-            throw new RuntimeException("Cannot create team for this program because it is FINISHED.");
+            throw new RuntimeException("Không thể tạo team vì chương trình đang diễn ra hoặc đã kết thúc.");
         }
 
         MentorUser mentor = mentorRepository.findById(dto.getMentorId())
-                .orElseThrow(() -> new RuntimeException("Mentor not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy mentor"));
 
         Team team = new Team(program, mentor, LocalDateTime.now());
         Team savedTeam = teamRepository.save(team);
@@ -118,11 +121,11 @@ public class TeamService {
     public void removeMentorFromProgram(Integer programId, Integer mentorId) {
 
         Program program = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương"));
 
-        // ❌ Cannot modify if ongoing or finished
-        if (!program.getProgramStatus().equals(ProgramStatus.UPCOMING)) {
-            throw new RuntimeException("Cannot remove mentor because program is not UPCOMING");
+        // ❌ Cannot modify if finished
+        if (program.getProgramStatus().equals(ProgramStatus.FINISHED)) {
+            throw new RuntimeException("Không thể hủy phân công mentor vì chương trình đã kết thúc");
         }
 
         // Check if mentor belongs to any team in this program
@@ -130,7 +133,8 @@ public class TeamService {
                 teamRepository.existsByProgramProgramIdAndMentorMentorId(programId, mentorId);
 
         if (mentorHasTeam) {
-            throw new RuntimeException("Cannot remove mentor. They are assigned to a team.");
+            throw new RuntimeException("Không thể hủy phân công mentor(s) vì mentor(s) " +
+                    "đã được phân công đến ít nhất 1 team trong chương trình này .");
         }
 
         // Remove from mentor_program table
@@ -141,17 +145,35 @@ public class TeamService {
     public void removeInternFromTeam(Integer teamId, Integer internId) {
 
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new RuntimeException("Team not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy team"));
+
+        Integer programId = team.getProgram().getProgramId();
 
         // Remove mapping
         teamInternRepository.deleteByTeam_TeamIdAndIntern_InternId(teamId, internId);
+
+        // 🔹 Notify intern
+        notificationService.createInternRemovedFromTeamNotification(internId, programId, teamId);
     }
 
     @Transactional
     public void deleteTeam(Integer teamId) {
 
-        if (!teamRepository.existsById(teamId)) {
-            throw new RuntimeException("Team not found");
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy team"));
+
+        Integer programId = team.getProgram().getProgramId();
+
+        // Get all interns BEFORE deletion
+        List<TeamIntern> teamInterns =
+                teamInternRepository.findAllByTeam_TeamId(teamId);
+
+        // Notify all affected interns
+        for (TeamIntern ti : teamInterns) {
+            notificationService.createTeamDeletedNotificationForIntern(
+                    ti.getIntern().getInternId(),
+                    programId,
+                    teamId);
         }
 
         // Delete interns inside team
@@ -164,7 +186,7 @@ public class TeamService {
     @Transactional
     public void updateTeam(Integer teamId, UpdateTeamRequestDTO request) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new RuntimeException("Team not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy team"));
 
         Program program = team.getProgram();
 
@@ -175,11 +197,11 @@ public class TeamService {
                 );
 
         if (!mentorInProgram) {
-            throw new RuntimeException("Mentor is not assigned to this program");
+            throw new RuntimeException("Mentor chưa được phân công cho chương trình này");
         }
 
         team.setMentor(mentorRepository.findById(request.getMentorId())
-                .orElseThrow(() -> new RuntimeException("Mentor not found")));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy mentor")));
 
         teamRepository.save(team);
     }
@@ -236,38 +258,38 @@ public class TeamService {
     public String addInternToTeam(Integer programId, Integer teamId, Integer internId) {
 
         var program = programRepository.findById(programId)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chương trình"));
 
         if (program.getProgramStatus().equals(ProgramStatus.FINISHED)) {
-            throw new RuntimeException("Intern can only be added when program is UPCOMING or ON_GOING");
+            throw new RuntimeException("TTS chỉ có thể được thêm khi chương trình chưa diễn ra hoặc đang diễn ra");
         }
 
         if (teamInternRepository.isInternInProgram(internId, programId)) {
-            throw new RuntimeException("Intern already assigned in this program");
+            throw new RuntimeException("TTS đã được phân công cho chương trình này");
         }
 
         if (teamInternRepository.isInternInAnyTeam(internId)) {
-            throw new RuntimeException("Intern already assigned to another team");
+            throw new RuntimeException("TTS đã được phân công đến team khác");
         }
 
 
         int currentInternCount = teamInternRepository.countInterns(programId);
         if (currentInternCount >= program.getMaxInterns()) {
-            throw new RuntimeException("Cannot add intern: Program has reached its maximum capacity of "
-                    + program.getMaxInterns() + " interns");
+            throw new RuntimeException("Không thể thêm TTS: Chương trình đã vượt quá giới hạn "
+                    + program.getMaxInterns() + " TTS");
         }
 
 
         var team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new RuntimeException("Team not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy team"));
 
         // ✅ Check that the team belongs to the correct program
         if (!team.getProgram().getProgramId().equals(programId)) {
-            throw new RuntimeException("Team does not belong to the specified program");
+            throw new RuntimeException("Team không thuộc về chương trình này");
         }
 
         var intern = internRepository.findById(internId)
-                .orElseThrow(() -> new RuntimeException("Intern not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy TTS"));
 
         TeamIntern teamIntern = new TeamIntern(
                 team,
@@ -276,6 +298,8 @@ public class TeamService {
         );
 
         teamInternRepository.save(teamIntern);
+
+        notificationService.createInternAddedToTeamNotification(internId, programId, teamId);
 
         return "Intern added successfully";
     }
@@ -287,7 +311,7 @@ public class TeamService {
         return teamInterns.stream().map(teamIntern -> {
             InternProfile intern = teamIntern.getIntern();
             User user = userRepository.findById(intern.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found for intern " + intern.getInternId()));
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản TTS " + intern.getInternId()));
 
             return new InternDetailDTO(
                     intern.getInternId(),
