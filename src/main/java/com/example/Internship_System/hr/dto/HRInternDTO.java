@@ -1,7 +1,9 @@
 package com.example.Internship_System.hr.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDate;
 
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class HRInternDTO {
     private int internId;
     private int userId;
