@@ -91,7 +91,7 @@ public class NotificationService {
     @Async
     public void createProfileUpdatedNotification(int internId) {
         String title = "Hồ sơ thực tập đã được cập nhật";
-        String message = "Hồ sơ của bạn đã được HR cập nhật. Vui lòng kiểm tra lại thông tin.";
+        String message = "Hồ sơ của bạn đã được cập nhật. Vui lòng kiểm tra lại thông tin.";
         Notification notification = new Notification(internId, title, message, "SYSTEM");
         save(notification);
     }
