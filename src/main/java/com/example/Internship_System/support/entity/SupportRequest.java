@@ -21,14 +21,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class SupportRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "request_id")
+    @Column(name = "support_id")
     private Integer supportId;
 
-    @Column(nullable = false)
+    @Column(name = "intern_id", nullable = false)
     private Integer internId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "support_type", nullable = false)
+    @Builder.Default
     private SupportType supportType = SupportType.OTHER;
 
     @Column(nullable = false, length = 255)
@@ -39,25 +40,29 @@ public class SupportRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SupportStatus status = SupportStatus.OPEN;
+    @Builder.Default
+    private SupportStatus status = SupportStatus.PENDING;
 
     @Column(length = 1000)
     private String response;
 
-    @Column(length = 1000)
+    @Column(name = "rejection_reason", length = 1000)
     private String rejectionReason;
 
-    // @Column(nullable = false, updatable = false)
-    // private LocalDateTime requestDate = LocalDateTime.now();
+    @Column(name = "request_date", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime requestDate;
 
-    @Column(nullable = false)
+    @Column(name = "processed_by")
     private Integer processedBy;
 
+    @Column(name = "processed_date")
     private LocalDateTime processedDate;
 
-    private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "request", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<SupportRequestHistory> histories = new ArrayList<>();
+    @PrePersist
+    protected void onCreate() {
+        if (this.requestDate == null) {
+            this.requestDate = LocalDateTime.now();
+        }
+    }
 }
