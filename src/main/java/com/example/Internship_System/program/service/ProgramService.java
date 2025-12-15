@@ -2,6 +2,8 @@ package com.example.Internship_System.program.service;
 
 import com.example.Internship_System.auth.entity.User;
 import com.example.Internship_System.auth.entity.UserStatus;
+import com.example.Internship_System.event.entity.ProgramEvent;
+import com.example.Internship_System.event.repository.ProgramEventRepository;
 import com.example.Internship_System.intern.entity.InternProfile;
 import com.example.Internship_System.mentor.entity.MentorUser;
 import com.example.Internship_System.notification.service.NotificationService;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -43,6 +46,8 @@ public class ProgramService {
     private final InternRepository internRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final ProgramEventRepository programEventRepository;
+
 
     public ProgramService(ProgramRepository programRepository,
                           MentorProgramRepository mentorProgramRepository,
@@ -53,7 +58,8 @@ public class ProgramService {
                           MentorRepository mentorRepository,
                           InternRepository internRepository,
                           UserRepository userRepository,
-                          NotificationService notificationService) {
+                          NotificationService notificationService,
+                          ProgramEventRepository programEventRepository ) {
         this.programRepository = programRepository;
         this.mentorProgramRepository = mentorProgramRepository;
         this.teamRepository = teamRepository;
@@ -64,6 +70,7 @@ public class ProgramService {
         this.internRepository = internRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
+        this.programEventRepository = programEventRepository;
     }
 
     // Search program by name
@@ -342,39 +349,72 @@ public class ProgramService {
                 program.getEndDate(),
                 program.getDetail()
         ));
+        // =============================
+        // 1.5 PROGRAM EVENTS (NEW) ✅
+        // =============================
+        DateTimeFormatter timeFormatter =
+                DateTimeFormatter.ofPattern("HH:mm");
+
+        List<ProgramEvent> programEvents =
+                programEventRepository.findByProgramId(program.getProgramId());
+
+        for (ProgramEvent e : programEvents) {
+
+            LocalDateTime startDateTime =
+                    LocalDateTime.of(e.getEventDate(), e.getStartTime());
+
+            String timeRange = e.getStartTime().format(timeFormatter)
+                    + " - "
+                    + e.getEndTime().format(timeFormatter);
+
+            String fullDescription =
+                    "⏰ " + timeRange +
+                            (e.getDescription() != null && !e.getDescription().isBlank()
+                                    ? "\n" + e.getDescription()
+                                    : "");
+
+            events.add(new ScheduleEventDTO(
+                    "event-" + e.getEventId(),
+                    "Sự kiện: "+e.getTitle(),
+                    "Địa điểm: "+e.getLocation(),     // subtitle
+                    "task",
+                    startDateTime,
+                    fullDescription
+            ));
+        }
 
         // =============================
-// 2. TASK CỦA TEAM INTERN
-// =============================
+        // 2. TASK CỦA TEAM INTERN
+        // =============================
 
-// (1) Lấy team intern đang thuộc về
-        TeamIntern teamIntern = teamInternRepository.findByInternId(internId);
-        Integer teamId = teamIntern.getTeam().getTeamId();
+        // (1) Lấy team intern đang thuộc về
+                TeamIntern teamIntern = teamInternRepository.findByInternId(internId);
+                Integer teamId = teamIntern.getTeam().getTeamId();
 
 
-        if (teamId != null) {
+                if (teamId != null) {
 
-            // (2) Lấy taskId thuộc team (dùng instance, không phải class)
-            List<Integer> teamTaskIds = taskTeamAssignmentRepository.findTaskIdsByTeamId(teamId);
+                    // (2) Lấy taskId thuộc team (dùng instance, không phải class)
+                    List<Integer> teamTaskIds = taskTeamAssignmentRepository.findTaskIdsByTeamId(teamId);
 
-            if (!teamTaskIds.isEmpty()) {
+                    if (!teamTaskIds.isEmpty()) {
 
-                // (3) Lấy danh sách task (dùng instance)
-                List<Task> teamTasks = taskRepository.findByTaskIdIn(teamTaskIds);
+                        // (3) Lấy danh sách task (dùng instance)
+                        List<Task> teamTasks = taskRepository.findByTaskIdIn(teamTaskIds);
 
-                // (4) Format thành event schedule
-                for (Task t : teamTasks) {
-                    events.add(new ScheduleEventDTO(
-                            "task-" + t.getTaskId(),
-                            "Deadline: "+t.getTitle(),
-                            "Deadline cho task: "+t.getTitle(),
-                            "deadline",              // type = deadline
-                            t.getDeadline(),
-                            t.getDescription()
-                    ));
+                        // (4) Format thành event schedule
+                        for (Task t : teamTasks) {
+                            events.add(new ScheduleEventDTO(
+                                    "task-" + t.getTaskId(),
+                                    "Deadline: "+t.getTitle(),
+                                    "Deadline cho task: "+t.getTitle(),
+                                    "deadline",              // type = deadline
+                                    t.getDeadline(),
+                                    t.getDescription()
+                            ));
+                        }
+                    }
                 }
-            }
-        }
 
         return events;
     }

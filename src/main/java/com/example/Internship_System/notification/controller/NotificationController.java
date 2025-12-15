@@ -96,14 +96,20 @@ public class NotificationController {
                 StringBuilder msg = new StringBuilder();
 
                 for (EvaluationService.EvaluationDTO e : evaluations) {
-                    msg.append("• ").append(e.getTitle())
-                            .append(" (").append(e.getCreated_at()).append(")\n")
-                            .append("  - Kỹ thuật: ").append(e.getTechnical()).append("\n")
-                            .append("  - Giao tiếp: ").append(e.getCommunication()).append("\n")
-                            .append("  - Kỷ luật: ").append(e.getDiscipline()).append("\n")
-                            .append("  - Thái độ: ").append(e.getAttitude()).append("\n")
-                            .append("  - Hệ số: ").append(e.getWeight()).append("%\n")
-                            .append("  - Ghi chú: ").append(e.getNote()).append("\n\n");
+                    msg.append("• ")
+                            .append(e.getTitle())
+                            .append(" (")
+                            .append(e.getCreated_at())
+                            .append(")\n")
+
+                            .append("  - Kỹ thuật: ").append(e.getTechnical())
+                            .append(" | Giao tiếp: ").append(e.getCommunication())
+                            .append(" | Kỷ luật: ").append(e.getDiscipline())
+                            .append(" | Thái độ: ").append(e.getAttitude())
+                            .append(" | Hệ số: ").append(e.getWeight()).append("%\n")
+
+                            .append("  - Ghi chú: ").append(e.getNote())
+                            .append("\n\n");
                 }
 
                 String title = "Đánh giá tổng hợp kết quả kì thực tập";

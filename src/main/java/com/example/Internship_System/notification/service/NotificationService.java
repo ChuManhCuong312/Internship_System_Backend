@@ -29,7 +29,7 @@ public class NotificationService {
     }
 
     public List<Notification> findByInternId(int internId) {
-        return repository.findByInternId(internId);
+        return repository.findByInternIdOrderByCreatedAtDesc(internId);
     }
 
     public List<Notification> findUnreadByInternId(int internId) {

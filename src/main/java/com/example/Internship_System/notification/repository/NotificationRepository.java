@@ -9,4 +9,5 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
     List<Notification> findByInternId(int internId);
     List<Notification> findByInternIdAndIsReadFalse(int internId);
+    List<Notification> findByInternIdOrderByCreatedAtDesc(int internId);
 }
