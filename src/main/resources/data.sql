@@ -22,10 +22,10 @@ INSERT INTO users (user_id, email, password_hash, full_name, phone, status, role
 (15, 'tts09@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Anh', '0377123456', 'ACTIVE', 4),
 (16, 'tts10@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Đức Hà', '0377123488', 'ACTIVE', 4),
 (17, 'tts11@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Tuấn Bảo', '0357356787', 'INACTIVE', 4),
-(18, 'tts12@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Gia Huy', '0127465497', 'PENDING_APPROVAL', 4),
-(19, 'tts13@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Minh Đức', '0477326788', 'ACTIVE', 4),
+(18, 'tts12@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Gia Huy', '0327465497', 'PENDING_APPROVAL', 4),
+(19, 'tts13@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Minh Đức', '0377326788', 'ACTIVE', 4),
 (20, 'tts14@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Lê Thị Anh', '0379296795', 'REJECTED', 4),
-(21, 'tts15@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Nguyên Chương', '0521163478', 'ACTIVE', 4),
+(21, 'tts15@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phan Nguyên Chương', '0921163478', 'ACTIVE', 4),
 (22, 'tts16@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Trần Thị', '0389988777', 'ACTIVE', 4),
 (23, 'tts17@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Phạm Minh', '0366999889', 'ACTIVE', 4),
 (24, 'tts18@cmcuni.edu.vn', '$2a$12$uIY3CJXTaEkuiMqIhesO6ejgxazDdq8F58Qqo4tLSI0udaGfICCRW', 'Nguyễn Thị', '0345678911', 'ACTIVE', 4),
@@ -299,14 +299,18 @@ VALUES
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES
 (1, 'Thực tập lập trình Web', 'CNTT', '2025-09-25', '2025-12-25', 'ON_GOING', 10),
-(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-11-25', '2026-01-25', 'ON_GOING', 8),
-(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-12-25', '2026-01-25', 'UPCOMING', 6);
+(2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-11-25', '2026-01-25', 'ON_GOING', 10),
+(3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-12-25', '2026-01-25', 'UPCOMING', 10),
+(4, 'Thực tập Cloud', 'Data Science', '2025-11-25', '2026-01-25', 'ON_GOING', 10),
+(5, 'Thực tập AI', 'Data Science', '2025-11-25', '2026-01-25', 'ON_GOING', 10);
 
 -- Gán mentor cho program
 INSERT INTO mentor_program (mentor_program_id, program_id, mentor_id, assigned_date) VALUES
 (1, 1, 1, NOW()),
 (2, 2, 1, NOW()),
-(3, 3, 3, NOW());
+(3, 3, 3, NOW()),
+(4, 4, 1, NOW()),
+(5, 5, 1, NOW());
 
 -- Tạo teams (thay thế intern_program)
 INSERT INTO teams (team_id, program_id, mentor_id, assigned_date) VALUES
@@ -315,7 +319,8 @@ INSERT INTO teams (team_id, program_id, mentor_id, assigned_date) VALUES
 (3, 1, 1, NOW()), -- Team lập trình Web
 (4, 2, 2, NOW()), -- Team Marketing
 (5, 1, 1, NOW()), -- Team lập trình Web
-(6, 3, 3, NOW()); -- Team Data
+(6, 3, 3, NOW()), -- Team Data
+(7, 1, 1, NOW()); -- Team lập trình Web
 
 -- Gán intern vào teams
 INSERT INTO team_intern (team_intern_id, team_id, intern_id, assigned_date) VALUES
@@ -324,9 +329,9 @@ INSERT INTO team_intern (team_intern_id, team_id, intern_id, assigned_date) VALU
 (3, 1, 6, NOW()), -- Đạt - Team Web
 (4, 1, 4, NOW()), -- Hằng - Team Web
 (5, 2, 2, NOW()), -- Mai - Team Marketing
-(6, 2, 7, NOW()), -- Ngọc - Team Marketing
+(6, 5, 7, NOW()), -- Ngọc - Team Web
 (7, 3, 5, NOW()), -- Bình - Team Data
-(8, 3, 8, NOW()); -- Đức - Team Data
+(8, 7, 8, NOW()); -- Đức - Team Web
 
 INSERT INTO tasks (program_id, title, description, assigned_by, priority, status, deadline, due_soon)
 VALUES
@@ -436,7 +441,7 @@ INSERT INTO intern_logs (intern_id, details) VALUES
 (5, ' Intern xác nhận hợp đồng');
 select * from users;
 
---Tuan update 11/12/2025
+
 SET SQL_SAFE_UPDATES = 0;
 UPDATE internship_system.support_request_history
 SET new_status = 'REJECTED'
