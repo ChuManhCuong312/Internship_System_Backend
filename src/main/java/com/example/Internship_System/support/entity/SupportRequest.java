@@ -41,7 +41,7 @@ public class SupportRequest {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private SupportStatus status = SupportStatus.PENDING;
+    private SupportStatus status = SupportStatus.OPEN;
 
     @Column(length = 1000)
     private String response;
@@ -49,9 +49,9 @@ public class SupportRequest {
     @Column(name = "rejection_reason", length = 1000)
     private String rejectionReason;
 
-    @Column(name = "request_date", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime requestDate;
+    private LocalDateTime createdAt;
 
     @Column(name = "processed_by")
     private Integer processedBy;
@@ -61,8 +61,8 @@ public class SupportRequest {
 
     @PrePersist
     protected void onCreate() {
-        if (this.requestDate == null) {
-            this.requestDate = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
         }
     }
 }
