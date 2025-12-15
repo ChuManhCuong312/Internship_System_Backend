@@ -63,7 +63,7 @@ public class MentorProgramService {
 
     public MentorInfoDTO getMentorByTeam(Integer teamId) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new RuntimeException("Team not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy team"));
 
         MentorUser mentor = team.getMentor();
         var user = mentor.getUser();
