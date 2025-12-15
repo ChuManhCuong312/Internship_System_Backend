@@ -6,16 +6,27 @@ import com.example.Internship_System.event.repository.ProgramEventRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import com.example.Internship_System.program.entity.Program;
+import com.example.Internship_System.repository.ProgramRepository;
 
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 public class ProgramEventService {
 
     private final ProgramEventRepository eventRepository;
+    private final ProgramRepository programRepository;
 
-    public ProgramEventService(ProgramEventRepository eventRepository) {
+    public ProgramEventService(
+            ProgramEventRepository eventRepository,
+            ProgramRepository programRepository
+    ) {
         this.eventRepository = eventRepository;
+        this.programRepository = programRepository;
     }
 
     public void create(ProgramEventRequest request) {
@@ -23,6 +34,12 @@ public class ProgramEventService {
         if (request.getEndTime().isBefore(request.getStartTime())) {
             throw new IllegalArgumentException("End time phải sau start time");
         }
+        validateEventWithinProgram(
+                request.getProgramId(),
+                request.getEventDate(),
+                request.getStartTime(),
+                request.getEndTime()
+        );
 
         if (eventRepository.existsByProgramIdAndTitle(
                 request.getProgramId(),
@@ -70,6 +87,12 @@ public class ProgramEventService {
         if (request.getEndTime().isBefore(request.getStartTime())) {
             throw new IllegalArgumentException("End time phải sau start time");
         }
+        validateEventWithinProgram(
+                request.getProgramId(),
+                request.getEventDate(),
+                request.getStartTime(),
+                request.getEndTime()
+        );
 
         if (eventRepository.existsByProgramIdAndTitleAndEventIdNot(
                 request.getProgramId(),
@@ -120,4 +143,30 @@ public class ProgramEventService {
     public List<ProgramEvent> getByProgramId(Integer programId) {
         return eventRepository.findByProgramId(programId);
     }
+    private void validateEventWithinProgram(
+            Integer programId,
+            LocalDate eventDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+        Program program = programRepository.findById(programId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Program không tồn tại"
+                        )
+                );
+
+        LocalDateTime eventStart = LocalDateTime.of(eventDate, startTime);
+        LocalDateTime eventEnd   = LocalDateTime.of(eventDate, endTime);
+
+        if (eventStart.isBefore(program.getStartDate())
+                || eventEnd.isAfter(program.getEndDate())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Thời gian sự kiện phải nằm trong thời gian của chương trình"
+            );
+        }
+    }
+
 }

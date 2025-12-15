@@ -298,7 +298,7 @@ VALUES
 
 
 INSERT INTO programs (program_id, name, department, start_date, end_date, program_status, max_interns) VALUES
-(1, 'Thực tập lập trình Web', 'CNTT', '2025-09-25', '2025-12-25', 'ON_GOING', 10),
+(1, 'Thực tập lập trình Web', 'CNTT', '2025-09-25', '2026-01-25', 'ON_GOING', 10),
 (2, 'Thực tập Digital Marketing', 'Kinh doanh', '2025-11-25', '2026-01-25', 'ON_GOING', 10),
 (3, 'Thực tập phân tích dữ liệu', 'Data Science', '2025-12-25', '2026-01-25', 'UPCOMING', 10),
 (4, 'Thực tập Cloud', 'Data Science', '2025-11-25', '2026-01-25', 'ON_GOING', 10),
