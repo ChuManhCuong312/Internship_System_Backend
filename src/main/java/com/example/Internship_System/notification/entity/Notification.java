@@ -1,15 +1,22 @@
 package com.example.Internship_System.notification.entity;
 
 import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "notifications")
+@Builder
 public class Notification {
 
     @Id
@@ -34,10 +41,6 @@ public class Notification {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @SuppressWarnings("unused")
-    public Notification() {
-    }
 
     public Notification(int internId, String title, String message, String type) {
         this.internId = internId;

@@ -435,3 +435,13 @@ INSERT INTO intern_logs (intern_id, details) VALUES
 (4, ' Intern gửi yêu cầu hỗ trợ về hợp đồng'),
 (5, ' Intern xác nhận hợp đồng');
 select * from users;
+
+--Tuan update 11/12/2025
+SET SQL_SAFE_UPDATES = 0;
+UPDATE internship_system.support_request_history
+SET new_status = 'REJECTED'
+WHERE new_status NOT IN ('OPEN','IN_PROGRESS','RESOLVED','REJECTED');
+ALTER TABLE internship_system.support_request_history
+MODIFY COLUMN new_status ENUM('OPEN','IN_PROGRESS','RESOLVED','REJECTED') DEFAULT 'OPEN',
+MODIFY COLUMN old_status ENUM('OPEN','IN_PROGRESS','RESOLVED','REJECTED') DEFAULT 'OPEN';
+SET SQL_SAFE_UPDATES = 1;
