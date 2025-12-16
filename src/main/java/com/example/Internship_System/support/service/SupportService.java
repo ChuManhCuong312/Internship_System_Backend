@@ -65,8 +65,6 @@ public class SupportService {
                 .title(dto.getTitle())
                 .description(dto.getDescription())
                 .status(SupportStatus.OPEN)
-                .processedDate(LocalDateTime.now())
-                .processedBy(internId)
                 .createdAt(LocalDateTime.now())
                 .build();
 
