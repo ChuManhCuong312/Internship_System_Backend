@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -416,7 +417,27 @@ public class ProgramService {
                     }
                 }
 
+
+        // =============================
+        // 3. SẮP XẾP THEO THỜI GIAN (SỚM → MUỘN)
+        // =============================
+        // Giả định ScheduleEventDTO có getter: getDateTime() (hoặc tên trường bạn đang dùng).
+        // Nếu tên khác (ví dụ getDate()), sửa lại cho khớp.
+        Comparator<ScheduleEventDTO> byTimeAsc = Comparator
+                .comparing(
+                        ScheduleEventDTO::getDate,               // <-- thay bằng getter đúng
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                )
+                // (tuỳ chọn) nếu cùng thời điểm, ưu tiên "program" trước "task"/"deadline"
+                .thenComparing(
+                        ScheduleEventDTO::getType,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                );
+
+        Collections.sort(events, byTimeAsc);
+
         return events;
+
     }
 
     private void updateStatuses() {
