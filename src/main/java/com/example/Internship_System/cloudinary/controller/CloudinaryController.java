@@ -40,7 +40,15 @@ public class CloudinaryController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
+            String message = e.getMessage();
+
+            if (message != null && message.contains("Unsupported ZIP file")) {
+                errorResponse.put("error",
+                        "File sai định dạng hoặc file DOCX bị hỏng. Chỉ chấp nhận các file: PDF, DOC, DOCX, JPG, JPEG, PNG, GIF, WEBP.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
+            errorResponse.put("error", "Đã xảy ra lỗi khi tải lên file. Vui lòng thử lại sau.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorResponse);
         }
@@ -108,34 +116,6 @@ public class CloudinaryController {
         }
     }
 
-    @GetMapping("/avatar/{internId}")
-    public ResponseEntity<Map<String, Object>> getAvatar(@PathVariable("internId") int internId) {
-        try {
-            Optional<InternProfile> profileOpt = internService.findById(internId);
-            if (profileOpt.isPresent()) {
-                InternProfile profile = profileOpt.get();
-                Map<String, Object> response = new HashMap<>();
-                response.put("internId", internId);
-                response.put("avatarUrl", profile.getAvatar() != null ? profile.getAvatar() : null);
-                response.put("hasAvatar", profile.getAvatar() != null && !profile.getAvatar().isEmpty());
-                return ResponseEntity.ok(response);
-            } else {
-                Map<String, Object> errorResponse = new HashMap<>();
-                errorResponse.put("error", "Intern profile not found for internId: " + internId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-        } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(errorResponse);
-        }
-    }
-
-    // ============================================
-    // CV FILE UPLOAD & RETRIEVAL
-    // ============================================
-
     @PostMapping(value = "/upload/cv", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Map<String, Object>> uploadCvFile(
             @RequestParam("file") MultipartFile file,
@@ -186,7 +166,17 @@ public class CloudinaryController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
+            String message = e.getMessage();
+
+            // Map specific Cloudinary/ZIP errors to user-friendly Vietnamese messages
+            if (message != null && message.contains("Unsupported ZIP file")) {
+                errorResponse.put("error",
+                        "Hồ sơ/CV sai định dạng hoặc file DOCX bị hỏng. Chỉ chấp nhận các file: PDF, DOC, DOCX.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
+            // Fallback: generic internal error without exposing raw exception text
+            errorResponse.put("error", "Đã xảy ra lỗi khi tải lên hồ sơ/CV. Vui lòng thử lại sau.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorResponse);
         }
@@ -254,8 +244,8 @@ public class CloudinaryController {
                             if (oldPublicId != null) {
                                 cloudinaryService.delete(oldPublicId);
                             }
-                        } catch (Exception e) {
-                            System.err.println("Failed to delete old permission file: " + e.getMessage());
+                        } catch (Exception ex) {
+                            System.err.println("Failed to delete old permission file: " + ex.getMessage());
                         }
                     }
                     profile.setPermissionFile(fileUrl);
@@ -270,7 +260,17 @@ public class CloudinaryController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
+            String message = e.getMessage();
+
+            // Map specific Cloudinary/ZIP errors to user-friendly Vietnamese messages
+            if (message != null && message.contains("Unsupported ZIP file")) {
+                errorResponse.put("error",
+                        "File sai định dạng hoặc file DOCX bị hỏng. Chỉ chấp nhận các file: PDF, DOC, DOCX, JPG, JPEG, PNG, GIF, WEBP.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
+            // Fallback: generic internal error without exposing raw exception text
+            errorResponse.put("error", "Đã xảy ra lỗi khi tải lên file. Vui lòng thử lại sau.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorResponse);
         }
@@ -284,8 +284,10 @@ public class CloudinaryController {
                 InternProfile profile = profileOpt.get();
                 Map<String, Object> response = new HashMap<>();
                 response.put("internId", internId);
-                response.put("permissionFileUrl", profile.getPermissionFile() != null ? profile.getPermissionFile() : null);
-                response.put("hasPermissionFile", profile.getPermissionFile() != null && !profile.getPermissionFile().isEmpty());
+                response.put("permissionFileUrl",
+                        profile.getPermissionFile() != null ? profile.getPermissionFile() : null);
+                response.put("hasPermissionFile",
+                        profile.getPermissionFile() != null && !profile.getPermissionFile().isEmpty());
                 return ResponseEntity.ok(response);
             } else {
                 Map<String, Object> errorResponse = new HashMap<>();
@@ -317,14 +319,14 @@ public class CloudinaryController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
             }
 
-            // Upload to avatars folder
+            // Upload to university_confirm folder
             Map<String, Object> uploadResult = cloudinaryService.upload(file, "university_confirm");
             String fileUrl = (String) uploadResult.get("url");
 
             Map<String, Object> response = new HashMap<>();
             response.put("url", fileUrl);
             response.put("publicId", uploadResult.get("public_id"));
-            response.put("message", "File uploaded successfully");
+            response.put("message", "University confirmation file uploaded successfully");
 
             // If internId is provided, update the InternProfile
             if (internId != null) {
@@ -334,14 +336,13 @@ public class CloudinaryController {
                     // Delete old university confirmation file if exists
                     if (profile.getUniversityConfirm() != null && !profile.getUniversityConfirm().isEmpty()) {
                         try {
-                            // Extract publicId from URL or use the stored value
                             String oldPublicId = extractPublicIdFromUrl(profile.getUniversityConfirm());
                             if (oldPublicId != null) {
                                 cloudinaryService.delete(oldPublicId);
                             }
-                        } catch (Exception e) {
+                        } catch (Exception ex) {
                             // Log but don't fail if old file deletion fails
-                            System.err.println("Failed to delete file: " + e.getMessage());
+                            System.err.println("Failed to delete old university confirmation file: " + ex.getMessage());
                         }
                     }
                     profile.setUniversityConfirm(fileUrl);
@@ -356,7 +357,17 @@ public class CloudinaryController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
+            String message = e.getMessage();
+
+            // Map specific Cloudinary/ZIP errors to user-friendly Vietnamese messages
+            if (message != null && message.contains("Unsupported ZIP file")) {
+                errorResponse.put("error",
+                        "File xác nhận từ trường sai định dạng hoặc file DOCX bị hỏng. Chỉ chấp nhận các file: PDF, DOC, DOCX, JPG, JPEG, PNG, GIF, WEBP.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
+            // Fallback: generic internal error without exposing raw exception text
+            errorResponse.put("error", "Đã xảy ra lỗi khi tải lên file xác nhận từ trường. Vui lòng thử lại sau.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorResponse);
         }
@@ -370,8 +381,10 @@ public class CloudinaryController {
                 InternProfile profile = profileOpt.get();
                 Map<String, Object> response = new HashMap<>();
                 response.put("internId", internId);
-                response.put("universityConfirmationUrl", profile.getUniversityConfirm() != null ? profile.getUniversityConfirm() : null);
-                response.put("hasUniversityConfirm", profile.getUniversityConfirm() != null && !profile.getUniversityConfirm().isEmpty());
+                response.put("universityConfirmationUrl",
+                        profile.getUniversityConfirm() != null ? profile.getUniversityConfirm() : null);
+                response.put("hasUniversityConfirm",
+                        profile.getUniversityConfirm() != null && !profile.getUniversityConfirm().isEmpty());
                 return ResponseEntity.ok(response);
             } else {
                 Map<String, Object> errorResponse = new HashMap<>();
@@ -392,7 +405,7 @@ public class CloudinaryController {
 
     /**
      * Extract public ID from Cloudinary URL
-     * Example: <a href="https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/filename.jpg">...</a>
+     * Example: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/filename.jpg
      * Returns: folder/filename
      */
     private String extractPublicIdFromUrl(String url) {
@@ -405,7 +418,7 @@ public class CloudinaryController {
             if (uploadIndex != -1) {
                 String afterUpload = url.substring(uploadIndex + 8);
                 // Remove version if present (v1234567890/)
-                if (afterUpload.matches("^v\\d+/.*")) {
+                if (afterUpload.matches("^v\\d+/.+")) {
                     afterUpload = afterUpload.substring(afterUpload.indexOf('/') + 1);
                 }
                 // Remove file extension

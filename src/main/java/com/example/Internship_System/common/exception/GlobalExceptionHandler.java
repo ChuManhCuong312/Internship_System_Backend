@@ -6,6 +6,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,5 +52,17 @@ public class GlobalExceptionHandler {
         response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
         
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, Object>> handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "error");
+        response.put("message",
+                "Kích thước file vượt quá dung lượng tối đa 10MB. Vui lòng chọn file nhỏ hơn.");
+        response.put("statusCode", HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
