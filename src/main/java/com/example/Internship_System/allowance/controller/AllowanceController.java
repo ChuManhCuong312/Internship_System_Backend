@@ -5,6 +5,7 @@ import com.example.Internship_System.allowance.dto.InternSearchDTO;
 import com.example.Internship_System.allowance.dto.PaginatedAllowanceDTO;
 import com.example.Internship_System.allowance.entity.Allowance;
 import com.example.Internship_System.allowance.service.AllowanceService;
+import com.example.Internship_System.notification.entity.Notification;
 import com.example.Internship_System.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +28,7 @@ public class AllowanceController {
     @Autowired
     private NotificationService notificationService;
 
-    //CREATE - Add new allowance
+    // CREATE - Add new allowance
     @PostMapping
     public ResponseEntity<Allowance> createAllowance(@RequestBody Allowance allowance) {
         try {
@@ -35,15 +37,14 @@ public class AllowanceController {
             notificationService.createAllowanceNotification(
                     savedAllowance.getInternId(),
                     savedAllowance.getType(),
-                    savedAllowance.getAmount().toString()
-            );
+                    savedAllowance.getAmount().toString());
             return new ResponseEntity<>(savedAllowance, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    //READ all allowances with intern names and pagination info
+    // READ all allowances with intern names and pagination info
     @GetMapping
     public ResponseEntity<?> getAllAllowances(
             @RequestParam(required = false) String sortBy,
@@ -52,14 +53,15 @@ public class AllowanceController {
             @RequestParam(required = false) Integer size) {
         try {
             List<AllowanceDTO> allowances = allowanceService.findAllWithInternNames();
-            
+
             // Apply sorting if sortBy is specified
             if (sortBy != null && !sortBy.isEmpty()) {
                 allowances = allowances.stream()
                         .sorted((a, b) -> {
                             int comparison;
                             switch (sortBy.toLowerCase()) {
-                                case "allowanceid" -> comparison = Integer.compare(a.getAllowanceId(), b.getAllowanceId());
+                                case "allowanceid" ->
+                                    comparison = Integer.compare(a.getAllowanceId(), b.getAllowanceId());
                                 case "internid" -> comparison = Integer.compare(a.getInternId(), b.getInternId());
                                 case "type" -> comparison = a.getType().compareTo(b.getType());
                                 case "amount" -> comparison = a.getAmount().compareTo(b.getAmount());
@@ -70,12 +72,13 @@ public class AllowanceController {
                         })
                         .toList();
             }
-            
+
             if (page != null && size != null) {
                 int start = page * size;
                 int end = Math.min(start + size, allowances.size());
                 List<AllowanceDTO> paginatedAllowances = allowances.subList(start, end);
-                PaginatedAllowanceDTO response = new PaginatedAllowanceDTO(paginatedAllowances, allowances.size(), page, size);
+                PaginatedAllowanceDTO response = new PaginatedAllowanceDTO(paginatedAllowances, allowances.size(), page,
+                        size);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(allowances, HttpStatus.OK);
@@ -85,7 +88,7 @@ public class AllowanceController {
         }
     }
 
-    //READ allowance by id
+    // READ allowance by id
     @GetMapping("/{id}")
     public ResponseEntity<Allowance> getAllowanceById(@PathVariable("id") int id) {
         Optional<Allowance> allowance = allowanceService.findById(id);
@@ -93,7 +96,7 @@ public class AllowanceController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    //READ allowances by intern id with intern name and pagination info
+    // READ allowances by intern id with intern name and pagination info
     @GetMapping("/intern/{internId}")
     public ResponseEntity<?> getAllowancesByInternId(
             @PathVariable("internId") int internId,
@@ -103,12 +106,13 @@ public class AllowanceController {
             @RequestParam(required = false) Integer size) {
         try {
             List<AllowanceDTO> allowances = allowanceService.findByInternIdWithInternName(internId);
-            
+
             if (page != null && size != null) {
                 int start = page * size;
                 int end = Math.min(start + size, allowances.size());
                 List<AllowanceDTO> paginatedAllowances = allowances.subList(start, end);
-                PaginatedAllowanceDTO response = new PaginatedAllowanceDTO(paginatedAllowances, allowances.size(), page, size);
+                PaginatedAllowanceDTO response = new PaginatedAllowanceDTO(paginatedAllowances, allowances.size(), page,
+                        size);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(allowances, HttpStatus.OK);
@@ -118,7 +122,7 @@ public class AllowanceController {
         }
     }
 
-    //UPDATE allowance
+    // UPDATE allowance
     @PutMapping("/{id}")
     public ResponseEntity<Allowance> updateAllowance(@PathVariable("id") int id, @RequestBody Allowance allowance) {
         Optional<Allowance> existingAllowance = allowanceService.findById(id);
@@ -136,13 +140,21 @@ public class AllowanceController {
         }
     }
 
-    //DELETE allowance by id
+    // DELETE allowance by id
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteAllowance(@PathVariable("id") int id) {
         try {
             Optional<Allowance> allowance = allowanceService.findById(id);
             if (allowance.isPresent()) {
                 allowanceService.deleteById(id);
+                Notification noti = Notification.builder()
+                        .title("Xoá trợ cấp Thực tập sinh")
+                        .message("Cán bộ QLNS đã xoá trợ cấp Thực tập sinh")
+                        .type("ALLOWANCE")
+                        .internId(allowance.get().getInternId())
+                        .createdAt(LocalDateTime.now())
+                        .build();
+                notificationService.save(noti);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -152,7 +164,7 @@ public class AllowanceController {
         }
     }
 
-    //FILTER allowances with intern names and pagination info
+    // FILTER allowances with intern names and pagination info
     @GetMapping("/filter/search")
     public ResponseEntity<?> filterAllowances(
             @RequestParam(required = false) Integer internId,
@@ -166,14 +178,16 @@ public class AllowanceController {
         try {
             LocalDate start = startDate != null && !startDate.isEmpty() ? LocalDate.parse(startDate) : null;
             LocalDate end = endDate != null && !endDate.isEmpty() ? LocalDate.parse(endDate) : null;
-            
-            List<AllowanceDTO> allAllowances = allowanceService.filterAllowancesWithInternNames(internId, type, minAmount, maxAmount, start, end);
-            
+
+            List<AllowanceDTO> allAllowances = allowanceService.filterAllowancesWithInternNames(internId, type,
+                    minAmount, maxAmount, start, end);
+
             if (page != null && size != null) {
                 int start_idx = page * size;
                 int end_idx = Math.min(start_idx + size, allAllowances.size());
                 List<AllowanceDTO> paginatedAllowances = allAllowances.subList(start_idx, end_idx);
-                PaginatedAllowanceDTO response = new PaginatedAllowanceDTO(paginatedAllowances, allAllowances.size(), page, size);
+                PaginatedAllowanceDTO response = new PaginatedAllowanceDTO(paginatedAllowances, allAllowances.size(),
+                        page, size);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(allAllowances, HttpStatus.OK);
@@ -183,7 +197,7 @@ public class AllowanceController {
         }
     }
 
-    //SEARCH interns by name for allowance (returns only internId and fullName)
+    // SEARCH interns by name for allowance (returns only internId and fullName)
     @GetMapping("/search/interns")
     public ResponseEntity<?> searchInternsForAllowance(@RequestParam String name) {
         try {
