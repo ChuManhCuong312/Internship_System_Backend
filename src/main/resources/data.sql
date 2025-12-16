@@ -404,11 +404,11 @@ INSERT INTO allowances (intern_id, type, amount, date_applied,note) VALUES
 (6, 'Phụ cấp bữa ăn', 50000, '2025-02-11','Phụ cấp bữa ăn'),
 (7, 'Phụ cấp đi lại', 30000, '2025-02-11','Phụ cấp đi lại');
 
-INSERT INTO support_requests (intern_id, description, file_path, status, created_at) VALUES
-(1, 'Không truy cập được hệ thống', NULL, 'OPEN', NOW()),
-(2, 'Yêu cầu sửa thông tin', NULL, 'IN_PROGRESS', NOW()),
-(5, 'Thắc mắc về phụ cấp tháng 2',NULL, 'RESOLVED', NOW()),
-(7, 'Xin nghỉ phép 1 ngày',NULL, 'OPEN', NOW());
+INSERT INTO support_requests (intern_id, title, description, file_path, status, created_at) VALUES
+(1, 'Không truy cập được hệ thống','Không truy cập được hệ thống', NULL, 'OPEN', NOW()),
+(2, 'Yêu cầu sửa thông tin','Yêu cầu sửa thông tin', NULL, 'OPEN', NOW()),
+(5, 'Vấn đề với phụ cấp','Thắc mắc về phụ cấp tháng 2',NULL, 'OPEN', NOW()),
+(7, 'Xin nghỉ phép','Xin nghỉ phép 1 ngày',NULL, 'OPEN', NOW());
 
 INSERT INTO evaluations
 (intern_id, mentor_evaluate_id, title, technical, communication, discipline, attitude, weight, note)
@@ -422,23 +422,6 @@ VALUES
 (5, 3, 'Đánh giá giữa kì', 9, 7, 8, 8, 25, 'Thực tập sinh chăm chỉ, hoàn thành tốt'),
 (7, 2, 'Đánh giá giữa kì', 5, 8, 7, 6, 25, 'Thực tập sinh chăm chỉ, hoàn thành tốt');
 
-INSERT INTO admin_logs (details) VALUES
-(' Admin tạo HR01 với role HR'),
-(' Admin tạo HR02 với role HR'),
-(' Admin cập nhật thông tin mentor Đặng Minh Tâm'),
-(' Admin xóa thực tập sinh Nguyễn Đức Anh');
-INSERT INTO hr_logs (hr_id, details) VALUES
-(1, 'HR duyệt hồ sơ intern Nguyễn Hữu Nam'),
-(1, 'HR upload hợp đồng cho intern Trần Thị Mai'),
-(2, 'HR gửi email thông báo hợp đồng cho intern Phạm Minh Quân'),
-(2, 'HR duyệt hồ sơ intern Nguyễn Thị Hằng'),
-(1, 'HR upload hợp đồng cho intern Lê Văn Bình');
-INSERT INTO intern_logs (intern_id, details) VALUES
-(1, ' Intern xác nhận hợp đồng'),
-(2, ' Intern upload CV bổ sung'),
-(3, ' Intern cập nhật số điện thoại'),
-(4, ' Intern gửi yêu cầu hỗ trợ về hợp đồng'),
-(5, ' Intern xác nhận hợp đồng');
 select * from users;
 
 

@@ -27,20 +27,6 @@ CREATE TABLE users (
     FOREIGN KEY (role_id) REFERENCES roles(role_id)
 );
 
-CREATE TABLE permissions (
-    permission_id INT AUTO_INCREMENT PRIMARY KEY,
-    code VARCHAR(50) UNIQUE NOT NULL,
-    description VARCHAR(255)
-);
-
-CREATE TABLE role_permissions (
-    role_id INT,
-    permission_id INT,
-    PRIMARY KEY (role_id, permission_id),
-    FOREIGN KEY (role_id) REFERENCES roles(role_id),
-    FOREIGN KEY (permission_id) REFERENCES permissions(permission_id)
-);
-
 -- ======================================
 -- 2. ROLE-SPECIFIC TABLES
 -- ======================================
@@ -257,6 +243,7 @@ CREATE TABLE allowances (
 CREATE TABLE support_requests (
     request_id INT AUTO_INCREMENT PRIMARY KEY,
     intern_id INT,
+    title TEXT,
     type ENUM('TECHNICAL','ADMIN','HR','OTHER') DEFAULT 'OTHER',
     description TEXT,
     file_path VARCHAR(255),
@@ -283,31 +270,6 @@ CREATE TABLE evaluations (
 );
 
 -- ======================================
--- 7. DOCUMENTS & AUDIT
--- ======================================
-
-CREATE TABLE admin_logs (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
-    details TEXT, -- CREATE_USER/UPDATE_USER/DELETE_USER
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE hr_logs (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
-    hr_id INT NOT NULL,
-    details TEXT, --  'APPROVE_INTERN', 'REJECT_INTERN', 'UPLOAD_CONTRACT', 'SEND_EMAIL'
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (hr_id) REFERENCES hr_users(hr_id)
-);
-CREATE TABLE intern_logs (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
-    intern_id INT NOT NULL,
-    details TEXT, -- 'CONFIRM_CONTRACT','UPLOAD_DOCUMENT','UPDATE_PROFILE','SEND_SUPPORT_REQUEST'
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
-);
-
--- ======================================
 -- 8. NOTIFICATIONS
 -- ======================================
 -- Bảng thông báo cho Intern
@@ -321,28 +283,6 @@ CREATE TABLE notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (intern_id) REFERENCES intern_users(intern_id)
 );
--- Bảng thông báo cho HR
-CREATE TABLE HRNotifications (
-    notification_id INT AUTO_INCREMENT PRIMARY KEY,
-    hr_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    message TEXT,
-    type VARCHAR(50), -- 'ALLOWANCE', 'TASK', 'LEAVE', 'EVALUATION', etc.
-    is_read BOOLEAN DEFAULT FALSE, -- trong MySQL là TINYINT(1)
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (hr_id) REFERENCES hr_users(hr_id)
-);
--- Bảng thông báo cho Mentor
-CREATE TABLE MentorNotifications (
-    notification_id INT AUTO_INCREMENT PRIMARY KEY,
-    mentor_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    message TEXT,
-    type VARCHAR(50), -- 'ALLOWANCE', 'TASK', 'LEAVE', 'EVALUATION', etc.
-    is_read BOOLEAN DEFAULT FALSE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (mentor_id) REFERENCES mentor_users(mentor_id)
-);
 
 -- Bảng lịch sử yêu cầu hỗ trợ
 CREATE TABLE support_request_history (
@@ -354,4 +294,4 @@ CREATE TABLE support_request_history (
   remarks varchar(1000) DEFAULT NULL,
   support_id int NOT NULL,
   FOREIGN KEY (support_id) REFERENCES support_requests (request_id)
-)
+);
