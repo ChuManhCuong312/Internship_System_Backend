@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class SupportRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "support_id")
+    @Column(name = "request_id")
     private Integer supportId;
 
     @Column(name = "intern_id", nullable = false)
