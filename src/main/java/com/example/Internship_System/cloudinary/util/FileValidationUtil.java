@@ -64,7 +64,34 @@ public class FileValidationUtil {
      * @return validation result with message
      */
     public static FileValidationResult validateCvFile(MultipartFile file) {
-        return validateFile(file, CV_TYPES, "CV", false);
+        // Custom validation for CV with clearer (Vietnamese) messages
+
+        // Check if file is empty
+        if (file == null || file.isEmpty()) {
+            return new FileValidationResult(false, "File hồ sơ/CV trống.");
+        }
+
+        // Check file size
+        if (file.getSize() > MAX_FILE_SIZE) {
+            long sizeMB = file.getSize() / (1024 * 1024);
+            return new FileValidationResult(false,
+                    String.format("Kích thước hồ sơ/CV (%dMB) vượt quá dung lượng tối đa 10MB.",
+                            sizeMB));
+        }
+
+        // Check file type (MIME type)
+        String contentType = file.getContentType();
+        if (contentType == null || !CV_TYPES.contains(contentType.toLowerCase())) {
+            return new FileValidationResult(false,
+                    "Hồ sơ/CV sai định dạng. Chỉ chấp nhận các file: PDF, DOC, DOCX.");
+        }
+
+        // Check filename is not null
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().trim().isEmpty()) {
+            return new FileValidationResult(false, "Tên file hồ sơ/CV không hợp lệ.");
+        }
+
+        return new FileValidationResult(true, "File hồ sơ/CV hợp lệ.");
     }
 
     /**
