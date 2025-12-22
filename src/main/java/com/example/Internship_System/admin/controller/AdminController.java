@@ -160,7 +160,9 @@ public class AdminController {
         if (!user.getEmail().equals(userDTO.getEmail()) && userRepository.existsByEmail(userDTO.getEmail())) {
             return ResponseEntity.badRequest().body("Email đã tồn tại!");
         }
-        if (!user.getPhone().equals(userDTO.getPhone()) && userRepository.existsByPhone(userDTO.getPhone())) {
+        if (!Objects.equals(user.getPhone(), userDTO.getPhone())
+                && userDTO.getPhone() != null
+                && userRepository.existsByPhone(userDTO.getPhone())) {
             return ResponseEntity.badRequest().body("Số điện thoại đã tồn tại!");
         }
         // 3. Cập nhật các trường cơ bản
