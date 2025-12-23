@@ -134,7 +134,25 @@ public class HRContractService {
                 }
             }
         }
-        
+        allContracts.sort((a, b) -> {
+            // 1️⃣ NOT_UPLOAD lên đầu
+            if (a.getContractStatus() == ContractStatus.NOT_UPLOAD &&
+                    b.getContractStatus() != ContractStatus.NOT_UPLOAD) {
+                return -1;
+            }
+            if (a.getContractStatus() != ContractStatus.NOT_UPLOAD &&
+                    b.getContractStatus() == ContractStatus.NOT_UPLOAD) {
+                return 1;
+            }
+
+            // 2️⃣ Cùng NOT_UPLOAD hoặc cùng loại khác → sort theo thời gian
+            if (a.getCreatedAt() == null && b.getCreatedAt() == null) return 0;
+            if (a.getCreatedAt() == null) return 1;
+            if (b.getCreatedAt() == null) return -1;
+
+            return b.getCreatedAt().compareTo(a.getCreatedAt());
+        });
+
         // Manual pagination
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), allContracts.size());
